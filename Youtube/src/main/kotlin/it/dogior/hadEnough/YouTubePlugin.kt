@@ -1,0 +1,39 @@
+package com.sinetech.latte
+
+import com.lagradost.cloudstream3.plugins.CloudstreamPlugin
+import com.lagradost.cloudstream3.plugins.Plugin
+import android.content.Context
+import androidx.appcompat.app.AppCompatActivity
+import com.lagradost.cloudstream3.CommonActivity.activity
+import com.sinetech.latte.settings.SettingsFragment
+import org.schabi.newpipe.extractor.NewPipe
+import org.schabi.newpipe.extractor.localization.ContentCountry
+import org.schabi.newpipe.extractor.localization.Localization
+
+@CloudstreamPlugin
+class YouTubePlugin : Plugin() {
+    private val sharedPref = activity?.getSharedPreferences("Youtube", Context.MODE_PRIVATE)
+
+    override fun load(context: Context) {
+        var language = sharedPref?.getString("language", "tr")
+        var country = sharedPref?.getString("country", "TR")
+
+        if (language.isNullOrEmpty()) {language = "tr"}
+        if (country.isNullOrEmpty()) {country = "TR"}
+
+        NewPipe.init(NewPipeDownloader.getInstance())
+        NewPipe.setupLocalization(Localization(language), ContentCountry(country))
+
+        // All providers should be added in this manner
+        registerMainAPI(YouTubeProvider(language, sharedPref))
+        registerMainAPI(YouTubePlaylistsProvider(language))
+        registerMainAPI(YouTubeChannelProvider(language))
+        registerExtractorAPI(YouTubeExtractor())
+
+        val activity = context as AppCompatActivity
+        openSettings = {
+            val frag = SettingsFragment(this, sharedPref)
+            frag.show(activity.supportFragmentManager, "Frag")
+        }
+    }
+}

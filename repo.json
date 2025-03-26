@@ -1,0 +1,8 @@
+{
+    "name": "Latte'nin deneme tahtası",
+    "description": "Birkaç eklenti ile deneme tahtası",
+    "manifestVersion": 1,
+    "pluginLists": [
+      "https://raw.githubusercontent.com/GitLatte/Sinetech/main/plugins.json"
+    ]
+  }
