@@ -7,22 +7,23 @@ import com.lagradost.cloudstream3.SearchResponse
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.utils.ExtractorLink
 
-class YouTubeChannelProvider(language: String) : MainAPI() {
+class YouTubeChannelProvider : MainAPI() {
     override var mainUrl = MAIN_URL
-    override var name = "YouTube Kanalları"
+    override var name = "CloudStream"
     override val supportedTypes = setOf(TvType.Others)
-    override val hasMainPage = false
-    override var lang = language
+    override val hasMainPage = true
+    override var lang = "tr"
 
     private val ytParser = YouTubeParser(this.name)
 
     companion object{
         const val MAIN_URL = "https://www.youtube.com"
+        const val CHANNEL_URL = "https://www.youtube.com/@sinetechone"
     }
 
-    override suspend fun search(query: String): List<SearchResponse> {
-        val videoUrls = ytParser.search(query, contentFilter = "channels")
-        return videoUrls
+    override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
+        val channelContent = ytParser.channelToSearchResponseList(CHANNEL_URL, page)
+        return HomePageResponse(listOf(channelContent))
     }
 
     override suspend fun load(url: String): LoadResponse {
