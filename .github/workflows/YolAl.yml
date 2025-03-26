@@ -5,6 +5,9 @@ concurrency:
   group: "build"
   cancel-in-progress: true
 
+permissions:
+  contents: write
+
 on:
   workflow_dispatch:
   push:
@@ -23,7 +26,7 @@ jobs:
         with:
           path: "src"
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ github.token }}
 
       - name: Setup Git
         run: |
