@@ -14,13 +14,13 @@ class TV(
     private val sharedPref: SharedPreferences?
 ) : MainAPI() {
     override var mainUrl =
-        "https://raw.githubusercontent.com/Free-TV/IPTV/refs/heads/master/playlists"
+        "https://raw.githubusercontent.com/GitLatte/patr0n/refs/heads/site/lists/"
     override var name = "TV"
     override val hasMainPage = true
     override val hasQuickSearch = true
     override val hasDownloadSupport = false
     override var sequentialMainPage = true
-    override val supportedTypes = setOf(TvType.Live)
+    override val supportedTypes = setOf(TvType.Live, TvType.Movie, TvType.TvSeries)
     private var playlists = mutableMapOf<String, Playlist?>()
     private val urlList = enabledPlaylists.map { "$mainUrl/$it" }
 
@@ -79,19 +79,59 @@ class TV(
 
     override suspend fun load(url: String): LoadResponse {
         val tvChannel = sharedPref?.getString(url, null)?.let { parseJson<TVChannel>(it) }
-            ?: throw ErrorLoadingException("Error loading channel from cache")
+            ?: throw ErrorLoadingException("Önbellekten kanal yüklenirken hata oluştu")
 
         val streamUrl = tvChannel.url.toString()
         val channelName = tvChannel.title ?: tvChannel.attributes["tvg-id"].toString()
         val posterUrl = tvChannel.attributes["tvg-logo"].toString()
+        val type = when {
+            tvChannel.url?.let { url ->
+                val lowercaseUrl = url.lowercase()
+                val videoExtensions = listOf(".mkv", ".mp4", ".avi", ".mov")
+                videoExtensions.any { lowercaseUrl.endsWith(it) } ||
+                lowercaseUrl.contains("/movies/") ||
+                lowercaseUrl.contains("/movie/") ||
+                lowercaseUrl.contains("/film/")
+            } == true -> TvType.Movie
+            tvChannel.url?.let { url ->
+                val lowercaseUrl = url.lowercase()
+                lowercaseUrl.contains("/series/") ||
+                lowercaseUrl.contains("/tv-shows/") ||
+                lowercaseUrl.contains("/season/") ||
+                lowercaseUrl.contains("/episode/") ||
+                tvChannel.title?.lowercase()?.let { title ->
+                    title.contains("sezon") || title.contains("bölüm") ||
+                    title.contains("season") || title.contains("episode")
+                } == true
+            } == true -> TvType.TvSeries
+            else -> TvType.Live
+        }
 
-        return LiveStreamLoadResponse(
-            channelName,
-            streamUrl,
-            this.name,
-            url,
-            posterUrl
-        )
+        return when (type) {
+            TvType.Movie -> MovieLoadResponse(
+                channelName,
+                url,
+                this.name,
+                TvType.Movie,
+                streamUrl,
+                posterUrl
+            )
+            TvType.TvSeries -> TvSeriesLoadResponse(
+                channelName,
+                url,
+                this.name,
+                TvType.TvSeries,
+                ArrayList(),
+                posterUrl
+            )
+            else -> LiveStreamLoadResponse(
+                channelName,
+                streamUrl,
+                this.name,
+                url,
+                posterUrl
+            )
+        }
     }
 
     override suspend fun loadLinks(
@@ -103,8 +143,8 @@ class TV(
 
         callback.invoke(
             ExtractorLink(
-                "Free-TV",
-                "Free-TV",
+                "GitLatte",
+                "GitLatte",
                 data,
                 "",
                 Qualities.Unknown.value,
@@ -130,12 +170,34 @@ data class TVChannel(
         val streamUrl = url.toString()
         val channelName = title ?: attributes["tvg-id"].toString()
         val posterUrl = attributes["tvg-logo"].toString()
-        return LiveSearchResponse(
-            channelName,
-            streamUrl,
-            apiName,
-            TvType.Live,
-            posterUrl,
-        )
+        val type = when {
+            attributes["group-title"]?.contains("movie", ignoreCase = true) == true -> TvType.Movie
+            attributes["group-title"]?.contains("series", ignoreCase = true) == true -> TvType.TvSeries
+            else -> TvType.Live
+        }
+        return when (type) {
+            TvType.Movie -> MovieSearchResponse(
+                channelName,
+                streamUrl,
+                apiName,
+                TvType.Movie,
+                posterUrl,
+            )
+            TvType.TvSeries -> TvSeriesSearchResponse(
+                channelName,
+                streamUrl,
+                apiName,
+                TvType.TvSeries,
+                posterUrl,
+                0
+            )
+            else -> LiveSearchResponse(
+                channelName,
+                streamUrl,
+                apiName,
+                TvType.Live,
+                posterUrl,
+            )
+        }
     }
 }
