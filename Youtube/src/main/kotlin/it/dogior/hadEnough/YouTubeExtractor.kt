@@ -33,7 +33,25 @@ open class YouTubeExtractor(private val hls: Boolean) : ExtractorApi() {
         val extractor = object : YoutubeStreamExtractor(
             ServiceList.YouTube,
             link
-        ) {}
+        ) {
+            override fun onFetchPage(downloader: Downloader): String {
+                try {
+                    return super.onFetchPage(downloader)
+                } catch (e: Exception) {
+                    Log.d("YoutubeExtractor", "Error fetching page: ${e.message}")
+                    throw e
+                }
+            }
+
+            override fun fetchIosMobileJsonPlayer(): String {
+                try {
+                    return super.fetchIosMobileJsonPlayer()
+                } catch (e: Exception) {
+                    Log.d("YoutubeExtractor", "Error fetching IOS player: ${e.message}")
+                    return ""
+                }
+            }
+        }
 
         extractor.fetchPage()
 
