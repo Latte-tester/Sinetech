@@ -35,6 +35,7 @@ jobs:
 
       - name: Create and checkout builds branch
         run: |
+          cd src
           if ! git show-ref --verify --quiet refs/remotes/origin/builds; then
             git checkout --orphan builds
             git rm -rf .
@@ -42,6 +43,7 @@ jobs:
             git push origin builds
           fi
           git fetch origin builds
+          cd ..
           git worktree add builds origin/builds
       
       - name: Clean old builds
