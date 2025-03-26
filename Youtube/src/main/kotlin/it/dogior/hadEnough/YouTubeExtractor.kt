@@ -25,45 +25,62 @@ open class YouTubeExtractor(private val hls: Boolean) : ExtractorApi() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit,
     ) {
-        val link =
-            YoutubeStreamLinkHandlerFactory.getInstance().fromUrl(
-                url.replace(schemaStripRegex, "")
-            )
-
-        val extractor = object : YoutubeStreamExtractor(
-            ServiceList.YouTube,
-            link
-        ) {}
-
-        extractor.fetchPage()
-
-        Log.d("YoutubeExtractor", "Is HLS enabled: $hls")
-        Log.d("YoutubeExtractor", "HLS Url: ${extractor.hlsUrl}")
-        if (hls) {
-            callback.invoke(
-                ExtractorLink(
-                    this.name,
-                    this.name,
-                    extractor.hlsUrl,
-                    referer ?: "",
-                    quality = Qualities.Unknown.value,
-                    isM3u8 = true
+        try {
+            val link =
+                YoutubeStreamLinkHandlerFactory.getInstance().fromUrl(
+                    url.replace(schemaStripRegex, "")
                 )
-            )
-        } else {
-            val stream = M3u8Helper.generateM3u8(this.name, extractor.hlsUrl, "")
-            stream.forEach {
-                callback.invoke(it)
-            }
-            val subtitles = try {
-                extractor.subtitlesDefault.filterNotNull()
+
+            val extractor = object : YoutubeStreamExtractor(
+                ServiceList.YouTube,
+                link
+            ) {}
+
+            try {
+                extractor.fetchPage()
             } catch (e: Exception) {
-                logError(e)
-                emptyList()
+                Log.e("YoutubeExtractor", "Error fetching page: ${e.message}")
+                throw e
             }
-            subtitles.mapNotNull {
-                SubtitleFile(it.languageTag ?: return@mapNotNull null, it.content ?: return@mapNotNull null)
-            }.forEach(subtitleCallback)
+
+            val hlsUrl = extractor.hlsUrl
+            if (hlsUrl.isNullOrEmpty()) {
+                Log.e("YoutubeExtractor", "HLS URL is null or empty")
+                throw Exception("Could not extract HLS URL")
+            }
+
+            Log.d("YoutubeExtractor", "Is HLS enabled: $hls")
+            Log.d("YoutubeExtractor", "HLS Url: $hlsUrl")
+
+            if (hls) {
+                callback.invoke(
+                    ExtractorLink(
+                        this.name,
+                        this.name,
+                        hlsUrl,
+                        referer ?: "",
+                        quality = Qualities.Unknown.value,
+                        isM3u8 = true
+                    )
+                )
+            } else {
+                val stream = M3u8Helper.generateM3u8(this.name, hlsUrl, "")
+                stream.forEach {
+                    callback.invoke(it)
+                }
+                val subtitles = try {
+                    extractor.subtitlesDefault.filterNotNull()
+                } catch (e: Exception) {
+                    logError(e)
+                    emptyList()
+                }
+                subtitles.mapNotNull {
+                    SubtitleFile(it.languageTag ?: return@mapNotNull null, it.content ?: return@mapNotNull null)
+                }.forEach(subtitleCallback)
+            }
+        } catch (e: Exception) {
+            Log.e("YoutubeExtractor", "Error in getUrl: ${e.message}")
+            throw e
         }
     }
 }
