@@ -38,7 +38,7 @@ class TV(
     ): HomePageResponse {
         if (urlList.isEmpty()){
             return newHomePageResponse( HomePageList(
-                "Enable channels in the plugin settings",
+                "Eklenti ayarlarından kanalları aktif edin",
                 emptyList(),
                 isHorizontalImages = true
             ), false)

@@ -107,7 +107,7 @@ class Settings(
                 }
                 this?.apply()
             }
-            showToast("Saved. Restart the app to apply the settings")
+            showToast("Kaydedildi. Aktif etmek için uygulamayı yeniden başlatın")
             dismiss()
         }
 

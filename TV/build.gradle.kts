@@ -4,8 +4,8 @@ version = 2
 cloudstream {
     // All of these properties are optional, you can safely remove them
 
-    description = "Live streams from the Free TV github repository. Forked from the Free-TV plugin in the ItalianProvider repo"
-    authors = listOf("Gian-Fr","Adippe","doGior")
+    description = "ItalianProvider reposu içindeki TV eklentisi"
+    authors = listOf("Gian-Fr","Adippe","doGior","GitLatte")
 
     /**
     * Status int as the following:
@@ -20,7 +20,7 @@ cloudstream {
 
     requiresResources = true
 
-    iconUrl = "https://raw.githubusercontent.com/doGior/doGiorsHadEnough/refs/heads/master/TV/television.png"
+    iconUrl = "https://raw.githubusercontent.com/GitLatte/m3ueditor/refs/heads/site/images/kanal-gorselleri/referans/isimsizkanal.png"
 }
 
 android {
