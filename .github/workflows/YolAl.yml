@@ -19,21 +19,30 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@master
+        uses: actions/checkout@v4
         with:
           path: "src"
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Create and checkout builds branch
+      - name: Setup Git
         run: |
           git config --global user.email "actions@github.com"
           git config --global user.name "GitHub Actions"
-          if ! git ls-remote --exit-code --heads origin builds; then
+
+      - name: Create and checkout builds branch
+        run: |
+          cd src
+          if ! git show-ref --verify --quiet refs/remotes/origin/builds; then
             git checkout --orphan builds
-            git reset --hard
+            git rm -rf .
             git commit --allow-empty -m "Initial builds branch"
             git push origin builds
+          else
+            git fetch origin builds
           fi
-          git worktree add builds builds || git worktree add builds -b builds
+          cd ..
+          git worktree add builds origin/builds
       
       - name: Clean old builds
         run: rm $GITHUB_WORKSPACE/builds/*.cs3
