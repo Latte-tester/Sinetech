@@ -1,75 +1,62 @@
-name: İşe Koyulma Vakti
+name: Build
 
 # https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#concurrency
 concurrency: 
   group: "build"
   cancel-in-progress: true
 
-permissions:
-  contents: write
-
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # Allows manual triggering
   push:
     branches:
+      # choose your default branch
       - master
       - main
     paths-ignore:
       - '*.md'
+      - '*.png'
+      - '*.yml'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@master
         with:
           path: "src"
-          fetch-depth: 0
-          token: ${{ github.token }}
 
-      - name: Setup Git
-        run: |
-          git config --global user.email "actions@github.com"
-          git config --global user.name "GitHub Actions"
-
-      - name: Create and checkout builds branch
-        run: |
-          cd src
-          if ! git show-ref --verify --quiet refs/remotes/origin/builds; then
-            git checkout --orphan builds
-            git rm -rf .
-            git commit --allow-empty -m "Initial builds branch"
-            git push origin builds
-          fi
-          git fetch origin builds
-          cd ..
-          git worktree add builds origin/builds
+      - name: Checkout builds
+        uses: actions/checkout@master
+        with:
+          ref: "builds"
+          path: "builds"
       
       - name: Clean old builds
-        run: rm -f $GITHUB_WORKSPACE/builds/*.cs3
+        run: rm $GITHUB_WORKSPACE/builds/*.cs3
 
-      - name: Setup JDK 11
-        uses: actions/setup-java@v1
+      - name: Setup Java 17
+        uses: actions/setup-java@v4.6.0
         with:
-          java-version: 11
+          distribution: adopt
+          java-version: 17
 
       - name: Setup Android SDK
-        uses: android-actions/setup-android@v2
+        uses: android-actions/setup-android@v3.2.2
 
       - name: Build Plugins
         run: |
-          cd src
+          cd $GITHUB_WORKSPACE/src
           chmod +x gradlew
           ./gradlew make makePluginsJson
-          cp **/build/*.cs3 $GITHUB_WORKSPACE/builds/
-          cp build/plugins.json $GITHUB_WORKSPACE/builds/
+          cp **/build/*.cs3 $GITHUB_WORKSPACE/builds
+          cp build/plugins.json $GITHUB_WORKSPACE/builds
 
       - name: Push builds
         run: |
-          cd builds
+          cd $GITHUB_WORKSPACE/builds
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
-          git add -A
-          git commit -m "Build $GITHUB_SHA" || exit 0   # do not error if nothing to commit
-          git push origin builds --force
+          git add .
+          git commit --amend -m "Build $GITHUB_SHA" || exit 0   # do not error if nothing to commit
+          git push --force
