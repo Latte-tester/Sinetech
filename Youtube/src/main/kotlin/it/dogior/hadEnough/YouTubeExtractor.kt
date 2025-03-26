@@ -43,13 +43,25 @@ open class YouTubeExtractor(private val hls: Boolean) : ExtractorApi() {
                 throw e
             }
 
-            val hlsUrl = extractor.hlsUrl
-            val dashUrl = extractor.dashMpdUrl
+            val hlsUrl = try {
+                extractor.hlsUrl
+            } catch (e: Exception) {
+                Log.e("YoutubeExtractor", "Error getting HLS URL: ${e.message}")
+                null
+            }
+            
+            val dashUrl = try {
+                extractor.dashMpdUrl
+            } catch (e: Exception) {
+                Log.e("YoutubeExtractor", "Error getting DASH URL: ${e.message}")
+                null
+            }
+            
             val streamUrl = hlsUrl ?: dashUrl
             
             if (streamUrl.isNullOrEmpty()) {
-                Log.e("YoutubeExtractor", "Stream URL is null or empty")
-                throw Exception("Could not extract stream URL")
+                Log.e("YoutubeExtractor", "Both HLS and DASH URLs are null or empty")
+                throw Exception("Could not extract any valid stream URL")
             }
 
             Log.d("YoutubeExtractor", "Is HLS enabled: $hls")
