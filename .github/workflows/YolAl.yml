@@ -33,7 +33,10 @@ jobs:
           path: "builds"
       
       - name: Clean old builds
-        run: rm $GITHUB_WORKSPACE/builds/*.cs3
+        run: |
+          if [ -d "$GITHUB_WORKSPACE/builds" ] && [ -n "$(find $GITHUB_WORKSPACE/builds -name '*.cs3' 2>/dev/null)" ]; then
+            rm $GITHUB_WORKSPACE/builds/*.cs3
+          fi
 
       - name: Setup Java 17
         uses: actions/setup-java@v4.6.0
