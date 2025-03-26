@@ -1,7 +1,6 @@
 package com.sinetech.latte
 
 import com.lagradost.api.Log
-import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.mvvm.logError
 import com.lagradost.cloudstream3.utils.ExtractorApi
 import com.lagradost.cloudstream3.utils.ExtractorLink
@@ -20,7 +19,6 @@ open class YouTubeExtractor : ExtractorApi() {
     override suspend fun getUrl(
         url: String,
         referer: String?,
-        subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit,
     ) {
         try {
@@ -65,16 +63,6 @@ open class YouTubeExtractor : ExtractorApi() {
                     isM3u8 = true
                 )
             )
-                val subtitles = try {
-                    extractor.subtitlesDefault.filterNotNull()
-                } catch (e: Exception) {
-                    logError(e)
-                    emptyList()
-                }
-                subtitles.mapNotNull {
-                    SubtitleFile(it.languageTag ?: return@mapNotNull null, it.content ?: return@mapNotNull null)
-                }.forEach(subtitleCallback)
-            }
         } catch (e: Exception) {
             Log.e("YoutubeExtractor", "Error in getUrl: ${e.message}")
             throw e

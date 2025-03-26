@@ -1,6 +1,5 @@
 package com.sinetech.latte
 
-import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.utils.ExtractorLink
 
 class YouTubeChannelProvider {
@@ -9,7 +8,6 @@ class YouTubeChannelProvider {
         private val youtubeParser = YouTubeParser()
 
         suspend fun getChannelVideos(
-            subtitleCallback: (SubtitleFile) -> Unit = {},
             callback: (ExtractorLink) -> Unit = {}
         ) {
             // Kanal videolarını NewPipe API'si üzerinden çekme işlemi
@@ -24,18 +22,17 @@ class YouTubeChannelProvider {
             videos.forEach { video ->
                 val videoUrl = video.url
                 if (videoUrl != null) {
-                    getVideoFromUrl(videoUrl, subtitleCallback, callback)
+                    getVideoFromUrl(videoUrl, callback)
                 }
             }
         }
 
         suspend fun getVideoFromUrl(
             url: String,
-            subtitleCallback: (SubtitleFile) -> Unit = {},
             callback: (ExtractorLink) -> Unit = {}
         ) {
             if (url.contains("@sinetechone")) {
-                youtubeParser.getVideoLinks(url, null, subtitleCallback, callback)
+                youtubeParser.getVideoLinks(url, null, callback)
             }
         }
     }
