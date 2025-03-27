@@ -23,8 +23,7 @@ class IptvPlaylistParser {
     fun parseM3U(input: InputStream): Playlist {
         val reader = input.bufferedReader()
 
-        val firstLine = reader.readLine()?.trim() ?: ""
-        if (!firstLine.startsWith("#EXTM3U", ignoreCase = true)) {
+        if (!reader.readLine().isExtendedM3u()) {
             throw PlaylistParserException.InvalidHeader()
         }
 
