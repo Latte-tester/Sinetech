@@ -10,14 +10,10 @@ import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.Qualities
 
 class SinetechTV(
-    private var enabledPlaylists: List<String>,
+    private val enabledPlaylists: List<String>,
     override var lang: String,
     private val sharedPref: SharedPreferences?
 ) : MainAPI() {
-    init {
-        enabledPlaylists = sharedPref?.getStringSet("enabled_playlists", setOf())?.toList() ?: emptyList()
-        urlList = enabledPlaylists.map { "$mainUrl/$it" }
-    }
         override var mainUrl =
         "https://raw.githubusercontent.com/GitLatte/patr0n/refs/heads/site/lists/"
     override var name = "SinetechTV"
@@ -41,7 +37,7 @@ class SinetechTV(
         page: Int,
         request: MainPageRequest
     ): HomePageResponse {
-        if (enabledPlaylists.isEmpty()) {
+        if (urlList.isEmpty()){
             return newHomePageResponse( HomePageList(
                 "Lütfen eklenti ayarlarından kanal listelerini etkinleştirin",
                 emptyList(),
@@ -50,12 +46,8 @@ class SinetechTV(
         }
         val sections = urlList.map {
             val data = getTVChannels(it)
-            val sectionTitle = it.substringAfter("playlist_", "").replace(".m3u8", "").trim().capitalize()
+            val sectionTitle = it.substringAfterLast("/").substringBeforeLast(".").capitalize()
             val show = data.map { showData ->
-                sharedPref?.edit()?.apply {
-                    putString(showData.url, showData.toJson())
-                    apply()
-                }
                 showData.toSearchResponse(apiName = this@SinetechTV.name)
             }
             HomePageList(
@@ -83,12 +75,9 @@ class SinetechTV(
     }
 
     override suspend fun load(url: String): LoadResponse {
-        val tvChannel = sharedPref?.getString(url, null)?.let { parseJson<TVChannel>(it) }
-            ?: throw ErrorLoadingException("Error loading channel from cache")
-
-        val streamUrl = tvChannel.url.toString()
-        val channelName = tvChannel.title ?: tvChannel.attributes["tvg-id"].toString()
-        val posterUrl = tvChannel.attributes["tvg-logo"].toString()
+        val streamUrl = url
+        val channelName = url.substringAfterLast("/").substringBeforeLast(".")
+        val posterUrl = ""
 
         return LiveStreamLoadResponse(
             channelName,
