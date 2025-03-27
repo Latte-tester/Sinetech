@@ -1,0 +1,35 @@
+name: Workflow Temizleyici
+
+on:
+  workflow_dispatch:
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Hatalı Workflow'ları Temizle
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const thirtyDaysAgo = new Date();
+            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+            
+            const runs = await github.rest.actions.listWorkflowRunsForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              status: 'failure',
+              created: `<=${thirtyDaysAgo.toISOString()}`
+            });
+            
+            console.log(`${runs.data.total_count} adet hatalı workflow bulundu.`);
+            
+            for (const run of runs.data.workflow_runs) {
+              console.log(`Siliniyor: ${run.name} (ID: ${run.id})`);
+              await github.rest.actions.deleteWorkflowRun({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                run_id: run.id
+              });
+            }
+            
+            console.log('Temizleme işlemi tamamlandı.');
