@@ -16,6 +16,7 @@ class SinetechTV(
 ) : MainAPI() {
     init {
         enabledPlaylists = sharedPref?.getStringSet("enabled_playlists", setOf())?.toList() ?: emptyList()
+        urlList = enabledPlaylists.map { "$mainUrl/$it" }
     }
         override var mainUrl =
         "https://raw.githubusercontent.com/GitLatte/patr0n/refs/heads/site/lists/"

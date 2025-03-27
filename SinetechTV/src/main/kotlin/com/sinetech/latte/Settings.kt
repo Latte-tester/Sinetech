@@ -100,12 +100,10 @@ class Settings(
         }
 
         saveBtn?.setOnClickListener {
-            with(sharedPref?.edit()) {
-                this?.clear()
-                enabledPlaylists.forEach {
-                    this?.putBoolean(it, true)
-                }
-                this?.apply()
+            sharedPref?.edit()?.apply {
+                clear()
+                putStringSet("enabled_playlists", enabledPlaylists.toSet())
+                apply()
             }
             showToast("Kaydedildi. Aktif etmek için uygulamayı yeniden başlatın")
             dismiss()
