@@ -28,20 +28,22 @@ class SinetechTV(
     private var playlists = mutableMapOf<String, Playlist?>()
     private val urlList: List<String>
         get() {
-            val savedPlaylists = sharedPref?.getString(ENABLED_PLAYLISTS_KEY, null)?.let {
-                try {
-                    parseJson<List<String>>(it)
-                } catch (e: Exception) {
-                    enabledPlaylists
+            val savedPlaylists = if (enabledPlaylists.isNotEmpty()) {
+                sharedPref?.edit()?.apply {
+                    putString(ENABLED_PLAYLISTS_KEY, enabledPlaylists.toJson())
+                    apply()
                 }
-            } ?: enabledPlaylists
-
-            // Save the playlists to SharedPreferences
-            sharedPref?.edit()?.apply {
-                putString(ENABLED_PLAYLISTS_KEY, savedPlaylists.toJson())
-                apply()
+                enabledPlaylists
+            } else {
+                sharedPref?.getString(ENABLED_PLAYLISTS_KEY, null)?.let {
+                    try {
+                        parseJson<List<String>>(it)
+                    } catch (e: Exception) {
+                        emptyList()
+                    }
+                } ?: emptyList()
             }
-
+            
             return savedPlaylists.map { "$mainUrl/$it" }
         }
 
