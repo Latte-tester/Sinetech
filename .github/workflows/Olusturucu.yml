@@ -56,7 +56,6 @@ jobs:
           chmod +x gradlew
           ./gradlew make makePluginsJson
           cp **/build/*.cs3 $GITHUB_WORKSPACE/builds
-          cp build/plugins.json $GITHUB_WORKSPACE/builds
 
       - name: Push builds
         run: |
@@ -66,3 +65,14 @@ jobs:
           git add .
           git commit --amend -m "Build $GITHUB_SHA" || exit 0   # do not error if nothing to commit
           git push --force origin builds
+
+      - name: Push plugins.json to main
+        run: |
+          cd $GITHUB_WORKSPACE/src
+          git checkout main
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          cp build/plugins.json .
+          git add plugins.json
+          git commit -m "Eklenti veri güncellemesi" || exit 0
+          git push origin main
