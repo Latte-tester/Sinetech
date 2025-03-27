@@ -6,6 +6,7 @@ import com.lagradost.cloudstream3.APIHolder.capitalize
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import com.lagradost.cloudstream3.utils.ExtractorLink
+import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.Qualities
 
 class SinetechTV(
@@ -108,9 +109,8 @@ class SinetechTV(
                 data,
                 "",
                 Qualities.Unknown.value,
-                type = ExtractorLinkType.M3U8,
-                headers = emptyMap(),
-                extractorData = null
+                isM3u8 = true,
+                headers = emptyMap()
             )
         )
         return true
