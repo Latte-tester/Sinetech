@@ -108,7 +108,9 @@ class SinetechTV(
                 data,
                 "",
                 Qualities.Unknown.value,
-                isM3u = true
+                type = ExtractorLinkType.M3U8,
+                headers = emptyMap(),
+                extractorData = null
             )
         )
         return true
