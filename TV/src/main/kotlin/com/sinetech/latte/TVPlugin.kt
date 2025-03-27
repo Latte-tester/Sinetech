@@ -8,7 +8,7 @@ import com.lagradost.cloudstream3.CommonActivity.activity
 
 @CloudstreamPlugin
 class TVPlugin : Plugin() {
-    private val sharedPref = activity?.getSharedPreferences("TV", Context.MODE_PRIVATE)
+    private val sharedPref = activity?.getSharedPreferences("SinetechTV", Context.MODE_PRIVATE)
     private val playlistsToLang = mapOf(
         "iptvsevenler.m3u" to "tr",
         "power-yabanci-dizi.m3u" to "tr",
@@ -31,7 +31,7 @@ class TVPlugin : Plugin() {
                 selectedLanguages.first()!! } else{ "un" }
         } else{ "un" }
 
-        registerMainAPI(TV(selectedPlaylists.toList(), lang, sharedPref))
+        registerMainAPI(SinetechTV(selectedPlaylists.toList(), lang, sharedPref))
 
         val activity = context as AppCompatActivity
         openSettings = {

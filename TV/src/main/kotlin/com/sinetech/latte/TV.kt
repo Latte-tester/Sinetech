@@ -8,14 +8,14 @@ import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.Qualities
 
-class TV(
+class SinetechTV(
     private val enabledPlaylists: List<String>,
     override var lang: String,
     private val sharedPref: SharedPreferences?
 ) : MainAPI() {
     override var mainUrl =
         "https://raw.githubusercontent.com/GitLatte/patr0n/refs/heads/site/lists/"
-    override var name = "TV"
+    override var name = "SinetechTV"
     override val hasMainPage = true
     override val hasQuickSearch = true
     override val hasDownloadSupport = false
@@ -45,13 +45,13 @@ class TV(
         }
         val sections = urlList.map {
             val data = getTVChannels(it)
-            val sectionTitle = it.substringAfter("playlist_", "").replace(".m3u8", "").trim().capitalize()
+            val sectionTitle = it.substringAfter("playlist_", "").replace(".m3u", "").trim().capitalize()
             val show = data.map { showData ->
                 sharedPref?.edit()?.apply {
                     putString(showData.url, showData.toJson())
                     apply()
                 }
-                showData.toSearchResponse(apiName = this@TV.name)
+                showData.toSearchResponse(apiName = this@SinetechTV.name)
             }
             HomePageList(
                 sectionTitle,
@@ -68,7 +68,7 @@ class TV(
             data.filter {
                 it.attributes["tvg-id"]?.contains(query) ?: false ||
                         it.title?.lowercase()?.contains(query.lowercase()) ?: false
-            }.map { it.toSearchResponse(apiName = this@TV.name) }
+            }.map { it.toSearchResponse(apiName = this@SinetechTV.name) }
         }.flatten()
         return searchResponses
     }
@@ -103,12 +103,12 @@ class TV(
 
         callback.invoke(
             ExtractorLink(
-                "GitLatte",
-                "GitLatte",
+                "Sinetech TV",
+                "Sinetech TV",
                 data,
                 "",
                 Qualities.Unknown.value,
-                isM3u8 = true
+                isM3u = true
             )
         )
         return true
