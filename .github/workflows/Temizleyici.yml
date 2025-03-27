@@ -9,18 +9,20 @@ jobs:
   cleanup:
     runs-on: ubuntu-latest
     steps:
-      - name: Hatalı Workflow'ları Temizle
+      - name: Hatalı ve İptal Edilen Workflow'ları Temizle
         uses: actions/github-script@v7
         with:
           script: |
             async function deleteWorkflowRuns() {
               let page = 1;
               let hasMoreRuns = true;
-              let totalDeleted = 0;
+              let totalFailedDeleted = 0;
+              let totalCancelledDeleted = 0;
               
               while (hasMoreRuns) {
                 try {
-                  const runs = await github.rest.actions.listWorkflowRunsForRepo({
+                  // Hatalı workflow'ları al
+                  const failedRuns = await github.rest.actions.listWorkflowRunsForRepo({
                     owner: context.repo.owner,
                     repo: context.repo.repo,
                     status: 'failure',
@@ -28,22 +30,39 @@ jobs:
                     page: page
                   });
                   
-                  if (!runs?.data?.workflow_runs?.length) {
+                  // İptal edilen workflow'ları al
+                  const cancelledRuns = await github.rest.actions.listWorkflowRunsForRepo({
+                    owner: context.repo.owner,
+                    repo: context.repo.repo,
+                    status: 'cancelled',
+                    per_page: 100,
+                    page: page
+                  });
+                  
+                  const allRuns = [...failedRuns.data.workflow_runs, ...cancelledRuns.data.workflow_runs];
+                  
+                  if (!allRuns.length) {
                     hasMoreRuns = false;
                     break;
                   }
                   
-                  console.log(`İşleniyor: Sayfa ${page}, ${runs.data.workflow_runs.length} adet workflow`);
+                  console.log(`İşleniyor: Sayfa ${page}, ${allRuns.length} adet workflow`);
                   
-                  for (const run of runs.data.workflow_runs) {
+                  for (const run of allRuns) {
                     try {
                       await github.rest.actions.deleteWorkflowRun({
                         owner: context.repo.owner,
                         repo: context.repo.repo,
                         run_id: run.id
                       });
-                      totalDeleted++;
-                      console.log(`Silindi: ${run.name} (ID: ${run.id})`);
+                      
+                      if (run.conclusion === 'failure') {
+                        totalFailedDeleted++;
+                        console.log(`Hatalı Workflow Silindi: ${run.name} (ID: ${run.id})`);
+                      } else {
+                        totalCancelledDeleted++;
+                        console.log(`İptal Edilen Workflow Silindi: ${run.name} (ID: ${run.id})`);
+                      }
                     } catch (deleteError) {
                       console.log(`Hata: ${run.name} (ID: ${run.id}) silinirken hata oluştu:`, deleteError);
                     }
@@ -56,7 +75,7 @@ jobs:
                 }
               }
               
-              console.log(`Temizleme işlemi tamamlandı. Toplam ${totalDeleted} workflow silindi.`);
+              console.log(`Temizleme işlemi tamamlandı.\nToplam ${totalFailedDeleted} hatalı workflow silindi.\nToplam ${totalCancelledDeleted} iptal edilen workflow silindi.`);
             }
             
             await deleteWorkflowRuns();
