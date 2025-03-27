@@ -14,6 +14,9 @@ class SinetechTV(
     override var lang: String,
     private val sharedPref: SharedPreferences?
 ) : MainAPI() {
+    companion object {
+        private const val ENABLED_PLAYLISTS_KEY = "enabled_playlists"
+    }
     override var mainUrl =
         "https://raw.githubusercontent.com/GitLatte/patr0n/refs/heads/site/lists/"
     override var name = "SinetechTV"
@@ -23,7 +26,19 @@ class SinetechTV(
     override var sequentialMainPage = true
     override val supportedTypes = setOf(TvType.Live)
     private var playlists = mutableMapOf<String, Playlist?>()
-    private val urlList = enabledPlaylists.map { "$mainUrl/$it" }
+    private val urlList: List<String>
+        get() {
+            val savedPlaylists = sharedPref?.getString(ENABLED_PLAYLISTS_KEY, null)?.let {
+                parseJson<List<String>>(it)
+            } ?: enabledPlaylists
+            
+            sharedPref?.edit()?.apply {
+                putString(ENABLED_PLAYLISTS_KEY, savedPlaylists.toJson())
+                apply()
+            }
+            
+            return savedPlaylists.map { "$mainUrl/$it" }
+        }
 
 
     private suspend fun getTVChannels(url: String): List<TVChannel> {
@@ -37,14 +52,15 @@ class SinetechTV(
         page: Int,
         request: MainPageRequest
     ): HomePageResponse {
-        if (urlList.isEmpty()){
+        val currentPlaylists = urlList
+        if (currentPlaylists.isEmpty()) {
             return newHomePageResponse( HomePageList(
                 "Eklenti ayarlarından kanalları aktif edin",
                 emptyList(),
                 isHorizontalImages = true
             ), false)
         }
-        val sections = urlList.map {
+        val sections = currentPlaylists.map {
             val data = getTVChannels(it)
             val sectionTitle = it.substringAfter("playlist_", "").replace(".m3u", "").trim().capitalize()
             val show = data.map { showData ->
