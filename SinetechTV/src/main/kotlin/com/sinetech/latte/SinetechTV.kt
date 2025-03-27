@@ -10,10 +10,13 @@ import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.Qualities
 
 class SinetechTV(
-    private val enabledPlaylists: List<String>,
+    private var enabledPlaylists: List<String>,
     override var lang: String,
     private val sharedPref: SharedPreferences?
 ) : MainAPI() {
+    init {
+        enabledPlaylists = sharedPref?.getStringSet("enabled_playlists", setOf())?.toList() ?: emptyList()
+    }
         override var mainUrl =
         "https://raw.githubusercontent.com/GitLatte/patr0n/refs/heads/site/lists/"
     override var name = "SinetechTV"
@@ -37,9 +40,9 @@ class SinetechTV(
         page: Int,
         request: MainPageRequest
     ): HomePageResponse {
-        if (urlList.isEmpty()){
+        if (enabledPlaylists.isEmpty()) {
             return newHomePageResponse( HomePageList(
-                "Enable channels in the plugin settings",
+                "Lütfen eklenti ayarlarından kanal listelerini etkinleştirin",
                 emptyList(),
                 isHorizontalImages = true
             ), false)
