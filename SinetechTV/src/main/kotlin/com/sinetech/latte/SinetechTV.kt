@@ -32,16 +32,14 @@ class SinetechTV(
                 try {
                     parseJson<List<String>>(it)
                 } catch (e: Exception) {
-                    null
+                    enabledPlaylists
                 }
             } ?: enabledPlaylists
 
-            // Only save if the playlists have changed
-            if (savedPlaylists != enabledPlaylists) {
-                sharedPref?.edit()?.apply {
-                    putString(ENABLED_PLAYLISTS_KEY, savedPlaylists.toJson())
-                    commit() // Use commit() instead of apply() for immediate write
-                }
+            // Save the playlists to SharedPreferences
+            sharedPref?.edit()?.apply {
+                putString(ENABLED_PLAYLISTS_KEY, savedPlaylists.toJson())
+                apply()
             }
 
             return savedPlaylists.map { "$mainUrl/$it" }
@@ -62,7 +60,7 @@ class SinetechTV(
         val currentPlaylists = urlList
         if (currentPlaylists.isEmpty()) {
             return newHomePageResponse( HomePageList(
-                "Eklenti ayarlarından kanalları aktif edin",
+                "Lütfen eklenti ayarlarından en az bir playlist seçin",
                 emptyList(),
                 isHorizontalImages = true
             ), false)
