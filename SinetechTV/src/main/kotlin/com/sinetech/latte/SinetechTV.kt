@@ -46,8 +46,12 @@ class SinetechTV(
         }
         val sections = urlList.map {
             val data = getTVChannels(it)
-            val sectionTitle = it.substringAfterLast("/").substringBeforeLast(".").capitalize()
+            val sectionTitle = it.substringAfter("playlist_", "").replace(".m3u8", "").trim().capitalize()
             val show = data.map { showData ->
+                sharedPref?.edit()?.apply {
+                    putString(showData.url, showData.toJson())
+                    apply()
+                }
                 showData.toSearchResponse(apiName = this@SinetechTV.name)
             }
             HomePageList(
@@ -75,9 +79,12 @@ class SinetechTV(
     }
 
     override suspend fun load(url: String): LoadResponse {
-        val streamUrl = url
-        val channelName = url.substringAfterLast("/").substringBeforeLast(".")
-        val posterUrl = ""
+        val tvChannel = sharedPref?.getString(url, null)?.let { parseJson<TVChannel>(it) }
+            ?: throw ErrorLoadingException("Error loading channel from cache")
+
+        val streamUrl = tvChannel.url.toString()
+        val channelName = tvChannel.title ?: tvChannel.attributes["tvg-id"].toString()
+        val posterUrl = tvChannel.attributes["tvg-logo"].toString()
 
         return LiveStreamLoadResponse(
             channelName,
