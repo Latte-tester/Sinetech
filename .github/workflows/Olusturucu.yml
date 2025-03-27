@@ -1,92 +1,61 @@
 name: Hakem Düdüğü
 
-permissions:
-  contents: write
-
-# https://docs.github.com/en/actions/learn-github-actions/workflow-syntax-for-github-actions#concurrency
-concurrency: 
-  group: "build"
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
   cancel-in-progress: true
 
 on:
-  workflow_dispatch:  # Allows manual triggering
+  workflow_dispatch:
   push:
     branches:
-      # choose your default branch
       - master
-      - main
     paths-ignore:
-      - '*.md'
-      - '*.png'
-      - '*.yml'
+      - "**/*.md"
+      - "**/*.yml"
+      - "**/*.jpg"
+      - "**/*.png"
+      - "**/*.py"
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-
-  cleanup-runs:
-    needs: build
+  CloudStreamDerleyici:
     runs-on: ubuntu-latest
     steps:
-      - name: Delete failed workflow runs
-        uses: Mattraks/delete-workflow-runs@v2
-        with:
-          token: ${{ github.token }}
-          repository: ${{ github.repository }}
-          retain_days: 1
-          keep_minimum_runs: 6
-          delete_workflow_pattern: Hakem Düdüğü
-          delete_run_by_conclusion_pattern: failure
-    steps:
-      - name: Checkout
-        uses: actions/checkout@master
+      - name: "'src' Depo Kontrolü"
+        uses: actions/checkout@v4.2.2
         with:
           path: "src"
 
-      - name: Checkout builds
-        uses: actions/checkout@master
+      - name: "'build' Depo Kontrolü"
+        uses: actions/checkout@v4.2.2
         with:
           ref: "builds"
           path: "builds"
-      
-      - name: Clean old builds
-        run: |
-          if [ -d "$GITHUB_WORKSPACE/builds" ] && [ -n "$(find $GITHUB_WORKSPACE/builds -name '*.cs3' 2>/dev/null)" ]; then
-            rm $GITHUB_WORKSPACE/builds/*.cs3
-          fi
 
-      - name: Setup Java 17
+      - name: Eski Derlemeleri Temizle
+        run: rm $GITHUB_WORKSPACE/builds/*.cs3 || true
+
+      - name: JDK 17 Ayarla
         uses: actions/setup-java@v4.6.0
         with:
           distribution: adopt
           java-version: 17
 
-      - name: Setup Android SDK
+      - name: Android SDK Ayarla
         uses: android-actions/setup-android@v3.2.2
 
-      - name: Build Plugins
+      - name: Eklenti Derlemesi
         run: |
           cd $GITHUB_WORKSPACE/src
           chmod +x gradlew
           ./gradlew make makePluginsJson
           cp **/build/*.cs3 $GITHUB_WORKSPACE/builds
+          cp build/plugins.json $GITHUB_WORKSPACE/builds
 
-      - name: Push builds
+      - name: Derlemeleri Yükle
         run: |
           cd $GITHUB_WORKSPACE/builds
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
           git add .
-          git commit --amend -m "Build $GITHUB_SHA" || exit 0   # do not error if nothing to commit
-          git push --force origin builds
-
-      - name: Push plugins.json to main
-        run: |
-          cd $GITHUB_WORKSPACE/src
-          git checkout main
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
-          cp build/plugins.json .
-          git add plugins.json
-          git commit -m "Eklenti veri güncellemesi" || exit 0
-          git push origin main
+          git commit --amend -m "$GITHUB_SHA maça başladı" || exit 0   # eğer commit edilecek bir şey yoksa hata verme
+          git push --force
