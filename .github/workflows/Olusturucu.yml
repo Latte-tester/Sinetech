@@ -2,6 +2,9 @@ name: Hakem Düdüğü
 
 permissions:
   contents: write
+  actions: write
+  pages: write
+  id-token: write
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.ref }}
