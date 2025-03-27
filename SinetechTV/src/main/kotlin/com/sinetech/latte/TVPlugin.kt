@@ -11,9 +11,9 @@ class TVPlugin : Plugin() {
     private val sharedPref = activity?.getSharedPreferences("SinetechTV", Context.MODE_PRIVATE)
     private val playlistsToLang = mapOf(
         "playlist_iptvsevenler.m3u8" to "tr",
-        "playlist_power-yabanci-dizi.m3u8" to "en",
-        "playlist_someone.m3u8" to "de",
-        "playlist_power-sinema.m3u8" to "fr"
+        "playlist_power-yabanci-dizi.m3u8" to "tr",
+        "playlist_someone.m3u8" to "tr",
+        "playlist_power-sinema.m3u8" to "tr"
     )
 
     init {
@@ -28,8 +28,8 @@ class TVPlugin : Plugin() {
         val selectedLanguages = selectedPlaylists.map { playlistsToLang[it] }
         val lang = if(selectedLanguages.isNotEmpty()){
             if(selectedLanguages.all { it == selectedLanguages.first() && it != null }){
-                selectedLanguages.first()!! } else{ "un" }
-        } else{ "un" }
+                selectedLanguages.first()!! } else{ "tr" }
+        } else{ "tr" }
 
         registerMainAPI(SinetechTV(selectedPlaylists.toList(), lang, sharedPref))
 
