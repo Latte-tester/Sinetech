@@ -14,10 +14,7 @@ class SinetechTV(
     override var lang: String,
     private val sharedPref: SharedPreferences?
 ) : MainAPI() {
-    companion object {
-        private const val ENABLED_PLAYLISTS_KEY = "enabled_playlists"
-    }
-    override var mainUrl =
+        override var mainUrl =
         "https://raw.githubusercontent.com/GitLatte/patr0n/refs/heads/site/lists/"
     override var name = "SinetechTV"
     override val hasMainPage = true
@@ -26,26 +23,7 @@ class SinetechTV(
     override var sequentialMainPage = true
     override val supportedTypes = setOf(TvType.Live)
     private var playlists = mutableMapOf<String, Playlist?>()
-    private val urlList: List<String>
-        get() {
-            val savedPlaylists = if (enabledPlaylists.isNotEmpty()) {
-                sharedPref?.edit()?.apply {
-                    putString(ENABLED_PLAYLISTS_KEY, enabledPlaylists.toJson())
-                    apply()
-                }
-                enabledPlaylists
-            } else {
-                sharedPref?.getString(ENABLED_PLAYLISTS_KEY, null)?.let {
-                    try {
-                        parseJson<List<String>>(it)
-                    } catch (e: Exception) {
-                        emptyList()
-                    }
-                } ?: emptyList()
-            }
-            
-            return savedPlaylists.map { "$mainUrl/$it" }
-        }
+    private val urlList = enabledPlaylists.map { "$mainUrl/$it" }
 
 
     private suspend fun getTVChannels(url: String): List<TVChannel> {
@@ -59,17 +37,16 @@ class SinetechTV(
         page: Int,
         request: MainPageRequest
     ): HomePageResponse {
-        val currentPlaylists = urlList
-        if (currentPlaylists.isEmpty()) {
+        if (urlList.isEmpty()){
             return newHomePageResponse( HomePageList(
-                "Lütfen eklenti ayarlarından en az bir playlist seçin",
+                "Enable channels in the plugin settings",
                 emptyList(),
                 isHorizontalImages = true
             ), false)
         }
-        val sections = currentPlaylists.map {
+        val sections = urlList.map {
             val data = getTVChannels(it)
-            val sectionTitle = it.substringAfter("playlist_", "").replace(".m3u", "").trim().capitalize()
+            val sectionTitle = it.substringAfter("playlist_", "").replace(".m3u8", "").trim().capitalize()
             val show = data.map { showData ->
                 sharedPref?.edit()?.apply {
                     putString(showData.url, showData.toJson())
@@ -103,7 +80,7 @@ class SinetechTV(
 
     override suspend fun load(url: String): LoadResponse {
         val tvChannel = sharedPref?.getString(url, null)?.let { parseJson<TVChannel>(it) }
-            ?: throw ErrorLoadingException("Önbellekten kanal yüklenirken hata oluştu")
+            ?: throw ErrorLoadingException("Error loading channel from cache")
 
         val streamUrl = tvChannel.url.toString()
         val channelName = tvChannel.title ?: tvChannel.attributes["tvg-id"].toString()
@@ -132,8 +109,7 @@ class SinetechTV(
                 data,
                 "",
                 Qualities.Unknown.value,
-                isM3u8 = true,
-                headers = emptyMap()
+                isM3u8 = true
             )
         )
         return true
