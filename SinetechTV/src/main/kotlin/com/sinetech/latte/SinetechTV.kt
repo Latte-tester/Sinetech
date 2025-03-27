@@ -29,14 +29,21 @@ class SinetechTV(
     private val urlList: List<String>
         get() {
             val savedPlaylists = sharedPref?.getString(ENABLED_PLAYLISTS_KEY, null)?.let {
-                parseJson<List<String>>(it)
+                try {
+                    parseJson<List<String>>(it)
+                } catch (e: Exception) {
+                    null
+                }
             } ?: enabledPlaylists
-            
-            sharedPref?.edit()?.apply {
-                putString(ENABLED_PLAYLISTS_KEY, savedPlaylists.toJson())
-                apply()
+
+            // Only save if the playlists have changed
+            if (savedPlaylists != enabledPlaylists) {
+                sharedPref?.edit()?.apply {
+                    putString(ENABLED_PLAYLISTS_KEY, savedPlaylists.toJson())
+                    commit() // Use commit() instead of apply() for immediate write
+                }
             }
-            
+
             return savedPlaylists.map { "$mainUrl/$it" }
         }
 
