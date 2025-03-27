@@ -13,8 +13,12 @@ class TVPlugin : Plugin() {
         "iptvsevenler.m3u" to "tr",
         "power-yabanci-dizi.m3u" to "tr",
         "someone.m3u" to "tr",
-        "power-sinema.m3u" to "it"
+        "power-sinema.m3u" to "tr"
     )
+
+    init {
+        sharedPref?.edit()?.clear()?.apply()
+    }
 
     override fun load(context: Context) {
         val playlistSettings = playlistsToLang.keys.associateWith {
