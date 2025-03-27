@@ -11,15 +11,16 @@ jobs:
         uses: actions/github-script@v7
         with:
           script: |
-            const thirtyDaysAgo = new Date();
-            thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-            
             const runs = await github.rest.actions.listWorkflowRunsForRepo({
               owner: context.repo.owner,
               repo: context.repo.repo,
-              status: 'failure',
-              created: `<=${thirtyDaysAgo.toISOString()}`
+              status: 'failure'
             });
+            
+            if (!runs || !runs.data) {
+              console.log('API yanıtı alınamadı veya hatalı format.');
+              return;
+            }
             
             console.log(`${runs.data.total_count} adet hatalı workflow bulundu.`);
             
