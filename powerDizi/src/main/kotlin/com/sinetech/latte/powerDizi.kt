@@ -132,7 +132,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 val match = episodeRegex.find(title)
                 if (match != null) {
                     val (_, season, episode) = match.destructured
-                    newEpisode(
+                    Episode(
                         episode = episode.toInt(),
                         season = season.toInt(),
                         data = LoadData(
