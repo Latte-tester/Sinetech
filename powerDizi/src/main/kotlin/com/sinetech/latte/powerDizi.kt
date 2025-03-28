@@ -31,7 +31,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     season = season.toInt(),
                     episode = episode.toInt(),
                     attributes = item.attributes.toMutableMap().apply {
-                        if (!containsKey("tvg-country")) { put("tvg-country", "TR") }
+                        if (!containsKey("tvg-country")) { put("tvg-country", "TR/Altyazılı") }
                         if (!containsKey("tvg-language")) { put("tvg-language", "TR;EN") }
                     }
                 )
@@ -88,7 +88,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             if (watchedShowsList.isNotEmpty()) {
                 watchedShows.add(HomePageList("${title ?: "Diğer"} - Devam Et", watchedShowsList, isHorizontalImages = true))
             }
-            regularShows.add(HomePageList(title ?: "Diğer", unwatchedShowsList, isHorizontalImages = true))
+            regularShows.add(HomePageList("${title?.toString() ?: "Diğer"} adlı diziye ait bölümler", unwatchedShowsList, isHorizontalImages = true))
         }
 
         return newHomePageResponse(
@@ -205,6 +205,9 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             putLong(progressKey, System.currentTimeMillis())
             apply()
         }
+        
+        // Notify the app to refresh the main page
+        HomeViewModel.updateHomePageEvent.invoke()
         Log.d("IPTV", "loadData » $loadData")
 
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
