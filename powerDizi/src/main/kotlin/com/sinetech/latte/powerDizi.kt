@@ -394,16 +394,19 @@ class IptvPlaylistParser {
 
     private fun String.getAttributes(): Map<String, String> {
         val extInfRegex = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
-        val attributesString = replace(extInfRegex, "").replaceQuotesAndTrim().split(",").first()
+        val attributesString = replace(extInfRegex, "").replaceQuotesAndTrim()
+        val titleAndAttributes = attributesString.split(",", limit = 2)
         
         val attributes = mutableMapOf<String, String>()
-        val attrRegex = Regex("([\\w-]+)=\"([^\"]*)\"|([\\w-]+)=([^\"]+)")
-        
-        attrRegex.findAll(attributesString).forEach { matchResult ->
-            val (quotedKey, quotedValue, unquotedKey, unquotedValue) = matchResult.destructured
-            val key = quotedKey.takeIf { it.isNotEmpty() } ?: unquotedKey
-            val value = quotedValue.takeIf { it.isNotEmpty() } ?: unquotedValue
-            attributes[key] = value.replaceQuotesAndTrim()
+        if (titleAndAttributes.size > 1) {
+            val attrRegex = Regex("([\\w-]+)=\"([^\"]*)\"|([\\w-]+)=([^\"]+)")
+            
+            attrRegex.findAll(titleAndAttributes[0]).forEach { matchResult ->
+                val (quotedKey, quotedValue, unquotedKey, unquotedValue) = matchResult.destructured
+                val key = quotedKey.takeIf { it.isNotEmpty() } ?: unquotedKey
+                val value = quotedValue.takeIf { it.isNotEmpty() } ?: unquotedValue
+                attributes[key] = value.replaceQuotesAndTrim()
+            }
         }
 
         if (!attributes.containsKey("tvg-country")) {
@@ -411,6 +414,16 @@ class IptvPlaylistParser {
         }
         if (!attributes.containsKey("tvg-language")) {
             attributes["tvg-language"] = "TR/Altyazılı"
+        }
+        if (!attributes.containsKey("group-title")) {
+            val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
+            val match = episodeRegex.find(titleAndAttributes.last())
+            if (match != null) {
+                val (showName, _, _) = match.destructured
+                attributes["group-title"] = showName.trim()
+            } else {
+                attributes["group-title"] = "Diğer"
+            }
         }
 
         return attributes
