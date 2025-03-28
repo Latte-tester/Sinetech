@@ -50,7 +50,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val regularShows = mutableListOf<HomePageList>()
 
         // Group shows by watched status
-        processedItems.groupBy { it.attributes["group-title"] }.forEach { (title, shows) ->
+        processedItems.groupBy { it.attributes["group-title"] ?: "Uncategorized" }.forEach { (title, shows) ->
             val watchedShowsList = mutableListOf<SearchResponse>()
             val unwatchedShowsList = mutableListOf<SearchResponse>()
 
@@ -86,9 +86,9 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             }
 
             if (watchedShowsList.isNotEmpty()) {
-                watchedShows.add(HomePageList("$title - Devam Et", watchedShowsList, isHorizontalImages = true))
+                watchedShows.add(HomePageList("${title ?: "Diğer"} - Devam Et", watchedShowsList, isHorizontalImages = true))
             }
-            regularShows.add(HomePageList(title, unwatchedShowsList, isHorizontalImages = true))
+            regularShows.add(HomePageList(title ?: "Diğer", unwatchedShowsList, isHorizontalImages = true))
         }
 
         return newHomePageResponse(
