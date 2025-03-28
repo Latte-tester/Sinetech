@@ -86,7 +86,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             }
 
             if (watchedShowsList.isNotEmpty()) {
-                watchedShows.add(HomePageList("${title?.toString()?.trim() ?: "Diğer"} - İzlemeye devam ettikleriniz", watchedShowsList, isHorizontalImages = true))
+                watchedShows.add(HomePageList("${title?.toString()?.trim() ?: "Diğer"} - İzlemeye Devam Et", watchedShowsList, isHorizontalImages = true))
             }
             regularShows.add(HomePageList("${title?.toString()?.trim() ?: "Diğer"} adlı diziye ait bölümler", unwatchedShowsList, isHorizontalImages = true))
         }
