@@ -81,85 +81,190 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
 
     override suspend fun quickSearch(query: String): List<SearchResponse> = search(query)
 
+    private var cachedPlaylist: Playlist? = null
+    private suspend fun getPlaylist(): Playlist {
+    if (cachedPlaylist != null) {
+        Log.d("powerSinema", "Returning cached playlist")
+        return cachedPlaylist!!
+    }
+    Log.d("powerSinema", "Fetching and parsing playlist from $mainUrl")
+    return try {
+        val inputStream = app.get(mainUrl).body // .body KULLAN
+        val parsedPlaylist = IptvPlaylistParser().parseM3U(inputStream) // InputStream ile parse et
+        cachedPlaylist = parsedPlaylist // Önbelleğe al
+        Log.d("powerSinema", "Playlist fetched. Items: ${parsedPlaylist.items.size}")
+        parsedPlaylist
+    } catch (e: Exception) {
+        Log.e("powerSinema", "Failed to fetch/parse playlist", e)
+        cachedPlaylist = null // Hata durumunda önbelleği temizle
+        Playlist() // Boş liste döndür
+    }
+    }
+
+
     override suspend fun load(url: String): LoadResponse {
-        val watchKey = "watch_${url.hashCode()}"
-        val progressKey = "progress_${url.hashCode()}"
-        val isWatched = sharedPref?.getBoolean(watchKey, false) ?: false
-        val watchProgress = sharedPref?.getLong(progressKey, 0L) ?: 0L
-        val loadData = fetchDataFromUrlOrJson(url)
-        val nation:String = if (loadData.group == "NSFW") {
-            "⚠️🔞🔞🔞 » ${loadData.group} | ${loadData.nation} « 🔞🔞🔞⚠️"
-        } else {
-            "» ${loadData.group} | ${loadData.nation} «"
-        }
+    // url burada muhtemelen JSON verisidir
+    val loadData = fetchDataFromUrlOrJson(url) // JSON'ı parse et veya URL'den fallback yap
 
-        val kanallar        = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-        val recommendations = mutableListOf<LiveSearchResponse>()
+    // GERÇEK stream URL'sini kullanarak anahtarları oluştur
+    val actualStreamUrl = loadData.url
+    val watchKey = "watch_${actualStreamUrl.hashCode()}"
+    // val progressKey = "progress_${actualStreamUrl.hashCode()}" // Zaman damgası için (gerekirse)
 
-        for (kanal in kanallar.items) {
-            if (kanal.attributes["group-title"].toString() == loadData.group) {
-                val rcStreamUrl   = kanal.url.toString()
+    // İzleme durumunu burada, doğru anahtarla kontrol et
+    val isWatched = sharedPref?.getBoolean(watchKey, false) ?: false
+    // val watchTimestamp = sharedPref?.getLong(progressKey, 0L) ?: 0L // Zaman damgasını istersen alabilirsin
+
+    val nation: String = if (loadData.group == "NSFW") {
+        "⚠️🔞🔞🔞 » ${loadData.group} | ${loadData.nation} « 🔞🔞🔞⚠️"
+    } else {
+        "» ${loadData.group} | ${loadData.nation} «"
+    }
+
+    // --- Öneri Mantığı ---
+    // DİKKAT: Burası hala app.get().text kullanıyor, getPlaylist() ile düzeltilmeli!
+    val recommendations = mutableListOf<SearchResponse>() // MovieLoadResponse değil, SearchResponse olmalı
+    try {
+        val playlist = getPlaylist() // Önbellekten/yeniden çekilmiş listeyi al
+        for (kanal in playlist.items) { // Ayrıştırılmış öğeler üzerinde döngü
+            if (kanal.attributes["group-title"]?.toString() == loadData.group) {
+                val rcStreamUrl = kanal.url.toString()
+                // Kendisini önermemek için kontrol et
+                if (rcStreamUrl == actualStreamUrl) continue
+
                 val rcChannelName = kanal.title.toString()
-                if (rcChannelName == loadData.title) continue
+                val rcPosterUrl = kanal.attributes["tvg-logo"] ?: "" // Varsayılan boş string
+                val rcChGroup = kanal.attributes["group-title"] ?: "Diğer" // Varsayılan
+                val rcNation = kanal.attributes["tvg-country"] ?: "TR" // Varsayılan
 
-                val rcPosterUrl   = kanal.attributes["tvg-logo"].toString()
-                val rcChGroup     = kanal.attributes["group-title"].toString()
-                val rcNation      = kanal.attributes["tvg-country"].toString()
-
-                val rcWatchKey = "watch_${rcStreamUrl.hashCode()}"
-                val rcProgressKey = "progress_${rcStreamUrl.hashCode()}"
-                val rcIsWatched = sharedPref?.getBoolean(rcWatchKey, false) ?: false
-                val rcWatchProgress = sharedPref?.getLong(rcProgressKey, 0L) ?: 0L
-
-                recommendations.add(newLiveSearchResponse(
+                // Öneriler için izleme durumu genellikle gerekmez, JSON verisini minimum tutalım
+                recommendations.add(newMovieSearchResponse( // newLiveSearchResponse yerine newMovieSearchResponse
                     rcChannelName,
-                    LoadData(rcStreamUrl, rcChannelName, rcPosterUrl, rcChGroup, rcNation, rcIsWatched, rcWatchProgress).toJson(),
+                    // Öneri için LoadData'nın basitleştirilmiş JSON'unu geç
+                    LoadData(rcStreamUrl, rcChannelName, rcPosterUrl, rcChGroup, rcNation).toJson(),
                     type = TvType.Movie
                 ) {
                     this.posterUrl = rcPosterUrl
-                    this.lang = rcNation
+                    // this.lang = rcNation // İsteğe bağlı
                 })
-
             }
         }
+    } catch (e: Exception) {
+        Log.e("powerSinema", "Error fetching recommendations", e)
+        // Hata durumunda öneriler boş kalır
+    }
+    // --- Öneri Mantığı Sonu ---
 
-        return newMovieLoadResponse(loadData.title, url, TvType.Movie, loadData.url) {
-            this.posterUrl = loadData.poster
-            this.plot = nation
-            this.tags = listOf(loadData.group, loadData.nation)
-            this.recommendations = recommendations
-            this.rating = if (isWatched) 5 else 0
-            this.duration = if (watchProgress > 0) (watchProgress / 1000).toInt() else null
-            this.watchProgress = watchProgress
+
+    // loadData.url yerine actualStreamUrl kullanıldı
+    return newMovieLoadResponse(loadData.title, actualStreamUrl, TvType.Movie, actualStreamUrl) {
+        this.posterUrl = loadData.poster
+        this.plot = nation
+        this.tags = listOfNotNull(loadData.group, loadData.nation.takeIf { it.isNotBlank() && it != "TR"}) // Daha temiz tag'ler
+        this.recommendations = recommendations // Oluşturulan önerileri ata
+        this.rating = if (isWatched) 5 else null // İzlenmemişse null daha iyi olabilir
+        // this.duration = null // IPTV için süre bilinmiyor, bu yüzden ayarlamıyoruz
+        // this.watchProgress = watchProgress // BU SATIRI SİL
+    }
+}
+
+// Diğer fonksiyonlardaki (getMainPage, search, loadLinks, fetchDataFromUrlOrJson)
+// TÜM app.get(mainUrl).text çağrılarını getPlaylist() kullanacak şekilde güncellemeyi unutmayın!
+
+// Örneğin fetchDataFromUrlOrJson içindeki fallback kısmı:
+private suspend fun fetchDataFromUrlOrJson(data: String): LoadData {
+    try {
+        // Önce JSON olarak ayrıştırmayı dene
+        return parseJson<LoadData>(data)
+    } catch (e: Exception) {
+        // JSON değilse, ham URL varsay (fallback)
+        Log.w("powerSinema", "fetchDataFromUrlOrJson treating as URL: $data")
+        val playlist = getPlaylist() // Önbelleğe alınmış/yeni listeyi al
+        val kanal = playlist.items.firstOrNull { it.url == data }
+            ?: throw RuntimeException("URL $data playlist içinde bulunamadı") // Bulamazsa hata fırlat
+
+        val streamurl = kanal.url.toString()
+        val channelname = kanal.title.toString()
+        val posterurl = kanal.attributes["tvg-logo"] ?: ""
+        val chGroup = kanal.attributes["group-title"] ?: "Diğer"
+        val nation = kanal.attributes["tvg-country"] ?: "TR"
+
+        // BU URL için izleme durumunu al
+        val watchKey = "watch_${streamurl.hashCode()}"
+        val progressKey = "progress_${streamurl.hashCode()}"
+        val isWatched = sharedPref?.getBoolean(watchKey, false) ?: false
+        val watchProgress = sharedPref?.getLong(progressKey, 0L) ?: 0L // Zaman damgası
+
+        // LoadData'ya izleme durumunu ekle (eğer LoadData içinde tutuluyorsa)
+        return LoadData(streamurl, channelname, posterurl, chGroup, nation, isWatched, watchProgress)
+    }
+}
+
+// LoadData sınıfı aynı kalabilir veya isWatched/watchProgress kaldırılabilir
+// Eğer sadece load içinde kullanılacaksa kaldırılabilirler. Şimdilik kalsın.
+data class LoadData(
+    val url: String,
+    val title: String,
+    val poster: String,
+    val group: String,
+    val nation: String,
+    val isWatched: Boolean = false,
+    val watchProgress: Long = 0L // Zaman damgası
+)
+
+// loadLinks içinde de app.get().text yerine getPlaylist() kullanın (sadece header gerekiyorsa)
+// ve SharedPreferences güncellemesini loadData.url ile yapın.
+override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
+    val loadData = try {
+        parseJson<LoadData>(data)
+    } catch (e: Exception) {
+        Log.e("powerSinema", "Failed to parse LoadData JSON in loadLinks", e)
+        return false // JSON parse edilemezse başarısız ol
+    }
+    Log.d("IPTV", "loadLinks loadData » $loadData")
+
+    // Header'lar gerçekten gerekliyse playlist'i al, yoksa boş bırak
+    var headers = emptyMap<String, String>()
+    var referrer = ""
+    try {
+        val playlist = getPlaylist() // Önbelleğe alınmış listeyi kullan
+        val kanal = playlist.items.firstOrNull { it.url == loadData.url }
+        if (kanal != null) {
+            headers = kanal.headers
+            referrer = kanal.headers["referrer"] ?: ""
+            Log.d("powerSinema", "Found channel in playlist for headers: ${kanal.title}")
+        } else {
+            Log.w("powerSinema", "Channel not found in playlist for headers: ${loadData.url}")
         }
+    } catch (e: Exception) {
+        Log.e("powerSinema", "Error getting headers from playlist in loadLinks", e)
     }
 
-    override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
-        val loadData = fetchDataFromUrlOrJson(data)
-        Log.d("IPTV", "loadData » $loadData")
 
-        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-        val kanal    = kanallar.items.first { it.url == loadData.url }
-        Log.d("IPTV", "kanal » $kanal")
+    // İzleme durumunu loadData.url kullanarak güncelle
+    val watchKey = "watch_${loadData.url.hashCode()}"
+    // val progressKey = "progress_${loadData.url.hashCode()}" // Zaman damgası için
+    sharedPref?.edit()?.apply {
+        putBoolean(watchKey, true)
+        // putLong(progressKey, System.currentTimeMillis()) // Zaman damgasını kaydet
+        apply()
+    }
 
-        val watchKey = "watch_${data.hashCode()}"
-        val progressKey = "progress_${data.hashCode()}"
-        sharedPref?.edit()?.putBoolean(watchKey, true)?.apply()
 
-        callback.invoke(
-            ExtractorLink(
-                source  = this.name,
-                name    = this.name,
-                url     = loadData.url,
-                headers = kanal.headers,
-                referer = kanal.headers["referrer"] ?: "",
-                quality = Qualities.Unknown.value,
-                isM3u8  = true
-            )
+    callback.invoke(
+        ExtractorLink(
+            source  = this.name,
+            name    = loadData.title, // Film başlığını kullan
+            url     = loadData.url,
+            headers = headers, // Bulunan header'ları kullan
+            referer = referrer, // Bulunan referrer'ı kullan
+            quality = Qualities.Unknown.value,
+            isM3u8  = loadData.url.contains(".m3u8", ignoreCase = true) // Basit kontrol
         )
+    )
 
-        return true
-    }
+    return true
+}
 
     data class LoadData(val url: String, val title: String, val poster: String, val group: String, val nation: String, val isWatched: Boolean = false, val watchProgress: Long = 0L)
 
