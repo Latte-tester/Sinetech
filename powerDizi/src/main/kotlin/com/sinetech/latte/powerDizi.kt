@@ -45,54 +45,57 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             }
         }
 
-        // Create a list for watched shows
-        val watchedShows = mutableListOf<HomePageList>()
-        val regularShows = mutableListOf<HomePageList>()
+        val groupedShows = mutableMapOf<String, Pair<MutableList<SearchResponse>, MutableList<SearchResponse>>>()
 
-        // Group shows by watched status
-        processedItems.groupBy { it.attributes["group-title"]?.toString()?.trim() ?: "Uncategorized" }.forEach { (title, shows) ->
-            val watchedShowsList = mutableListOf<SearchResponse>()
-            val unwatchedShowsList = mutableListOf<SearchResponse>()
+        processedItems.forEach { kanal ->
+            val streamurl = kanal.url.toString()
+            val channelname = kanal.title.toString()
+            val posterurl = kanal.attributes["tvg-logo"].toString()
+            val chGroup = kanal.attributes["group-title"]?.toString()?.trim() ?: "Diğer"
+            val nation = kanal.attributes["tvg-country"].toString()
+            val watchKey = "watch_${streamurl.hashCode()}"
+            val progressKey = "progress_${streamurl.hashCode()}"
+            val isWatched = sharedPref?.getBoolean(watchKey, false) ?: false
+            val watchProgress = sharedPref?.getLong(progressKey, 0L) ?: 0L
 
-            shows.forEach { kanal ->
-                val streamurl = kanal.url.toString()
-                val channelname = kanal.title.toString()
-                val posterurl = kanal.attributes["tvg-logo"].toString()
-                val chGroup = kanal.attributes["group-title"].toString()
-                val nation = kanal.attributes["tvg-country"].toString()
-                val watchKey = "watch_${streamurl.hashCode()}"
-                val progressKey = "progress_${streamurl.hashCode()}"
-                val isWatched = sharedPref?.getBoolean(watchKey, false) ?: false
-                val watchProgress = sharedPref?.getLong(progressKey, 0L) ?: 0L
-
-                val searchResponse = newLiveSearchResponse(
-                    channelname,
-                    LoadData(streamurl, channelname, posterurl, chGroup, nation, kanal.season, kanal.episode).toJson(),
-                    type = TvType.TvSeries
-                ) {
-                    this.posterUrl = posterurl
-                    this.lang = nation
-                    if (isWatched) {
-                        this.quality = SearchQuality.HD
-                        this.posterHeaders = mapOf("watched" to "true")
-                    }
-                }
-
-                if (isWatched && watchProgress > 0) {
-                    watchedShowsList.add(searchResponse)
-                } else {
-                    unwatchedShowsList.add(searchResponse)
+            val searchResponse = newLiveSearchResponse(
+                channelname,
+                LoadData(streamurl, channelname, posterurl, chGroup, nation, kanal.season, kanal.episode).toJson(),
+                type = TvType.TvSeries
+            ) {
+                this.posterUrl = posterurl
+                this.lang = nation
+                if (isWatched) {
+                    this.quality = SearchQuality.HD
+                    this.posterHeaders = mapOf("watched" to "true")
                 }
             }
 
-            if (watchedShowsList.isNotEmpty()) {
-                watchedShows.add(HomePageList("${title?.toString()?.trim() ?: "Diğer"} - İzlemeye Devam Et", watchedShowsList, isHorizontalImages = true))
+            if (!groupedShows.containsKey(chGroup)) {
+                groupedShows[chGroup] = Pair(mutableListOf(), mutableListOf())
             }
-            regularShows.add(HomePageList("${title?.toString()?.trim() ?: "Diğer"} adlı diziye ait bölümler", unwatchedShowsList, isHorizontalImages = true))
+
+            if (isWatched && watchProgress > 0) {
+                groupedShows[chGroup]?.first?.add(searchResponse)
+            } else {
+                groupedShows[chGroup]?.second?.add(searchResponse)
+            }
+        }
+
+        val homePageLists = mutableListOf<HomePageList>()
+
+        groupedShows.forEach { (group, shows) ->
+            val (watchedShows, unwatchedShows) = shows
+            if (watchedShows.isNotEmpty()) {
+                homePageLists.add(HomePageList("$group - İzlemeye Devam Et", watchedShows, isHorizontalImages = true))
+            }
+            if (unwatchedShows.isNotEmpty()) {
+                homePageLists.add(HomePageList(group, unwatchedShows, isHorizontalImages = true))
+            }
         }
 
         return newHomePageResponse(
-            watchedShows + regularShows,
+            homePageLists,
             hasNext = false
         )
     }
