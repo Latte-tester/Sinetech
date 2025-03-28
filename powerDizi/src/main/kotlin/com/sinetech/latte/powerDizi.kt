@@ -100,10 +100,10 @@ class powerDizi : MainAPI() {
                 val rcChGroup     = kanal.attributes["group-title"].toString()
                 val rcNation      = kanal.attributes["tvg-country"].toString()
 
-                recommendations.add(newMovieSearchResponse(
-                    rcChGroup,
+                recommendations.add(newLiveSearchResponse(
+                    rcChannelName,
                     LoadData(rcStreamUrl, rcChannelName, rcPosterUrl, rcChGroup, rcNation).toJson(),
-                    TvType.TvSeries
+                    type = TvType.TvSeries
                 ) {
                     this.posterUrl = rcPosterUrl
                     this.lang = rcNation
