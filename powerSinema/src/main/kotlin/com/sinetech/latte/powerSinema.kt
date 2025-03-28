@@ -18,7 +18,7 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
     override val supportedTypes       = setOf(TvType.Movie)
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).body)
+        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
 
         return newHomePageResponse(
             kanallar.items.groupBy { it.attributes["group-title"] }.map { group ->
@@ -53,7 +53,7 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).body)
+        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
 
         return kanallar.items.filter { it.title.toString().lowercase().contains(query.lowercase()) }.map { kanal ->
             val streamurl   = kanal.url.toString()
@@ -93,7 +93,7 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
             "» ${loadData.group} | ${loadData.nation} «"
         }
 
-        val kanallar        = IptvPlaylistParser().parseM3U(app.get(mainUrl).body)
+        val kanallar        = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
         val recommendations = mutableListOf<LiveSearchResponse>()
 
         for (kanal in kanallar.items) {
@@ -138,7 +138,7 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
         val loadData = fetchDataFromUrlOrJson(data)
         Log.d("IPTV", "loadData » $loadData")
 
-        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).body)
+        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
         val kanal    = kanallar.items.first { it.url == loadData.url }
         Log.d("IPTV", "kanal » $kanal")
 
@@ -167,7 +167,7 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
         if (data.startsWith("{")) {
             return parseJson<LoadData>(data)
         } else {
-            val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).body)
+            val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
             val kanal    = kanallar.items.first { it.url == data }
 
             val streamurl   = kanal.url.toString()
