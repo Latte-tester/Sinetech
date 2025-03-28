@@ -100,10 +100,10 @@ class powerDizi : MainAPI() {
                 val rcChGroup     = kanal.attributes["group-title"].toString()
                 val rcNation      = kanal.attributes["tvg-country"].toString()
 
-                recommendations.add(newLiveSearchResponse(
-                    rcChannelName,
+                recommendations.add(newMovieSearchResponse(
+                    rcChGroup,
                     LoadData(rcStreamUrl, rcChannelName, rcPosterUrl, rcChGroup, rcNation).toJson(),
-                    type = TvType.TvSeries
+                    TvType.TvSeries
                 ) {
                     this.posterUrl = rcPosterUrl
                     this.lang = rcNation
@@ -111,11 +111,11 @@ class powerDizi : MainAPI() {
             }
         }
 
-        return newLiveStreamLoadResponse(
+        return newTvSeriesLoadResponse(
             loadData.title,
-            loadData.url,
             url,
-            TvType.TvSeries
+            TvType.TvSeries,
+            episodes
         ) {
             this.posterUrl = loadData.poster
             this.plot = nation
