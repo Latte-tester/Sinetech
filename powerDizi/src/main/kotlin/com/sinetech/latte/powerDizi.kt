@@ -315,18 +315,26 @@ class IptvPlaylistParser {
         var currentIndex = 0
 
         var line: String? = reader.readLine()
+        val episodeRegex = Regex("(.*?)-(\\d+)\.\s*Sezon\s*(\\d+)\.\s*Bölüm.*")
 
         while (line != null) {
             if (line.isNotEmpty()) {
                 if (line.startsWith(EXT_INF)) {
-                    val title      = line.getTitle()
+                    val title = line.getTitle()
                     val attributes = line.getAttributes()
+                    val match = title?.let { episodeRegex.find(it) }
+                    val (season, episode) = if (match != null) {
+                        val (_, s, e) = match.destructured
+                        s.toInt() to e.toInt()
+                    } else {
+                        1 to 0
+                    }
 
-                    playlistItems.add(PlaylistItem(title, attributes))
+                    playlistItems.add(PlaylistItem(title, attributes, season = season, episode = episode))
                 } else if (line.startsWith(EXT_VLC_OPT)) {
-                    val item      = playlistItems[currentIndex]
+                    val item = playlistItems[currentIndex]
                     val userAgent = item.userAgent ?: line.getTagValue("http-user-agent")?.toString()
-                    val referrer  = line.getTagValue("http-referrer")?.toString()
+                    val referrer = line.getTagValue("http-referrer")?.toString()
 
                     val headers = mutableMapOf<String, String>()
 
@@ -340,19 +348,19 @@ class IptvPlaylistParser {
 
                     playlistItems[currentIndex] = item.copy(
                         userAgent = userAgent,
-                        headers   = headers
+                        headers = headers
                     )
                 } else {
                     if (!line.startsWith("#")) {
-                        val item       = playlistItems[currentIndex]
-                        val url        = line.getUrl()
-                        val userAgent  = line.getUrlParameter("user-agent")
-                        val referrer   = line.getUrlParameter("referer")
+                        val item = playlistItems[currentIndex]
+                        val url = line.getUrl()
+                        val userAgent = line.getUrlParameter("user-agent")
+                        val referrer = line.getUrlParameter("referer")
                         val urlHeaders = if (referrer != null) {item.headers + mapOf("referrer" to referrer)} else item.headers
 
                         playlistItems[currentIndex] = item.copy(
-                            url       = url,
-                            headers   = item.headers + urlHeaders,
+                            url = url,
+                            headers = item.headers + urlHeaders,
                             userAgent = userAgent ?: item.userAgent
                         )
                         currentIndex++
