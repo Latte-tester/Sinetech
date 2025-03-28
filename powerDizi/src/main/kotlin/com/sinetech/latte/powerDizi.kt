@@ -29,10 +29,10 @@ class powerDizi : MainAPI() {
                     val chGroup     = kanal.attributes["group-title"].toString()
                     val nation      = kanal.attributes["tvg-country"].toString()
 
-                    newMovieSearchResponse(
-                        chGroup,
+                    newLiveSearchResponse(
+                        channelname,
                         LoadData(streamurl, channelname, posterurl, chGroup, nation).toJson(),
-                        TvType.TvSeries
+                        type = TvType.TvSeries
                     ) {
                         this.posterUrl = posterurl
                         this.lang = nation
@@ -56,10 +56,10 @@ class powerDizi : MainAPI() {
             val chGroup     = kanal.attributes["group-title"].toString()
             val nation      = kanal.attributes["tvg-country"].toString()
 
-            newMovieSearchResponse(
-                chGroup,
+            newLiveSearchResponse(
+                channelname,
                 LoadData(streamurl, channelname, posterurl, chGroup, nation).toJson(),
-                TvType.TvSeries
+                type = TvType.TvSeries
             ) {
                 this.posterUrl = posterurl
                 this.lang = nation
@@ -100,10 +100,10 @@ class powerDizi : MainAPI() {
                 val rcChGroup     = kanal.attributes["group-title"].toString()
                 val rcNation      = kanal.attributes["tvg-country"].toString()
 
-                recommendations.add(newMovieSearchResponse(
-                    rcChGroup,
+                recommendations.add(newLiveSearchResponse(
+                    rcChannelName,
                     LoadData(rcStreamUrl, rcChannelName, rcPosterUrl, rcChGroup, rcNation).toJson(),
-                    TvType.TvSeries
+                    type = TvType.TvSeries
                 ) {
                     this.posterUrl = rcPosterUrl
                     this.lang = rcNation
@@ -111,11 +111,11 @@ class powerDizi : MainAPI() {
             }
         }
 
-        return newTvSeriesLoadResponse(
+        return newLiveStreamLoadResponse(
             loadData.title,
+            loadData.url,
             url,
-            TvType.TvSeries,
-            episodes
+            TvType.TvSeries
         ) {
             this.posterUrl = loadData.poster
             this.plot = nation
