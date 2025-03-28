@@ -206,12 +206,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             apply()
         }
         
-        // Notify the app to refresh the main page
-        MainActivity.activity?.apply {
-            runOnUiThread {
-                MainActivity.activity?.recreate()
-            }
-        }
+        // SharedPreferences changes will trigger a refresh automatically
         Log.d("IPTV", "loadData » $loadData")
 
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
