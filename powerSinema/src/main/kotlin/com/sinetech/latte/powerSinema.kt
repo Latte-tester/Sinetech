@@ -146,7 +146,7 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
         return true
     }
 
-    data class LoadData(val url: String, val title: String, val poster: String, val group: String, val nation: String)
+    data class LoadData(val url: String, val title: String, val poster: String, val group: String, val nation: String, val isWatched: Boolean = false, val watchProgress: Long = 0)
 
     private suspend fun fetchDataFromUrlOrJson(data: String): LoadData {
         if (data.startsWith("{")) {
@@ -160,8 +160,12 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
             val posterurl   = kanal.attributes["tvg-logo"].toString()
             val chGroup     = kanal.attributes["group-title"].toString()
             val nation      = kanal.attributes["tvg-country"].toString()
+            val watchKey = "watch_${data.hashCode()}"
+            val progressKey = "progress_${data.hashCode()}"
+            val isWatched = sharedPref?.getBoolean(watchKey, false) ?: false
+            val watchProgress = sharedPref?.getLong(progressKey, 0L) ?: 0L
 
-            return LoadData(streamurl, channelname, posterurl, chGroup, nation)
+            return LoadData(streamurl, channelname, posterurl, chGroup, nation, isWatched, watchProgress)
         }
     }
 }

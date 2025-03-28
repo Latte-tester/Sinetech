@@ -7,6 +7,8 @@ import android.content.Context
 @CloudstreamPlugin
 class powerSinemaPlugin: Plugin() {
     override fun load(context: Context) {
-        registerMainAPI(powerSinema())
+        // Get SharedPreferences instance
+        val sharedPreferences = context.getSharedPreferences("power_sinema_prefs", Context.MODE_PRIVATE)
+        registerMainAPI(powerSinema(sharedPreferences))
     }
 }
