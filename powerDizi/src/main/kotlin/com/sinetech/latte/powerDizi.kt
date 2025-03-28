@@ -86,7 +86,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             }
 
             if (watchedShowsList.isNotEmpty()) {
-                watchedShows.add(HomePageList("${title?.toString()?.trim() ?: "Diğer"} - Devam Et", watchedShowsList, isHorizontalImages = true))
+                watchedShows.add(HomePageList("${title?.toString()?.trim() ?: "Diğer"} - İzlemeye devam ettikleriniz", watchedShowsList, isHorizontalImages = true))
             }
             regularShows.add(HomePageList("${title?.toString()?.trim() ?: "Diğer"} adlı diziye ait bölümler", unwatchedShowsList, isHorizontalImages = true))
         }
@@ -375,17 +375,17 @@ class IptvPlaylistParser {
     }
 
     private fun String.getAttributes(): Map<String, String> {
-        val extInfRegex      = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
+        val extInfRegex = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
         val attributesString = replace(extInfRegex, "").replaceQuotesAndTrim().split(",").first()
         
-        val attributes = attributesString
-            .split(Regex("\\s"))
-            .mapNotNull {
-                val pair = it.split("=")
-                if (pair.size == 2) pair.first() to pair.last().replaceQuotesAndTrim() else null
-            }
-            .toMap()
-            .toMutableMap()
+        val attributes = mutableMapOf<String, String>()
+        val attrRegex = Regex("([\\w-]+)=\"([^\"]*)\"|([\\w-]+)=([^\"]+)")
+        
+        attrRegex.findAll(attributesString).forEach { matchResult ->
+            val (quotedKey, quotedValue, unquotedKey, unquotedValue) = matchResult.destructured
+            val key = quotedKey.takeIf { it.isNotEmpty() } ?: unquotedKey
+            val value = quotedValue.takeIf { it.isNotEmpty() } ?: unquotedValue
+            attributes[key] = value.replaceQuotesAndTrim()
 
         if (!attributes.containsKey("tvg-country")) {
             attributes["tvg-country"] = "TR/Altyazılı"
