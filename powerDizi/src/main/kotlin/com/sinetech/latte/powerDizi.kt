@@ -19,8 +19,33 @@ class powerDizi : MainAPI() {
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
 
+        // Parse episode information from titles
+        val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
+        val processedItems = kanallar.items.map { item ->
+            val title = item.title.toString()
+            val match = episodeRegex.find(title)
+            if (match != null) {
+                val (showName, season, episode) = match.destructured
+                item.copy(
+                    season = season.toInt(),
+                    episode = episode.toInt(),
+                    attributes = item.attributes.toMutableMap().apply {
+                        if (!containsKey("tvg-country")) { put("tvg-country", "TR") }
+                        if (!containsKey("tvg-language")) { put("tvg-language", "TR;EN") }
+                    }
+                )
+            } else {
+                item.copy(
+                    attributes = item.attributes.toMutableMap().apply {
+                        if (!containsKey("tvg-country")) { put("tvg-country", "TR") }
+                        if (!containsKey("tvg-language")) { put("tvg-language", "TR;EN") }
+                    }
+                )
+            }
+        }
+
         return newHomePageResponse(
-            kanallar.items.groupBy { it.attributes["group-title"] }.map { group ->
+            processedItems.groupBy { it.attributes["group-title"] }.map { group ->
                 val title = group.key ?: ""
                 val show  = group.value.map { kanal ->
                     val streamurl   = kanal.url.toString()
@@ -31,7 +56,7 @@ class powerDizi : MainAPI() {
 
                     newLiveSearchResponse(
                         channelname,
-                        LoadData(streamurl, channelname, posterurl, chGroup, nation).toJson(),
+                        LoadData(streamurl, channelname, posterurl, chGroup, nation, kanal.season, kanal.episode).toJson(),
                         type = TvType.TvSeries
                     ) {
                         this.posterUrl = posterurl
@@ -48,6 +73,7 @@ class powerDizi : MainAPI() {
 
     override suspend fun search(query: String): List<SearchResponse> {
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
+        val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
 
         return kanallar.items.filter { it.title.toString().lowercase().contains(query.lowercase()) }.map { kanal ->
             val streamurl   = kanal.url.toString()
@@ -58,7 +84,16 @@ class powerDizi : MainAPI() {
 
             newLiveSearchResponse(
                 channelname,
-                LoadData(streamurl, channelname, posterurl, chGroup, nation).toJson(),
+                LoadData(streamurl, channelname, posterurl, chGroup, nation, 
+                    episodeRegex.find(channelname)?.let { match ->
+                        val (_, season, episode) = match.destructured
+                        season.toInt() to episode.toInt()
+                    }?.first ?: 1,
+                    episodeRegex.find(channelname)?.let { match ->
+                        val (_, season, episode) = match.destructured
+                        season.toInt() to episode.toInt()
+                    }?.second ?: 0
+                ).toJson(),
                 type = TvType.TvSeries
             ) {
                 this.posterUrl = posterurl
@@ -78,49 +113,40 @@ class powerDizi : MainAPI() {
             "» ${loadData.group} | ${loadData.nation} «"
         }
 
-        val kanallar        = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-        val recommendations = mutableListOf<LiveSearchResponse>()
-        val episodes        = mutableListOf<Episode>()
-
-        for (kanal in kanallar.items) {
-            if (kanal.attributes["group-title"].toString() == loadData.group) {
-                val rcStreamUrl   = kanal.url.toString()
-                val rcChannelName = kanal.title.toString()
-                if (rcChannelName == loadData.title) {
-                    episodes.add(Episode(
-                        rcStreamUrl,
-                        rcChannelName,
-                        season = 1,
-                        episode = episodes.size + 1
-                    ))
-                    continue
-                }
-
-                val rcPosterUrl   = kanal.attributes["tvg-logo"].toString()
-                val rcChGroup     = kanal.attributes["group-title"].toString()
-                val rcNation      = kanal.attributes["tvg-country"].toString()
-
-                recommendations.add(newLiveSearchResponse(
-                    rcChannelName,
-                    LoadData(rcStreamUrl, rcChannelName, rcPosterUrl, rcChGroup, rcNation).toJson(),
-                    type = TvType.TvSeries
-                ) {
-                    this.posterUrl = rcPosterUrl
-                    this.lang = rcNation
-                })
+        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
+        val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
+        val groupEpisodes = kanallar.items
+            .filter { it.attributes["group-title"].toString() == loadData.group }
+            .mapNotNull { kanal ->
+                val title = kanal.title.toString()
+                val match = episodeRegex.find(title)
+                if (match != null) {
+                    val (_, season, episode) = match.destructured
+                    Episode(
+                        episode = episode.toInt(),
+                        season = season.toInt(),
+                        data = LoadData(
+                            kanal.url.toString(),
+                            title,
+                            kanal.attributes["tvg-logo"].toString(),
+                            kanal.attributes["group-title"].toString(),
+                            kanal.attributes["tvg-country"]?.toString() ?: "TR",
+                            season.toInt(),
+                            episode.toInt()
+                        ).toJson()
+                    )
+                } else null
             }
-        }
 
         return newTvSeriesLoadResponse(
             loadData.title,
             url,
             TvType.TvSeries,
-            episodes
+            groupEpisodes
         ) {
             this.posterUrl = loadData.poster
             this.plot = nation
             this.tags = listOf(loadData.group, loadData.nation)
-            this.recommendations = recommendations
         }
     }
 
@@ -135,7 +161,7 @@ class powerDizi : MainAPI() {
         callback.invoke(
             ExtractorLink(
                 source  = this.name,
-                name    = this.name,
+                name    = "${loadData.title} (S${loadData.season}:E${loadData.episode})",
                 url     = loadData.url,
                 headers = kanal.headers,
                 referer = kanal.headers["referrer"] ?: "",
@@ -147,7 +173,16 @@ class powerDizi : MainAPI() {
         return true
     }
 
-    data class LoadData(val url: String, val title: String, val poster: String, val group: String, val nation: String)
+    data class LoadData(
+    val url: String,
+    val title: String,
+    val poster: String,
+    val group: String,
+    val nation: String,
+    val season: Int = 1,
+    val episode: Int = 0,
+    val isWatched: Boolean = false
+)
 
     private suspend fun fetchDataFromUrlOrJson(data: String): LoadData {
         if (data.startsWith("{")) {
@@ -176,7 +211,9 @@ data class PlaylistItem(
     val attributes: Map<String, String> = emptyMap(),
     val headers: Map<String, String>    = emptyMap(),
     val url: String?                    = null,
-    val userAgent: String?              = null
+    val userAgent: String?              = null,
+    val season: Int                     = 1,
+    val episode: Int                    = 0
 )
 
 class IptvPlaylistParser {
@@ -343,14 +380,25 @@ class IptvPlaylistParser {
     private fun String.getAttributes(): Map<String, String> {
         val extInfRegex      = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
         val attributesString = replace(extInfRegex, "").replaceQuotesAndTrim().split(",").first()
-
-        return attributesString
+        
+        val attributes = attributesString
             .split(Regex("\\s"))
             .mapNotNull {
                 val pair = it.split("=")
                 if (pair.size == 2) pair.first() to pair.last().replaceQuotesAndTrim() else null
             }
             .toMap()
+            .toMutableMap()
+
+        // Set default values for missing attributes
+        if (!attributes.containsKey("tvg-country")) {
+            attributes["tvg-country"] = "TR"
+        }
+        if (!attributes.containsKey("tvg-language")) {
+            attributes["tvg-language"] = "TR;EN"
+        }
+
+        return attributes
     }
 
     /**
