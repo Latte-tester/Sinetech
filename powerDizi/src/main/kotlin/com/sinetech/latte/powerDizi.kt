@@ -417,15 +417,8 @@ class IptvPlaylistParser {
         return attributes
     }
 
-    fun String.getTagValue(key: String): String? {
+    private fun String.getTagValue(key: String): String? {
         val keyRegex = Regex("$key=(.*)", RegexOption.IGNORE_CASE)
-
-        return keyRegex.find(this)?.groups?.get(1)?.value?.replaceQuotesAndTrim()
-    }
-
-    fun String.getTagValue(key: String): String? {
-        val keyRegex = Regex("$key=(.*)", RegexOption.IGNORE_CASE)
-
         return keyRegex.find(this)?.groups?.get(1)?.value?.replaceQuotesAndTrim()
     }
 
