@@ -1,7 +1,7 @@
 version = 2
 
 cloudstream {
-    authors     = listOf("GitLatte", "patr0nq")
+    authors     = listOf("GitLatte", "patr0nq", "keyiflerolsun")
     language    = "tr"
     description = "powerboard`un sinema arşivi"
 

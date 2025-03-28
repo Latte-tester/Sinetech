@@ -30,9 +30,14 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
                     val chGroup     = kanal.attributes["group-title"].toString()
                     val nation      = kanal.attributes["tvg-country"].toString()
 
+                    val watchKey = "watch_${streamurl.hashCode()}"
+                    val progressKey = "progress_${streamurl.hashCode()}"
+                    val isWatched = sharedPref?.getBoolean(watchKey, false) ?: false
+                    val watchProgress = sharedPref?.getLong(progressKey, 0L) ?: 0L
+
                     newLiveSearchResponse(
                         channelname,
-                        LoadData(streamurl, channelname, posterurl, chGroup, nation).toJson(),
+                        LoadData(streamurl, channelname, posterurl, chGroup, nation, isWatched, watchProgress).toJson(),
                         type = TvType.Movie
                     ) {
                         this.posterUrl = posterurl
@@ -57,9 +62,14 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
             val chGroup     = kanal.attributes["group-title"].toString()
             val nation      = kanal.attributes["tvg-country"].toString()
 
+            val watchKey = "watch_${streamurl.hashCode()}"
+            val progressKey = "progress_${streamurl.hashCode()}"
+            val isWatched = sharedPref?.getBoolean(watchKey, false) ?: false
+            val watchProgress = sharedPref?.getLong(progressKey, 0L) ?: 0L
+
             newLiveSearchResponse(
                 channelname,
-                LoadData(streamurl, channelname, posterurl, chGroup, nation).toJson(),
+                LoadData(streamurl, channelname, posterurl, chGroup, nation, isWatched, watchProgress).toJson(),
                 type = TvType.Movie
             ) {
                 this.posterUrl = posterurl
@@ -96,9 +106,14 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
                 val rcChGroup     = kanal.attributes["group-title"].toString()
                 val rcNation      = kanal.attributes["tvg-country"].toString()
 
+                val rcWatchKey = "watch_${rcStreamUrl.hashCode()}"
+                val rcProgressKey = "progress_${rcStreamUrl.hashCode()}"
+                val rcIsWatched = sharedPref?.getBoolean(rcWatchKey, false) ?: false
+                val rcWatchProgress = sharedPref?.getLong(rcProgressKey, 0L) ?: 0L
+
                 recommendations.add(newLiveSearchResponse(
                     rcChannelName,
-                    LoadData(rcStreamUrl, rcChannelName, rcPosterUrl, rcChGroup, rcNation).toJson(),
+                    LoadData(rcStreamUrl, rcChannelName, rcPosterUrl, rcChGroup, rcNation, rcIsWatched, rcWatchProgress).toJson(),
                     type = TvType.Movie
                 ) {
                     this.posterUrl = rcPosterUrl
