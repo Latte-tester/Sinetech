@@ -1,13 +1,14 @@
 package com.sinetech.latte
 
 import android.util.Log
+import android.content.SharedPreferences
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import java.io.InputStream
 
-class powerSinema : MainAPI() {
+class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
     override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/patr0n/site/lists/power-sinema.m3u"
     override var name                 = "powerSinema"
     override val hasMainPage          = true
@@ -71,6 +72,10 @@ class powerSinema : MainAPI() {
     override suspend fun quickSearch(query: String): List<SearchResponse> = search(query)
 
     override suspend fun load(url: String): LoadResponse {
+        val watchKey = "watch_${url.hashCode()}"
+        val progressKey = "progress_${url.hashCode()}"
+        val isWatched = sharedPref?.getBoolean(watchKey, false) ?: false
+        val watchProgress = sharedPref?.getLong(progressKey, 0L) ?: 0L
         val loadData = fetchDataFromUrlOrJson(url)
         val nation:String = if (loadData.group == "NSFW") {
             "⚠️🔞🔞🔞 » ${loadData.group} | ${loadData.nation} « 🔞🔞🔞⚠️"
@@ -103,11 +108,14 @@ class powerSinema : MainAPI() {
             }
         }
 
-        return newLiveStreamLoadResponse(loadData.title, loadData.url, url) {
+        return newMovieLoadResponse(loadData.title, url, TvType.Movie, loadData.url) {
             this.posterUrl = loadData.poster
             this.plot = nation
             this.tags = listOf(loadData.group, loadData.nation)
             this.recommendations = recommendations
+            this.rating = if (isWatched) 5 else 0
+            this.duration = if (watchProgress > 0) (watchProgress / 1000).toInt() else null
+            this.watchProgress = watchProgress
         }
     }
 
@@ -118,6 +126,10 @@ class powerSinema : MainAPI() {
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
         val kanal    = kanallar.items.first { it.url == loadData.url }
         Log.d("IPTV", "kanal » $kanal")
+
+        val watchKey = "watch_${data.hashCode()}"
+        val progressKey = "progress_${data.hashCode()}"
+        sharedPref?.edit()?.putBoolean(watchKey, true)?.apply()
 
         callback.invoke(
             ExtractorLink(
@@ -246,60 +258,20 @@ class IptvPlaylistParser {
         return Playlist(playlistItems)
     }
 
-    /** Replace "" (quotes) from given string. */
     private fun String.replaceQuotesAndTrim(): String {
         return replace("\"", "").trim()
     }
 
-    /** Check if given content is valid M3U8 playlist. */
     private fun String.isExtendedM3u(): Boolean = startsWith(EXT_M3U)
 
-    /**
-     * Get title of media.
-     *
-     * Example:-
-     *
-     * Input:
-     * ```
-     * #EXTINF:-1 tvg-id="1234" group-title="Kids" tvg-logo="url/to/logo", Title
-     * ```
-     *
-     * Result: Title
-     */
     private fun String.getTitle(): String? {
         return split(",").lastOrNull()?.replaceQuotesAndTrim()
     }
 
-    /**
-     * Get media url.
-     *
-     * Example:-
-     *
-     * Input:
-     * ```
-     * https://example.com/sample.m3u8|user-agent="Custom"
-     * ```
-     *
-     * Result: https://example.com/sample.m3u8
-     */
     private fun String.getUrl(): String? {
         return split("|").firstOrNull()?.replaceQuotesAndTrim()
     }
 
-    /**
-     * Get url parameter with key.
-     *
-     * Example:-
-     *
-     * Input:
-     * ```
-     * http://192.54.104.122:8080/d/abcdef/video.mp4|User-Agent=Mozilla&Referer=CustomReferrer
-     * ```
-     *
-     * If given key is `user-agent`, then
-     *
-     * Result: Mozilla
-     */
     private fun String.getUrlParameter(key: String): String? {
         val urlRegex     = Regex("^(.*)\\|", RegexOption.IGNORE_CASE)
         val keyRegex     = Regex("$key=(\\w[^&]*)", RegexOption.IGNORE_CASE)
@@ -308,25 +280,6 @@ class IptvPlaylistParser {
         return keyRegex.find(paramsString)?.groups?.get(1)?.value
     }
 
-    /**
-     * Get attributes from `#EXTINF` tag as Map<String, String>.
-     *
-     * Example:-
-     *
-     * Input:
-     * ```
-     * #EXTINF:-1 tvg-id="1234" group-title="Kids" tvg-logo="url/to/logo", Title
-     * ```
-     *
-     * Result will be equivalent to kotlin map:
-     * ```Kotlin
-     * mapOf(
-     *   "tvg-id" to "1234",
-     *   "group-title" to "Kids",
-     *   "tvg-logo" to "url/to/logo"
-     * )
-     * ```
-     */
     private fun String.getAttributes(): Map<String, String> {
         val extInfRegex      = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
         val attributesString = replace(extInfRegex, "").replaceQuotesAndTrim().split(",").first()
@@ -340,18 +293,6 @@ class IptvPlaylistParser {
             .toMap()
     }
 
-    /**
-     * Get value from a tag.
-     *
-     * Example:-
-     *
-     * Input:
-     * ```
-     * #EXTVLCOPT:http-referrer=http://example.com/
-     * ```
-     *
-     * Result: http://example.com/
-     */
     private fun String.getTagValue(key: String): String? {
         val keyRegex = Regex("$key=(.*)", RegexOption.IGNORE_CASE)
 
@@ -365,9 +306,7 @@ class IptvPlaylistParser {
     }
 }
 
-/** Exception thrown when an error occurs while parsing playlist. */
 sealed class PlaylistParserException(message: String) : Exception(message) {
 
-    /** Exception thrown if given file content is not valid. */
     class InvalidHeader : PlaylistParserException("Invalid file header. Header doesn't start with #EXTM3U")
 }
