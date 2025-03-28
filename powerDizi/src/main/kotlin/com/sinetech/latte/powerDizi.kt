@@ -325,8 +325,8 @@ class IptvPlaylistParser {
                     playlistItems.add(PlaylistItem(title, attributes))
                 } else if (line.startsWith(EXT_VLC_OPT)) {
                     val item      = playlistItems[currentIndex]
-                    val userAgent = item.userAgent ?: line.getTagValue("http-user-agent")
-                    val referrer  = line.getTagValue("http-referrer")
+                    val userAgent = item.userAgent ?: line.getTagValue("http-user-agent")?.toString()
+                    val referrer  = line.getTagValue("http-referrer")?.toString()
 
                     val headers = mutableMapOf<String, String>()
 
@@ -385,36 +385,6 @@ class IptvPlaylistParser {
         val paramsString = replace(urlRegex, "").replaceQuotesAndTrim()
 
         return keyRegex.find(paramsString)?.groups?.get(1)?.value
-    }
-
-    fun String.getTagValue(key: String): String? {
-        val keyRegex = Regex("$key=(.*)", RegexOption.IGNORE_CASE)
-
-        return keyRegex.find(this)?.groups?.get(1)?.value?.replaceQuotesAndTrim()
-    }
-
-    private fun String.getAttributes(): Map<String, String> {
-        val extInfRegex = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
-        val attributesString = replace(extInfRegex, "").replaceQuotesAndTrim().split(",").first()
-        
-        val attributes = mutableMapOf<String, String>()
-        val attrRegex = Regex("([\\w-]+)=\"([^\"]*)\"|([\\w-]+)=([^\"]+)")
-        
-        attrRegex.findAll(attributesString).forEach { matchResult ->
-            val (quotedKey, quotedValue, unquotedKey, unquotedValue) = matchResult.destructured
-            val key = quotedKey.takeIf { it.isNotEmpty() } ?: unquotedKey
-            val value = quotedValue.takeIf { it.isNotEmpty() } ?: unquotedValue
-            attributes[key] = value.replaceQuotesAndTrim()
-        }
-
-        if (!attributes.containsKey("tvg-country")) {
-            attributes["tvg-country"] = "TR/Altyazılı"
-        }
-        if (!attributes.containsKey("tvg-language")) {
-            attributes["tvg-language"] = "TR/Altyazılı"
-        }
-
-        return attributes
     }
 
     private fun String.getTagValue(key: String): String? {
