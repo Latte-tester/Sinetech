@@ -414,11 +414,6 @@ class IptvPlaylistParser {
     
         return attributes
     }
-    
-    // Make sure this helper function is still present or integrated if needed elsewhere
-    private fun String.replaceQuotesAndTrim(): String {
-        return replace("\"", "").trim()
-    }
 
     private fun String.getTagValue(key: String): String? {
         val keyRegex = Regex("$key=(.*)", RegexOption.IGNORE_CASE)
