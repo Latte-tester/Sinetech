@@ -270,7 +270,13 @@ data class PlaylistItem(
     val userAgent: String?              = null,
     val season: Int                     = 1,
     val episode: Int                    = 0
-)
+) {
+    companion object {
+        const val EXT_M3U = "#EXTM3U"
+        const val EXT_INF = "#EXTINF"
+        const val EXT_VLC_OPT = "#EXTVLCOPT"
+    }
+}
 
 class IptvPlaylistParser {
 
@@ -297,6 +303,10 @@ class IptvPlaylistParser {
         if (!reader.readLine().isExtendedM3u()) {
             throw PlaylistParserException.InvalidHeader()
         }
+
+        val EXT_M3U = PlaylistItem.EXT_M3U
+        val EXT_INF = PlaylistItem.EXT_INF
+        val EXT_VLC_OPT = PlaylistItem.EXT_VLC_OPT
 
         val playlistItems: MutableList<PlaylistItem> = mutableListOf()
         var currentIndex = 0
@@ -356,7 +366,7 @@ class IptvPlaylistParser {
         return replace("\"", "").trim()
     }
 
-    private fun String.isExtendedM3u(): Boolean = startsWith(EXT_M3U)
+    private fun String.isExtendedM3u(): Boolean = startsWith(PlaylistItem.EXT_M3U)
 
     private fun String.getTitle(): String? {
         return split(",").lastOrNull()?.replaceQuotesAndTrim()
@@ -403,11 +413,7 @@ class IptvPlaylistParser {
         return keyRegex.find(this)?.groups?.get(1)?.value?.replaceQuotesAndTrim()
     }
 
-    companion object {
-        const val EXT_M3U     = "#EXTM3U"
-        const val EXT_INF     = "#EXTINF"
-        const val EXT_VLC_OPT = "#EXTVLCOPT"
-    }
+
 }
 
 sealed class PlaylistParserException(message: String) : Exception(message) {
