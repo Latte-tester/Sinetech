@@ -1,6 +1,6 @@
 {
-    "name": "Latte'nin deneme tahtası",
-    "description": "Birkaç eklenti ile deneme tahtası",
+    "name": "Latte - Sinetech Deposu",
+    "description": "Sinetech.tr Özel Cloudstream Deposu",
     "manifestVersion": 1,
     "pluginLists": [
       "https://raw.githubusercontent.com/GitLatte/Sinetech/builds/plugins.json"

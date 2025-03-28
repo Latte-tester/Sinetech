@@ -1,9 +1,9 @@
-version = 2
+version = 3
 
 cloudstream {
-    authors     = listOf("patr0n", "Latte")
+    authors     = listOf("GitLatte", "patr0nq")
     language    = "tr"
-    description = "powerDizi"
+    description = "powerboard`un yabancı dizi arşivi"
 
     /**
      * Status int as the following:

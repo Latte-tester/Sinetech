@@ -75,6 +75,13 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     if (isWatched) {
                         this.quality = SearchQuality.HD
                         this.posterHeaders = mapOf("watched" to "true")
+                        if (watchProgress > 0) {
+                            val seconds = watchProgress / 1000
+                            val hours = seconds / 3600
+                            val minutes = (seconds % 3600) / 60
+                            val remainingSeconds = seconds % 60
+                            this.description = "İzleme süresi: ${if (hours > 0) "${hours} saat " else ""}${if (minutes > 0) "${minutes} dakika " else ""}${if (remainingSeconds > 0 || (hours == 0L && minutes == 0L)) "${remainingSeconds} saniye" else ""}".trim()
+                        }
                     }
                 }
 
