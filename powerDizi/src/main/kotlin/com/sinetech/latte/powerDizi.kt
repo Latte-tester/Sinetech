@@ -45,52 +45,29 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             }
         }
 
-        val groupedShows = mutableMapOf<String, Pair<MutableList<SearchResponse>, MutableList<SearchResponse>>>()
-
-        processedItems.forEach { kanal ->
-            val streamurl = kanal.url.toString()
-            val channelname = kanal.title.toString()
-            val posterurl = kanal.attributes["tvg-logo"].toString()
-            val chGroup = kanal.attributes["group-title"]?.toString()?.trim() ?: "Diğer"
-            val nation = kanal.attributes["tvg-country"].toString()
-            val watchKey = "watch_${streamurl.hashCode()}"
-            val progressKey = "progress_${streamurl.hashCode()}"
-            val isWatched = sharedPref?.getBoolean(watchKey, false) ?: false
-            val watchProgress = sharedPref?.getLong(progressKey, 0L) ?: 0L
-
-            val searchResponse = newLiveSearchResponse(
-                channelname,
-                LoadData(streamurl, channelname, posterurl, chGroup, nation, kanal.season, kanal.episode).toJson(),
-                type = TvType.TvSeries
-            ) {
-                this.posterUrl = posterurl
-                this.lang = nation
-                if (isWatched) {
-                    this.quality = SearchQuality.HD
-                    this.posterHeaders = mapOf("watched" to "true")
-                }
-            }
-
-            if (!groupedShows.containsKey(chGroup)) {
-                groupedShows[chGroup] = Pair(mutableListOf(), mutableListOf())
-            }
-
-            if (isWatched && watchProgress > 0) {
-                groupedShows[chGroup]?.first?.add(searchResponse)
-            } else {
-                groupedShows[chGroup]?.second?.add(searchResponse)
-            }
-        }
+        val groupedShows = processedItems.groupBy { it.attributes["group-title"]?.toString()?.trim() ?: "Diğer" }
 
         val homePageLists = mutableListOf<HomePageList>()
 
         groupedShows.forEach { (group, shows) ->
-            val (watchedShows, unwatchedShows) = shows
-            if (watchedShows.isNotEmpty()) {
-                homePageLists.add(HomePageList("$group - İzlemeye Devam Et", watchedShows, isHorizontalImages = true))
+            val searchResponses = shows.map { kanal ->
+                val streamurl = kanal.url.toString()
+                val channelname = kanal.title.toString()
+                val posterurl = kanal.attributes["tvg-logo"].toString()
+                val nation = kanal.attributes["tvg-country"].toString()
+
+                newLiveSearchResponse(
+                    channelname,
+                    LoadData(streamurl, channelname, posterurl, group, nation, kanal.season, kanal.episode).toJson(),
+                    type = TvType.TvSeries
+                ) {
+                    this.posterUrl = posterurl
+                    this.lang = nation
+                }
             }
-            if (unwatchedShows.isNotEmpty()) {
-                homePageLists.add(HomePageList(group, unwatchedShows, isHorizontalImages = true))
+            
+            if (searchResponses.isNotEmpty()) {
+                homePageLists.add(HomePageList(group, searchResponses, isHorizontalImages = true))
             }
         }
 
@@ -200,16 +177,6 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
 
     override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
         val loadData = fetchDataFromUrlOrJson(data)
-        val watchKey = "watch_${loadData.url.hashCode()}"
-        val progressKey = "progress_${loadData.url.hashCode()}"
-        
-        sharedPref?.edit()?.apply {
-            putBoolean(watchKey, true)
-            putLong(progressKey, System.currentTimeMillis())
-            apply()
-        }
-        
-        // SharedPreferences changes will trigger a refresh automatically
         Log.d("IPTV", "loadData » $loadData")
 
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
