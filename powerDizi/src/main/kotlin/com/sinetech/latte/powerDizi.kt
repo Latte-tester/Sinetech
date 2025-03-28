@@ -29,10 +29,10 @@ class powerDizi : MainAPI() {
                     val chGroup     = kanal.attributes["group-title"].toString()
                     val nation      = kanal.attributes["tvg-country"].toString()
 
-                    newLiveSearchResponse(
-                        channelname,
+                    newMovieSearchResponse(
+                        chGroup,
                         LoadData(streamurl, channelname, posterurl, chGroup, nation).toJson(),
-                        type = TvType.TvSeries
+                        TvType.TvSeries
                     ) {
                         this.posterUrl = posterurl
                         this.lang = nation
@@ -56,10 +56,10 @@ class powerDizi : MainAPI() {
             val chGroup     = kanal.attributes["group-title"].toString()
             val nation      = kanal.attributes["tvg-country"].toString()
 
-            newLiveSearchResponse(
-                channelname,
+            newMovieSearchResponse(
+                chGroup,
                 LoadData(streamurl, channelname, posterurl, chGroup, nation).toJson(),
-                type = TvType.TvSeries
+                TvType.TvSeries
             ) {
                 this.posterUrl = posterurl
                 this.lang = nation
@@ -100,10 +100,10 @@ class powerDizi : MainAPI() {
                 val rcChGroup     = kanal.attributes["group-title"].toString()
                 val rcNation      = kanal.attributes["tvg-country"].toString()
 
-                recommendations.add(newLiveSearchResponse(
-                    rcChannelName,
+                recommendations.add(newMovieSearchResponse(
+                    rcChGroup,
                     LoadData(rcStreamUrl, rcChannelName, rcPosterUrl, rcChGroup, rcNation).toJson(),
-                    type = TvType.TvSeries
+                    TvType.TvSeries
                 ) {
                     this.posterUrl = rcPosterUrl
                     this.lang = rcNation
