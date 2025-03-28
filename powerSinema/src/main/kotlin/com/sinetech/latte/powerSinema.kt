@@ -130,7 +130,6 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
             this.recommendations = recommendations
             this.rating = if (isWatched) 5 else 0
             this.duration = if (watchProgress > 0) (watchProgress / 1000).toInt() else null
-            this.watchProgress = watchProgress
         }
     }
 
