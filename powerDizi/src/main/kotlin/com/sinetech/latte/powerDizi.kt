@@ -1,4 +1,4 @@
-package com.keyiflerolsun
+package com.sinetech.latte
 
 import android.util.Log
 import com.lagradost.cloudstream3.*
@@ -80,12 +80,21 @@ class powerDizi : MainAPI() {
 
         val kanallar        = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
         val recommendations = mutableListOf<LiveSearchResponse>()
+        val episodes        = mutableListOf<Episode>()
 
         for (kanal in kanallar.items) {
             if (kanal.attributes["group-title"].toString() == loadData.group) {
                 val rcStreamUrl   = kanal.url.toString()
                 val rcChannelName = kanal.title.toString()
-                if (rcChannelName == loadData.title) continue
+                if (rcChannelName == loadData.title) {
+                    episodes.add(Episode(
+                        rcStreamUrl,
+                        rcChannelName,
+                        season = 1,
+                        episode = episodes.size + 1
+                    ))
+                    continue
+                }
 
                 val rcPosterUrl   = kanal.attributes["tvg-logo"].toString()
                 val rcChGroup     = kanal.attributes["group-title"].toString()
@@ -99,11 +108,15 @@ class powerDizi : MainAPI() {
                     this.posterUrl = rcPosterUrl
                     this.lang = rcNation
                 })
-
             }
         }
 
-        return newLiveStreamLoadResponse(loadData.title, loadData.url, url) {
+        return newTvSeriesLoadResponse(
+            loadData.title,
+            url,
+            TvType.TvSeries,
+            episodes
+        ) {
             this.posterUrl = loadData.poster
             this.plot = nation
             this.tags = listOf(loadData.group, loadData.nation)

@@ -1,4 +1,4 @@
-package com.keyiflerolsun
+package com.sinetech.latte
 
 import android.util.Log
 import com.lagradost.cloudstream3.*
