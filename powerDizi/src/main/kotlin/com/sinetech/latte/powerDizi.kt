@@ -112,6 +112,10 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
     override suspend fun quickSearch(query: String): List<SearchResponse> = search(query)
 
     override suspend fun load(url: String): LoadResponse {
+        val watchKey = "watch_${url.hashCode()}"
+        val progressKey = "progress_${url.hashCode()}"
+        val isWatched = sharedPref?.getBoolean(watchKey, false) ?: false
+        val watchProgress = sharedPref?.getLong(progressKey, 0L) ?: 0L
         val loadData = fetchDataFromUrlOrJson(url)
         val nation:String = if (loadData.group == "NSFW") {
             "⚠️🔞🔞🔞 » ${loadData.group} | ${loadData.nation} « 🔞🔞🔞⚠️"
@@ -149,9 +153,8 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             url,
             TvType.TvSeries,
             groupEpisodes.map { episode ->
-                val epData = parseJson<LoadData>(episode.data)
-                val epWatchKey = "watch_${epData.group}_${epData.title.hashCode()}"
-                val epProgressKey = "progress_${epData.group}_${epData.title.hashCode()}"
+                val epWatchKey = "watch_${episode.data.hashCode()}"
+                val epProgressKey = "progress_${episode.data.hashCode()}"
                 val epIsWatched = sharedPref?.getBoolean(epWatchKey, false) ?: false
                 val epWatchProgress = sharedPref?.getLong(epProgressKey, 0L) ?: 0L
                 episode.apply {
@@ -180,19 +183,12 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val kanal    = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
         Log.d("IPTV", "kanal » $kanal")
 
-        // Her video için benzersiz bir anahtar oluştur
-        val watchKey = "watch_${loadData.group}_${loadData.title.hashCode()}"
-        val progressKey = "progress_${loadData.group}_${loadData.title.hashCode()}"
-
         callback.invoke(
             ExtractorLink(
                 source  = this.name,
                 name    = "${loadData.title} (S${loadData.season}:E${loadData.episode})",
                 url     = loadData.url,
-                headers = kanal.headers.toMutableMap().apply {
-                    put("watchKey", watchKey)
-                    put("progressKey", progressKey)
-                },
+                headers = kanal.headers,
                 referer = kanal.headers["referrer"] ?: "",
                 quality = Qualities.Unknown.value,
                 isM3u8  = true
