@@ -205,11 +205,10 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             putLong(progressKey, System.currentTimeMillis())
             apply()
         }
-        val loadData = fetchDataFromUrlOrJson(data)
         Log.d("IPTV", "loadData » $loadData")
 
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-        val kanal    = kanallar.items.first { it.url == loadData.url }
+        val kanal    = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
         Log.d("IPTV", "kanal » $kanal")
 
         callback.invoke(
