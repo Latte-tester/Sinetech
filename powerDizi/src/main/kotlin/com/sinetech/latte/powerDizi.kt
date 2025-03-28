@@ -387,6 +387,12 @@ class IptvPlaylistParser {
         return keyRegex.find(paramsString)?.groups?.get(1)?.value
     }
 
+    fun String.getTagValue(key: String): String? {
+        val keyRegex = Regex("$key=(.*)", RegexOption.IGNORE_CASE)
+
+        return keyRegex.find(this)?.groups?.get(1)?.value?.replaceQuotesAndTrim()
+    }
+
     private fun String.getAttributes(): Map<String, String> {
         val extInfRegex = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
         val attributesString = replace(extInfRegex, "").replaceQuotesAndTrim().split(",").first()
@@ -399,6 +405,7 @@ class IptvPlaylistParser {
             val key = quotedKey.takeIf { it.isNotEmpty() } ?: unquotedKey
             val value = quotedValue.takeIf { it.isNotEmpty() } ?: unquotedValue
             attributes[key] = value.replaceQuotesAndTrim()
+        }
 
         if (!attributes.containsKey("tvg-country")) {
             attributes["tvg-country"] = "TR/Altyazılı"
@@ -408,6 +415,12 @@ class IptvPlaylistParser {
         }
 
         return attributes
+    }
+
+    fun String.getTagValue(key: String): String? {
+        val keyRegex = Regex("$key=(.*)", RegexOption.IGNORE_CASE)
+
+        return keyRegex.find(this)?.groups?.get(1)?.value?.replaceQuotesAndTrim()
     }
 
     fun String.getTagValue(key: String): String? {
