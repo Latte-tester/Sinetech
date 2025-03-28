@@ -7,7 +7,7 @@ import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import java.io.InputStream
 
-class powerDizi : MainAPI() {
+class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
     override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/patr0n/refs/heads/site/lists/power-yabanci-dizi.m3u"
     override var name                 = "powerDizi"
     override val hasMainPage          = true
@@ -106,6 +106,10 @@ class powerDizi : MainAPI() {
     override suspend fun quickSearch(query: String): List<SearchResponse> = search(query)
 
     override suspend fun load(url: String): LoadResponse {
+        val watchKey = "watch_${url.hashCode()}"
+        val progressKey = "progress_${url.hashCode()}"
+        val isWatched = sharedPref?.getBoolean(watchKey, false) ?: false
+        val watchProgress = sharedPref?.getLong(progressKey, 0L) ?: 0L
         val loadData = fetchDataFromUrlOrJson(url)
         val nation:String = if (loadData.group == "NSFW") {
             "⚠️🔞🔞🔞 » ${loadData.group} | ${loadData.nation} « 🔞🔞🔞⚠️"
@@ -142,7 +146,16 @@ class powerDizi : MainAPI() {
             loadData.title,
             url,
             TvType.TvSeries,
-            groupEpisodes
+            groupEpisodes.map { episode ->
+                val epWatchKey = "watch_${episode.data.hashCode()}"
+                val epProgressKey = "progress_${episode.data.hashCode()}"
+                val epIsWatched = sharedPref?.getBoolean(epWatchKey, false) ?: false
+                val epWatchProgress = sharedPref?.getLong(epProgressKey, 0L) ?: 0L
+                episode.apply {
+                    this.rating = if (epIsWatched) 5.0 else 0.0
+                    this.description = if (epWatchProgress > 0) "İzleme süresi: ${epWatchProgress / 1000} saniye" else null
+                }
+            }
         ) {
             this.posterUrl = loadData.poster
             this.plot = nation
@@ -151,6 +164,14 @@ class powerDizi : MainAPI() {
     }
 
     override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
+        val watchKey = "watch_${data.hashCode()}"
+        val progressKey = "progress_${data.hashCode()}"
+        
+        sharedPref?.edit()?.apply {
+            putBoolean(watchKey, true)
+            putLong(progressKey, System.currentTimeMillis())
+            apply()
+        }
         val loadData = fetchDataFromUrlOrJson(data)
         Log.d("IPTV", "loadData » $loadData")
 
@@ -181,7 +202,8 @@ class powerDizi : MainAPI() {
     val nation: String,
     val season: Int = 1,
     val episode: Int = 0,
-    val isWatched: Boolean = false
+    val isWatched: Boolean = false,
+    val watchProgress: Long = 0
 )
 
     private suspend fun fetchDataFromUrlOrJson(data: String): LoadData {
