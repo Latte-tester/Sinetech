@@ -146,7 +146,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
         val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
         val groupEpisodes = kanallar.items
-            .filter { it.attributes["group-title"].toString() == loadData.group }
+            .filter { it.attributes["group-title"]?.toString() ?: "" == loadData.group }
             .mapNotNull { kanal ->
                 val title = kanal.title.toString()
                 val match = episodeRegex.find(title)
