@@ -153,7 +153,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 val epIsWatched = sharedPref?.getBoolean(epWatchKey, false) ?: false
                 val epWatchProgress = sharedPref?.getLong(epProgressKey, 0L) ?: 0L
                 episode.apply {
-                    this.rating = if (epIsWatched) 5.0 else 0.0
+                    this.rating = if (epIsWatched) 5 else 0
                     this.description = if (epWatchProgress > 0) "İzleme süresi: ${epWatchProgress / 1000} saniye" else null
                 }
             }
