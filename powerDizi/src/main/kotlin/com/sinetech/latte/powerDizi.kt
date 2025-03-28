@@ -86,7 +86,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             }
 
             if (watchedShowsList.isNotEmpty()) {
-                watchedShows.add(HomePageList("${title ?: "Diğer"} - Devam Et", watchedShowsList, isHorizontalImages = true))
+                watchedShows.add(HomePageList("${title?.toString()?.trim() ?: "Diğer"} - Devam Et", watchedShowsList, isHorizontalImages = true))
             }
             regularShows.add(HomePageList("${title?.toString()?.trim() ?: "Diğer"} adlı diziye ait bölümler", unwatchedShowsList, isHorizontalImages = true))
         }
@@ -375,26 +375,49 @@ class IptvPlaylistParser {
     }
 
     private fun String.getAttributes(): Map<String, String> {
-        val extInfRegex      = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
+        val extInfRegex = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
         val attributesString = replace(extInfRegex, "").replaceQuotesAndTrim().split(",").first()
-        
-        val attributes = attributesString
-            .split(Regex("\\s"))
-            .mapNotNull {
-                val pair = it.split("=")
-                if (pair.size == 2) pair.first() to pair.last().replaceQuotesAndTrim() else null
+    
+        val attributes = mutableMapOf<String, String>()
+        // Regex to find key="value" or key=value patterns
+        // (\S+?)     - Capture group 1: Key (one or more non-whitespace chars, non-greedy)
+        // =           - Match the equals sign
+        // (           - Start group 2: Value (either quoted or unquoted)
+        //   "(.+?)"   - Capture group 3: Quoted value (anything between quotes, non-greedy)
+        //   |         - OR
+        //   ([^"\s]+) - Capture group 4: Unquoted value (one or more chars that are not quote or whitespace)
+        // )           - End group 2
+        val attributePattern = Pattern.compile("""(\S+?)=(?:"(.+?)"|([^"\s]+))""")
+        val matcher = attributePattern.matcher(attributesString)
+    
+        while (matcher.find()) {
+            val key = matcher.group(1)
+            // Prefer the quoted value (group 3) if it exists, otherwise use the unquoted value (group 4)
+            val value = matcher.group(3) ?: matcher.group(4)
+            if (key != null && value != null) {
+                attributes[key] = value // No need for replaceQuotesAndTrim here as regex handles quotes
             }
-            .toMap()
-            .toMutableMap()
-
+        }
+    
+        // Apply default attributes if they are missing AFTER parsing
         if (!attributes.containsKey("tvg-country")) {
-            attributes["tvg-country"] = "TR/Altyazılı"
+            // Decide on your default logic. Maybe keep the original defaults or adjust.
+            // Let's keep your original defaults for now.
+             attributes["tvg-country"] = "TR/Altyazılı"
         }
         if (!attributes.containsKey("tvg-language")) {
-            attributes["tvg-language"] = "TR/Altyazılı"
+             attributes["tvg-language"] = "TR;EN" // Adjusted based on your original code in powerDizi
         }
-
+    
+        // Log the parsed attributes for debugging (optional)
+        // Log.d("IptvParser", "Parsed attributes for line: '$this' -> $attributes")
+    
         return attributes
+    }
+    
+    // Make sure this helper function is still present or integrated if needed elsewhere
+    private fun String.replaceQuotesAndTrim(): String {
+        return replace("\"", "").trim()
     }
 
     private fun String.getTagValue(key: String): String? {
