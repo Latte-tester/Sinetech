@@ -45,29 +45,54 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             }
         }
 
-        return newHomePageResponse(
-            processedItems.groupBy { it.attributes["group-title"] }.map { group ->
-                val title = group.key ?: ""
-                val show  = group.value.map { kanal ->
-                    val streamurl   = kanal.url.toString()
-                    val channelname = kanal.title.toString()
-                    val posterurl   = kanal.attributes["tvg-logo"].toString()
-                    val chGroup     = kanal.attributes["group-title"].toString()
-                    val nation      = kanal.attributes["tvg-country"].toString()
+        // Create a list for watched shows
+        val watchedShows = mutableListOf<HomePageList>()
+        val regularShows = mutableListOf<HomePageList>()
 
-                    newLiveSearchResponse(
-                        channelname,
-                        LoadData(streamurl, channelname, posterurl, chGroup, nation, kanal.season, kanal.episode).toJson(),
-                        type = TvType.TvSeries
-                    ) {
-                        this.posterUrl = posterurl
-                        this.lang = nation
+        // Group shows by watched status
+        processedItems.groupBy { it.attributes["group-title"] }.forEach { (title, shows) ->
+            val watchedShowsList = mutableListOf<SearchResponse>()
+            val unwatchedShowsList = mutableListOf<SearchResponse>()
+
+            shows.forEach { kanal ->
+                val streamurl = kanal.url.toString()
+                val channelname = kanal.title.toString()
+                val posterurl = kanal.attributes["tvg-logo"].toString()
+                val chGroup = kanal.attributes["group-title"].toString()
+                val nation = kanal.attributes["tvg-country"].toString()
+                val watchKey = "watch_${streamurl.hashCode()}"
+                val progressKey = "progress_${streamurl.hashCode()}"
+                val isWatched = sharedPref?.getBoolean(watchKey, false) ?: false
+                val watchProgress = sharedPref?.getLong(progressKey, 0L) ?: 0L
+
+                val searchResponse = newLiveSearchResponse(
+                    channelname,
+                    LoadData(streamurl, channelname, posterurl, chGroup, nation, kanal.season, kanal.episode).toJson(),
+                    type = TvType.TvSeries
+                ) {
+                    this.posterUrl = posterurl
+                    this.lang = nation
+                    if (isWatched) {
+                        this.quality = SearchQuality.HD
+                        this.posterHeaders = mapOf("watched" to "true")
                     }
                 }
 
+                if (isWatched && watchProgress > 0) {
+                    watchedShowsList.add(searchResponse)
+                } else {
+                    unwatchedShowsList.add(searchResponse)
+                }
+            }
 
-                HomePageList(title, show, isHorizontalImages = true)
-            },
+            if (watchedShowsList.isNotEmpty()) {
+                watchedShows.add(HomePageList("$title - Devam Et", watchedShowsList, isHorizontalImages = true))
+            }
+            regularShows.add(HomePageList(title, unwatchedShowsList, isHorizontalImages = true))
+        }
+
+        return newHomePageResponse(
+            watchedShows + regularShows,
             hasNext = false
         )
     }
@@ -154,7 +179,13 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 val epWatchProgress = sharedPref?.getLong(epProgressKey, 0L) ?: 0L
                 episode.apply {
                     this.rating = if (epIsWatched) 5 else 0
-                    this.description = if (epWatchProgress > 0) "İzleme süresi: ${epWatchProgress / 1000} saniye" else null
+                    this.description = if (epWatchProgress > 0) {
+                        val seconds = epWatchProgress / 1000
+                        val hours = seconds / 3600
+                        val minutes = (seconds % 3600) / 60
+                        val remainingSeconds = seconds % 60
+                        "İzleme süresi: ${if (hours > 0) "${hours} saat " else ""}${if (minutes > 0) "${minutes} dakika " else ""}${if (remainingSeconds > 0 || (hours == 0L && minutes == 0L)) "${remainingSeconds} saniye" else ""}".trim()
+                    } else null
                 }
             }
         ) {
@@ -165,8 +196,9 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
     }
 
     override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
-        val watchKey = "watch_${data.hashCode()}"
-        val progressKey = "progress_${data.hashCode()}"
+        val loadData = fetchDataFromUrlOrJson(data)
+        val watchKey = "watch_${loadData.url.hashCode()}"
+        val progressKey = "progress_${loadData.url.hashCode()}"
         
         sharedPref?.edit()?.apply {
             putBoolean(watchKey, true)
