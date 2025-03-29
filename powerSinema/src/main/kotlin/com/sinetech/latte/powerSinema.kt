@@ -123,7 +123,12 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
             }
         }
 
-        // TMDB API'den film detaylarını çek
+        import com.google.gson.Gson
+import com.google.gson.JsonObject
+import okhttp3.OkHttpClient
+import okhttp3.Request
+
+// TMDB API'den film detaylarını çek
         val tmdbApiKey = BuildConfig.TMDB_API_KEY
         if (tmdbApiKey.isNotEmpty()) {
             try {
