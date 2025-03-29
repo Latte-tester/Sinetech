@@ -186,7 +186,7 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
             this.tags = buildList {
                 add(loadData.group)
                 add(loadData.nation)
-                loadData.genres?.let { addAll(it) }
+                loadData.genres?.takeIf { it.isNotEmpty() }?.let { addAll(it) }
             }
             this.recommendations = recommendations
             this.rating = loadData.rating?.times(2)?.toInt() ?: if (isWatched) 5 else 0
