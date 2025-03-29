@@ -91,7 +91,7 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
         val searchData = parseJson<JsonObject>(searchResponse)
         val results = searchData.getAsJsonArray("results")
         
-        if (results.size() > 0) {
+        if (results?.size() ?: 0 > 0) {
             val movie = results[0].asJsonObject
             val movieId = movie.get("id").asInt
             
