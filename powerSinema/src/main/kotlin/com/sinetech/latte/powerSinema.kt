@@ -167,24 +167,24 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
         return newMovieLoadResponse(loadData.title, url, TvType.Movie, loadData.url) {
             this.posterUrl = loadData.poster
             val movieInfo = buildString {
+                append("📝 Film Özeti:\n")
                 tmdbDetails["overview"]?.toString()?.let { overview ->
                     append(overview)
                     append("\n\n")
                 }
                 if ((tmdbDetails["cast"] as? List<String>)?.isNotEmpty() == true) {
-                    append("🎭 Oyuncular: ${(tmdbDetails["cast"] as List<String>).joinToString(", ")}\n")
+                    append("🎭 Oyuncular:\n${(tmdbDetails["cast"] as List<String>).joinToString("\n- ", "- ")}\n\n")
                 }
                 if (tmdbDetails["director"] != null) {
-                    append("🎬 Yönetmen: ${tmdbDetails["director"]}\n")
+                    append("🎬 Yönetmen:\n- ${tmdbDetails["director"]}\n\n")
                 }
                 if (!nation.isNullOrEmpty()) {
-                    append("\n")
                     append(nation)
                 }
             }
             
             this.plot = movieInfo
-            this.rating = (tmdbDetails["rating"] as? Double)?.times(10)?.toInt() ?: (if (isWatched) 50 else 0)
+            this.rating = (tmdbDetails["rating"] as? Double)?.times(10)?.toInt() ?: 0
             this.tags = listOf(loadData.group, loadData.nation)
             this.recommendations = recommendations
             this.duration = if (watchProgress > 0) (watchProgress / 1000).toInt() else null
