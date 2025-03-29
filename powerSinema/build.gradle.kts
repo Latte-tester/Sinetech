@@ -2,6 +2,12 @@ version = 2.1
 
 val tmdbApiKey = System.getenv("TMDB_SECRET_API") ?: ""
 
+android {
+    defaultConfig {
+        buildConfigField("String", "TMDB_API_KEY", "\"${tmdbApiKey}\"")
+    }
+}
+
 cloudstream {
     authors     = listOf("GitLatte", "patr0nq", "keyiflerolsun")
     language    = "tr"
