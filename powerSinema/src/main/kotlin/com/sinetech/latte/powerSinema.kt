@@ -86,8 +86,14 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
     private suspend fun fetchTMDBDetails(title: String): Map<String, Any?> {
         try {
             val tmdbApiKey = BuildConfig.TMDB_API_KEY ?: return mapOf()
-            val cleanTitle = title.replace(Regex("\\([^)]*\\)"), "").trim()
-            val searchUrl = "https://api.themoviedb.org/3/search/movie?api_key=$tmdbApiKey&query=${URLEncoder.encode(cleanTitle, "UTF-8")}&language=tr-TR"
+            val cleanTitle = title.trim()
+            // Film başlığından yıl bilgisini çıkar
+            val yearRegex = Regex("\\((\\d{4})\\)")
+            val yearMatch = yearRegex.find(title)
+            val year = yearMatch?.groupValues?.get(1)
+            val searchTitle = title.replace(yearRegex, "").trim()
+            
+            val searchUrl = "https://api.themoviedb.org/3/search/movie?api_key=$tmdbApiKey&query=${URLEncoder.encode(searchTitle, "UTF-8")}${if (year != null) "&year=$year" else ""}&language=tr-TR"
             
             val searchResponse = app.get(searchUrl).text
             val searchData = parseJson<JsonObject>(searchResponse)
@@ -178,8 +184,12 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
 
         val tmdbDetails = fetchTMDBDetails(loadData.title)
         
-        return newMovieLoadResponse(loadData.title, url, TvType.Movie, loadData.url) {
+        return newMovieLoadResponse(tmdbDetails["title"]?.toString() ?: loadData.title, url, TvType.Movie, loadData.url) {
             this.posterUrl = loadData.poster
+            this.plot = tmdbDetails["overview"]?.toString()
+            this.rating = (tmdbDetails["rating"] as? Double)?.toFloat()
+            this.tags = listOf(loadData.group)
+            
             val movieInfo = buildString {
                 tmdbDetails["overview"]?.toString()?.let { overview ->
                     append("📝 Film Özeti:\n")
