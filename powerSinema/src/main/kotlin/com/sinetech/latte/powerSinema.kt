@@ -84,38 +84,52 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
     override suspend fun quickSearch(query: String): List<SearchResponse> = search(query)
 
     private suspend fun fetchTMDBDetails(title: String): Map<String, Any?> {
-        val tmdbApiKey = BuildConfig.TMDB_API_KEY ?: return mapOf()
-        val searchUrl = "https://api.themoviedb.org/3/search/movie?api_key=$tmdbApiKey&query=${URLEncoder.encode(title, "UTF-8")}&language=tr-TR"
-        
-        val searchResponse = app.get(searchUrl).text
-        val searchData = parseJson<JsonObject>(searchResponse)
-        val results = searchData.getAsJsonArray("results")
-        
-        if (results?.size() ?: 0 > 0) {
-            val movie = results[0].asJsonObject
-            val movieId = movie.get("id").asInt
+        try {
+            val tmdbApiKey = BuildConfig.TMDB_API_KEY ?: return mapOf()
+            val cleanTitle = title.replace(Regex("\\([^)]*\\)"), "").trim()
+            val searchUrl = "https://api.themoviedb.org/3/search/movie?api_key=$tmdbApiKey&query=${URLEncoder.encode(cleanTitle, "UTF-8")}&language=tr-TR"
             
-            val detailsUrl = "https://api.themoviedb.org/3/movie/$movieId?api_key=$tmdbApiKey&append_to_response=credits&language=tr-TR"
-            val detailsResponse = app.get(detailsUrl).text
-            val details = parseJson<JsonObject>(detailsResponse)
+            val searchResponse = app.get(searchUrl).text
+            val searchData = parseJson<JsonObject>(searchResponse)
+            val results = searchData.getAsJsonArray("results")
             
-            val cast = details.getAsJsonObject("credits")
-                .getAsJsonArray("cast")
-                .take(5)
-                .map { it.asJsonObject.get("name").asString }
-            
-            val director = details.getAsJsonObject("credits")
-                .getAsJsonArray("crew")
-                .find { it.asJsonObject.get("job").asString == "Director" }
-                ?.asJsonObject?.get("name")?.asString
-            
-            return mapOf(
-                "tmdbId" to movieId,
-                "overview" to details.get("overview").asString,
-                "rating" to details.get("vote_average").asDouble,
-                "cast" to cast,
-                "director" to director
-            )
+            if (results?.size() ?: 0 > 0) {
+                val movie = results[0].asJsonObject
+                val movieId = movie.get("id")?.asInt ?: return mapOf()
+                val movieTitle = movie.get("title")?.asString ?: cleanTitle
+                
+                val detailsUrl = "https://api.themoviedb.org/3/movie/$movieId?api_key=$tmdbApiKey&append_to_response=credits&language=tr-TR"
+                val detailsResponse = app.get(detailsUrl).text
+                val details = parseJson<JsonObject>(detailsResponse)
+                
+                val credits = details.getAsJsonObject("credits")
+                val cast = credits?.getAsJsonArray("cast")
+                    ?.take(5)
+                    ?.mapNotNull { it.asJsonObject?.get("name")?.asString }
+                    ?.takeIf { it.isNotEmpty() }
+                    ?: emptyList()
+                
+                val director = credits?.getAsJsonArray("crew")
+                    ?.find { it.asJsonObject?.get("job")?.asString == "Director" }
+                    ?.asJsonObject?.get("name")?.asString
+                
+                val overview = details.get("overview")?.asString?.takeIf { it.isNotEmpty() }
+                    ?: movie.get("overview")?.asString?.takeIf { it.isNotEmpty() }
+                val rating = details.get("vote_average")?.asDouble
+                    ?: movie.get("vote_average")?.asDouble
+                
+                val result = mutableMapOf<String, Any?>()
+                result["tmdbId"] = movieId
+                result["title"] = movieTitle
+                if (!overview.isNullOrBlank()) result["overview"] = overview
+                if (rating != null) result["rating"] = rating
+                if (cast.isNotEmpty()) result["cast"] = cast
+                if (!director.isNullOrBlank()) result["director"] = director
+                
+                return result
+            }
+        } catch (e: Exception) {
+            Log.e("TMDB", "Error fetching TMDB details for '$title': ${e.message}", e)
         }
         return mapOf()
     }
@@ -167,18 +181,25 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
         return newMovieLoadResponse(loadData.title, url, TvType.Movie, loadData.url) {
             this.posterUrl = loadData.poster
             val movieInfo = buildString {
-                append("📝 Film Özeti:\n")
                 tmdbDetails["overview"]?.toString()?.let { overview ->
+                    append("📝 Film Özeti:\n")
                     append(overview)
                     append("\n\n")
                 }
+                
                 val cast = tmdbDetails["cast"] as? List<String>
                 if (cast?.isNotEmpty() == true) {
-                    append("🎭 Oyuncular:\n${cast.joinToString("\n- ", "- ")}\n\n")
+                    append("🎭 Oyuncular:\n")
+                    append(cast.joinToString("\n- ", "- "))
+                    append("\n\n")
                 }
+                
                 tmdbDetails["director"]?.toString()?.let { director ->
-                    append("🎬 Yönetmen:\n- $director\n\n")
+                    append("🎬 Yönetmen:\n")
+                    append("- $director")
+                    append("\n\n")
                 }
+                
                 if (!nation.isNullOrEmpty()) {
                     append(nation)
                 }
