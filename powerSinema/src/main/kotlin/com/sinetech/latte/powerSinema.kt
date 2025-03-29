@@ -127,14 +127,14 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
 
         return newMovieLoadResponse(loadData.title, url, TvType.Movie, loadData.url) {
             this.posterUrl = loadData.poster
-            this.plot = tmdbData["overview"]?.takeIf { it.isNotBlank() } ?: nation
-            this.tags = listOf(loadData.group, loadData.nation) + (tmdbData["genres"] as? List<String> ?: emptyList())
+            this.plot = (tmdbData["overview"] as? String)?.takeIf { it.isNotBlank() } ?: nation
+            this.tags = listOf(loadData.group, loadData.nation) + ((tmdbData["genres"] as? List<String>) ?: emptyList())
             this.recommendations = recommendations
-            this.rating = tmdbData["imdbRating"] as? Double ?: (if (isWatched) 5 else 0)
+            this.rating = (tmdbData["imdbRating"] as? Double) ?: (if (isWatched) 5.0 else 0.0)
             this.duration = if (watchProgress > 0) (watchProgress / 1000).toInt() else null
-            this.year = tmdbData["year"] as? Int
-            this.director = tmdbData["director"] as? String
-            this.cast = tmdbData["cast"] as? List<String> ?: emptyList()
+            this.year = (tmdbData["year"] as? Int)
+            this.director = (tmdbData["director"] as? String)
+            this.cast = (tmdbData["cast"] as? List<String>) ?: emptyList()
         }
     }
 
@@ -198,6 +198,39 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
 
 private suspend fun fetchTmdbData(title: String): Map<String, Any?> {
     try {
+        val apiKey = BuildConfig.TMDB_SECRET_API
+        val cleanTitle = cleanMovieTitle(title)
+        val searchUrl = "https://api.themoviedb.org/3/search/movie?api_key=$apiKey&query=${cleanTitle}"
+        
+        val response = app.get(searchUrl).text
+        val jsonObject = parseJson<Map<String, Any>>(response)
+        val results = (jsonObject["results"] as? List<Map<String, Any>>)?.firstOrNull()
+        
+        if (results != null) {
+            val movieId = (results["id"] as? Double)?.toInt()
+            if (movieId != null) {
+                val movieUrl = "https://api.themoviedb.org/3/movie/$movieId?api_key=$apiKey&append_to_response=credits"
+                val movieResponse = app.get(movieUrl).text
+                val movieData = parseJson<Map<String, Any>>(movieResponse)
+                
+                val genres = (movieData["genres"] as? List<Map<String, Any>>)?.map { it["name"] as String } ?: emptyList()
+                val credits = movieData["credits"] as? Map<String, Any>
+                val cast = (credits?.get("cast") as? List<Map<String, Any>>)?.take(5)?.map { it["name"] as String } ?: emptyList()
+                val crew = credits?.get("crew") as? List<Map<String, Any>>
+                val director = crew?.find { it["job"] == "Director" }?.get("name") as? String
+                
+                return mapOf(
+                    "overview" to (movieData["overview"] as? String ?: ""),
+                    "year" to ((movieData["release_date"] as? String)?.split("-")?.firstOrNull()?.toIntOrNull()),
+                    "imdbRating" to ((movieData["vote_average"] as? Double)?.div(2)),
+                    "genres" to genres,
+                    "director" to director,
+                    "cast" to cast
+                )
+            }
+        }
+        return emptyMap()
+    } catch (e: Exception) {
         val response = app.get(
             "https://api.themoviedb.org/3/search/movie?api_key=${BuildConfig.TMDB_SECRET_API}&query=${cleanMovieTitle(title)}"
         ).text

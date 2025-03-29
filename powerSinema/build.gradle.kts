@@ -1,5 +1,20 @@
 version = 2.1
 
+plugins {
+    id("com.android.library")
+    id("org.jetbrains.kotlin.android")
+}
+
+dependencies {
+    implementation("com.google.code.gson:gson:2.10.1")
+}
+
+android {
+    defaultConfig {
+        buildConfigField("String", "TMDB_SECRET_API", System.getenv("TMDB_API_KEY") ?: "\"\"")
+    }
+}
+
 cloudstream {
     authors     = listOf("GitLatte", "patr0nq", "keyiflerolsun")
     language    = "tr"
