@@ -293,14 +293,20 @@ class IptvPlaylistParser {
         val commaIndex = lastIndexOf(",")
         return if (commaIndex >= 0) {
             substring(commaIndex + 1).trim().let { title ->
-                if (title.startsWith("\"") && title.endsWith("\"")) {
+                val unquotedTitle = if (title.startsWith("\"") && title.endsWith("\"")) {
                     title.substring(1, title.length - 1)
                 } else {
                     title
                 }
-            }.let { title ->
-                // Özel karakterleri koruyarak başlığı düzenle
-                title.trim().ifEmpty { title }
+                // Özel karakterleri ve Unicode karakterlerini koru
+                unquotedTitle.trim().takeIf { it.isNotEmpty() }?.let { rawTitle ->
+                    // HTML entity'lerini decode et
+                    rawTitle.replace("&amp;", "&")
+                           .replace("&lt;", "<")
+                           .replace("&gt;", ">")
+                           .replace("&quot;", "\"") 
+                           .replace("&#39;", "'")
+                } ?: unquotedTitle
             }
         } else {
             null
