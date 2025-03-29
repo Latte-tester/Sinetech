@@ -1,9 +1,15 @@
 version = 2.1
 
+val tmdbApiKey = System.getenv("TMDB_SECRET_API") ?: ""
+
 cloudstream {
     authors     = listOf("GitLatte", "patr0nq", "keyiflerolsun")
     language    = "tr"
     description = "powerboard`un sinema arşivi"
+
+    dependencies {
+        implementation("com.google.code.gson:gson:2.8.9")
+    }
 
     /**
      * Status int as the following:
