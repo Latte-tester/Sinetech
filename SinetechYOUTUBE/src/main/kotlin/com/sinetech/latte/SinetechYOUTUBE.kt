@@ -8,6 +8,10 @@ import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import org.schabi.newpipe.extractor.ServiceList
+import org.schabi.newpipe.extractor.services.youtube.extractors.YoutubeStreamExtractor
+import org.schabi.newpipe.extractor.services.youtube.linkHandler.YoutubeStreamLinkHandlerFactory
+import org.schabi.newpipe.extractor.stream.StreamInfo
 
 class SinetechYOUTUBE(private val sharedPref: SharedPreferences?) : MainAPI() {
     override var mainUrl = "https://www.youtube.com/@sinetechone"
@@ -85,32 +89,49 @@ class SinetechYOUTUBE(private val sharedPref: SharedPreferences?) : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ): Boolean {
-        val videoUrl = "https://www.youtube.com/watch?v=$data"
-
-        callback.invoke(
-            ExtractorLink(
-                source = this.name,
-                name = this.name,
-                url = videoUrl,
-                referer = "",
-                quality = Qualities.Unknown.value,
-                isM3u8 = false
+        try {
+            val link = YoutubeStreamLinkHandlerFactory.getInstance().fromUrl(
+                "https://www.youtube.com/watch?v=$data"
             )
-        )
 
-        return true
+            val extractor = object : YoutubeStreamExtractor(ServiceList.YouTube, link) {}
+            extractor.fetchPage()
+
+            callback.invoke(
+                ExtractorLink(
+                    source = this.name,
+                    name = this.name,
+                    url = extractor.hlsUrl,
+                    referer = "",
+                    quality = Qualities.Unknown.value,
+                    isM3u8 = true
+                )
+            )
+
+            val subtitles = extractor.subtitlesDefault.filterNotNull()
+            subtitles.mapNotNull {
+                SubtitleFile(it.languageTag ?: return@mapNotNull null, it.content ?: return@mapNotNull null)
+            }.forEach(subtitleCallback)
+
+            return true
+        } catch (e: Exception) {
+            Log.e("SinetechYOUTUBE", "Error in loadLinks: ${e.message}", e)
+            return false
+        }
     }
 
     private fun parseVideos(doc: Document): List<SearchResponse> {
-        return doc.select("ytd-rich-item-renderer, ytd-video-renderer").mapNotNull { video ->
-            val videoElement = video.select("a#video-title-link").firstOrNull() ?: video.select("a#thumbnail[href]").firstOrNull()
+        return doc.select("ytd-rich-grid-media, ytd-video-renderer").mapNotNull { video ->
+            val videoElement = video.select("a#video-title, a#thumbnail[href]").firstOrNull()
             val videoUrl = videoElement?.attr("href") ?: return@mapNotNull null
             val videoId = videoUrl.substringAfter("v=").substringBefore("&")
             if (videoId.isBlank()) return@mapNotNull null
 
-            val title = videoElement.attr("title")
+            val title = videoElement.attr("title").ifEmpty { videoElement.text() }
+            if (title.isBlank()) return@mapNotNull null
+            
             val thumbnail = "https://i.ytimg.com/vi/$videoId/hqdefault.jpg"
-            val publishTime = video.select("span.inline-metadata-item, span.style-scope.ytd-video-meta-block").firstOrNull()?.text() ?: ""
+            val publishTime = video.select("span.ytd-video-meta-block[aria-label], span.inline-metadata-item").firstOrNull()?.text() ?: ""
 
             val watchKey = "watch_${videoId.hashCode()}"
             val progressKey = "progress_${videoId.hashCode()}"
