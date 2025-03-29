@@ -7,8 +7,6 @@ import com.lagradost.cloudstream3.utils.*
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import java.io.InputStream
-import com.lagradost.cloudstream3.mvvm.safeApiCall
-import com.lagradost.cloudstream3.metadata.Tmdb
 
 class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
     override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/patr0n/site/lists/power-sinema.m3u"
@@ -89,20 +87,6 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
         val isWatched = sharedPref?.getBoolean(watchKey, false) ?: false
         val watchProgress = sharedPref?.getLong(progressKey, 0L) ?: 0L
         val loadData = fetchDataFromUrlOrJson(url)
-        
-        // TMDB'den film detaylarını al
-        val tmdbData = safeApiCall {
-            Tmdb.getMovieDetails(BuildConfig.TMDB_SECRET_API, loadData.title, loadData.year)
-        }
-        
-        val updatedLoadData = loadData.copy(
-            year = tmdbData?.year,
-            director = tmdbData?.director,
-            actors = tmdbData?.actors,
-            rating = tmdbData?.rating,
-            plot = tmdbData?.plot,
-            genres = tmdbData?.genres
-        )
         val nation:String = if (loadData.group == "NSFW") {
             "⚠️🔞🔞🔞 » ${loadData.group} | ${loadData.nation} « 🔞🔞🔞⚠️"
         } else {
@@ -139,13 +123,18 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
             }
         }
 
+        val tmdbData = fetchTmdbData(loadData.title)
+
         return newMovieLoadResponse(loadData.title, url, TvType.Movie, loadData.url) {
             this.posterUrl = loadData.poster
-            this.plot = nation
-            this.tags = listOf(loadData.group, loadData.nation)
+            this.plot = tmdbData["overview"]?.takeIf { it.isNotBlank() } ?: nation
+            this.tags = listOf(loadData.group, loadData.nation) + (tmdbData["genres"] as? List<String> ?: emptyList())
             this.recommendations = recommendations
-            this.rating = if (isWatched) 5 else 0
+            this.rating = tmdbData["imdbRating"] as? Double ?: (if (isWatched) 5 else 0)
             this.duration = if (watchProgress > 0) (watchProgress / 1000).toInt() else null
+            this.year = tmdbData["year"] as? Int
+            this.director = tmdbData["director"] as? String
+            this.cast = tmdbData["cast"] as? List<String> ?: emptyList()
         }
     }
 
@@ -193,13 +182,102 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
     val watchProgress: Long = 0L,
     val year: Int? = null,
     val director: String? = null,
-    val actors: List<String>? = null,
-    val rating: Float? = null,
-    val plot: String? = null,
-    val genres: List<String>? = null
+    val cast: List<String> = emptyList(),
+    val imdbRating: Double? = null,
+    val overview: String? = null,
+    val genres: List<String> = emptyList()
 )
 
-    private suspend fun fetchDataFromUrlOrJson(data: String): LoadData {
+    private fun cleanMovieTitle(title: String): String {
+    return title
+        .replace("\\(\\d{4}\\)".toRegex(), "")
+        .replace("(\\d{3,4}p)".toRegex(), "")
+        .replace("[\\[\\]()]".toRegex(), "")
+        .trim()
+}
+
+private suspend fun fetchTmdbData(title: String): Map<String, Any?> {
+    try {
+        val response = app.get(
+            "https://api.themoviedb.org/3/search/movie?api_key=${BuildConfig.TMDB_SECRET_API}&query=${cleanMovieTitle(title)}"
+        ).text
+
+        val json = parseJson<JsonObject>(response)
+        return json["results"]?.asJsonArray?.firstOrNull()?.asJsonObject?.let {
+            mapOf(
+                "year" to it["release_date"]?.asString?.take(4)?.toIntOrNull(),
+                "director" to getDirectorFromCredits(it["id"]?.asInt),
+                "cast" to getCastMembers(it["id"]?.asInt),
+                "imdbRating" to getImdbRating(it["id"]?.asInt),
+                "overview" to it["overview"]?.asString,
+                "genres" to it["genre_ids"]?.asJsonArray?.mapNotNull { genreId -> 
+                    when(genreId.asInt) {
+                        28 -> "Aksiyon"
+                        12 -> "Macera"
+                        16 -> "Animasyon"
+                        35 -> "Komedi"
+                        80 -> "Suç"
+                        99 -> "Belgesel"
+                        18 -> "Drama"
+                        10751 -> "Aile"
+                        14 -> "Fantastik"
+                        36 -> "Tarih"
+                        27 -> "Korku"
+                        10402 -> "Müzik"
+                        9648 -> "Gizem"
+                        10749 -> "Romantik"
+                        878 -> "Bilim Kurgu"
+                        10770 -> "TV Film"
+                        53 -> "Gerilim"
+                        10752 -> "Savaş"
+                        37 -> "Western"
+                        else -> null
+                    }
+                }
+            )
+        } ?: emptyMap()
+    } catch (e: Exception) {
+        Log.e("TMDB", "API hatası: ${e.message}")
+        return emptyMap()
+    }
+}
+
+private suspend fun getDirectorFromCredits(movieId: Int?): String? {
+    if (movieId == null) return null
+    val response = app.get(
+        "https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${BuildConfig.TMDB_SECRET_API}"
+    ).text
+    return parseJson<JsonObject>(response)["crew"]?.asJsonArray
+        ?.firstOrNull { it["job"]?.asString == "Director" }
+        ?.get("name")?.asString
+}
+
+private suspend fun getCastMembers(movieId: Int?): List<String> {
+    if (movieId == null) return emptyList()
+    val response = app.get(
+        "https://api.themoviedb.org/3/movie/${movieId}/credits?api_key=${BuildConfig.TMDB_SECRET_API}"
+    ).text
+    return parseJson<JsonObject>(response)["cast"]?.asJsonArray
+        ?.take(5)
+        ?.mapNotNull { it["name"]?.asString } ?: emptyList()
+}
+
+private suspend fun getImdbRating(movieId: Int?): Double? {
+    if (movieId == null) return null
+    val response = app.get(
+        "https://api.themoviedb.org/3/movie/${movieId}/external_ids?api_key=${BuildConfig.TMDB_SECRET_API}"
+    ).text
+    val imdbId = parseJson<JsonObject>(response)["imdb_id"]?.asString ?: return null
+    
+    return try {
+        val imdbResponse = app.get("https://www.omdbapi.com/?i=${imdbId}&apikey=${BuildConfig.OMDB_API_KEY}").text
+        parseJson<JsonObject>(imdbResponse)["imdbRating"]?.asString?.toDoubleOrNull()
+    } catch (e: Exception) {
+        null
+    }
+}
+
+private suspend fun fetchDataFromUrlOrJson(data: String): LoadData {
         if (data.startsWith("{")) {
             return parseJson<LoadData>(data)
         } else {
