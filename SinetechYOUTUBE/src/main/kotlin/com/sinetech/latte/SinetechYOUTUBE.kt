@@ -102,11 +102,15 @@ class SinetechYOUTUBE(private val sharedPref: SharedPreferences?) : MainAPI() {
     }
 
     private fun parseVideos(doc: Document): List<SearchResponse> {
-        return doc.select("div[id=contents] ytd-video-renderer").map { video ->
-            val videoId = video.attr("video-id")
-            val title = video.select("h3 a").text()
+        return doc.select("ytd-rich-item-renderer, ytd-video-renderer").mapNotNull { video ->
+            val videoElement = video.select("a#video-title-link").firstOrNull() ?: video.select("a#thumbnail[href]").firstOrNull()
+            val videoUrl = videoElement?.attr("href") ?: return@mapNotNull null
+            val videoId = videoUrl.substringAfter("v=").substringBefore("&")
+            if (videoId.isBlank()) return@mapNotNull null
+
+            val title = videoElement.attr("title")
             val thumbnail = "https://i.ytimg.com/vi/$videoId/hqdefault.jpg"
-            val publishTime = video.select("span.style-scope.ytd-video-meta-block").first()?.text() ?: ""
+            val publishTime = video.select("span.inline-metadata-item, span.style-scope.ytd-video-meta-block").firstOrNull()?.text() ?: ""
 
             val watchKey = "watch_${videoId.hashCode()}"
             val progressKey = "progress_${videoId.hashCode()}"
