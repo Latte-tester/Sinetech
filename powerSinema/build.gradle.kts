@@ -3,6 +3,10 @@ version = 2.1
 val tmdbApiKey = System.getenv("TMDB_SECRET_API") ?: ""
 
 android {
+    buildFeatures {
+        buildConfig = true
+    }
+    
     defaultConfig {
         buildConfigField("String", "TMDB_API_KEY", "\"${tmdbApiKey}\"")
     }
