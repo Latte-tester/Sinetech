@@ -187,7 +187,7 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
         return newMovieLoadResponse(tmdbDetails["title"]?.toString() ?: loadData.title, url, TvType.Movie, loadData.url) {
             this.posterUrl = loadData.poster
             this.plot = tmdbDetails["overview"]?.toString()
-            this.rating = (tmdbDetails["rating"] as? Double)?.toFloat()
+            this.rating = (tmdbDetails["rating"] as? Double)?.toFloat()?.toInt()
             this.tags = listOf(loadData.group)
             
             val movieInfo = buildString {
