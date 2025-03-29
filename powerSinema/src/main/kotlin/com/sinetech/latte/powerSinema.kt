@@ -166,19 +166,16 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
         
         return newMovieLoadResponse(loadData.title, url, TvType.Movie, loadData.url) {
             this.posterUrl = loadData.poster
-            this.plot = tmdbDetails["overview"]?.toString() ?: nation
-            this.rating = (tmdbDetails["rating"] as? Double)?.times(2)?.toInt() ?: (if (isWatched) 5 else 0)
-            
-            @Suppress("UNCHECKED_CAST")
-            val castList = tmdbDetails["cast"] as? List<String> ?: emptyList()
-            val director = tmdbDetails["director"] as? String
-            
             val movieInfo = buildString {
-                if (castList.isNotEmpty()) {
-                    append("Oyuncular: ${castList.joinToString(", ")}\n")
+                tmdbDetails["overview"]?.toString()?.let { overview ->
+                    append(overview)
+                    append("\n\n")
                 }
-                if (director != null) {
-                    append("Yönetmen: $director\n")
+                if ((tmdbDetails["cast"] as? List<String>)?.isNotEmpty() == true) {
+                    append("Oyuncular: ${(tmdbDetails["cast"] as List<String>).joinToString(", ")}\n")
+                }
+                if (tmdbDetails["director"] != null) {
+                    append("Yönetmen: ${tmdbDetails["director"]}\n")
                 }
                 if (!nation.isNullOrEmpty()) {
                     append(nation)
@@ -186,6 +183,7 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
             }
             
             this.plot = movieInfo
+            this.rating = (tmdbDetails["rating"] as? Double)?.times(2)?.toInt() ?: (if (isWatched) 5 else 0)
             this.tags = listOf(loadData.group, loadData.nation)
             this.recommendations = recommendations
             this.rating = if (isWatched) 5 else 0
