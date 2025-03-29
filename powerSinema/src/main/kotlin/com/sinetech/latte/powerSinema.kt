@@ -172,11 +172,12 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
                     append(overview)
                     append("\n\n")
                 }
-                if ((tmdbDetails["cast"] as? List<String>)?.isNotEmpty() == true) {
-                    append("🎭 Oyuncular:\n${(tmdbDetails["cast"] as List<String>).joinToString("\n- ", "- ")}\n\n")
+                val cast = tmdbDetails["cast"] as? List<String>
+                if (cast?.isNotEmpty() == true) {
+                    append("🎭 Oyuncular:\n${cast.joinToString("\n- ", "- ")}\n\n")
                 }
-                if (tmdbDetails["director"] != null) {
-                    append("🎬 Yönetmen:\n- ${tmdbDetails["director"]}\n\n")
+                tmdbDetails["director"]?.toString()?.let { director ->
+                    append("🎬 Yönetmen:\n- $director\n\n")
                 }
                 if (!nation.isNullOrEmpty()) {
                     append(nation)
