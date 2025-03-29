@@ -207,37 +207,10 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
             if (!nation.isNullOrEmpty()) {
                 append(nation)
             }
-        }
+        }.toString()
         
         return newMovieLoadResponse(tmdbDetails["title"]?.toString() ?: loadData.title, url, TvType.Movie, loadData.url) {
             this.posterUrl = loadData.poster
-            this.plot = movieInfo
-            this.rating = (tmdbDetails["rating"] as? Double)?.times(10)?.toInt() ?: 0
-            this.tags = listOf(loadData.group, loadData.nation)
-                tmdbDetails["overview"]?.toString()?.let { overview ->
-                    append("📝 Film Özeti:\n")
-                    append(overview)
-                    append("\n\n")
-                }
-                
-                val cast = tmdbDetails["cast"] as? List<String>
-                if (cast?.isNotEmpty() == true) {
-                    append("🎭 Oyuncular:\n")
-                    append(cast.joinToString("\n- ", "- "))
-                    append("\n\n")
-                }
-                
-                tmdbDetails["director"]?.toString()?.let { director ->
-                    append("🎬 Yönetmen:\n")
-                    append("- $director")
-                    append("\n\n")
-                }
-                
-                if (!nation.isNullOrEmpty()) {
-                    append(nation)
-                }
-            }
-            
             this.plot = movieInfo
             this.rating = (tmdbDetails["rating"] as? Double)?.times(10)?.toInt() ?: 0
             this.tags = listOf(loadData.group, loadData.nation)
