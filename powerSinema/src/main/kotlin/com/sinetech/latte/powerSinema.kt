@@ -291,6 +291,9 @@ class IptvPlaylistParser {
                 } else {
                     title
                 }
+            }.let { title ->
+                // Özel karakterleri temizle ve başlığı düzenle
+                title.replace(Regex("^[^a-zA-Z0-9]+"), "").ifEmpty { title }
             }
         } else {
             null
@@ -328,13 +331,19 @@ class IptvPlaylistParser {
                     currentValue.clear()
                 }
                 char == ' ' && !inQuotes && currentKey.isNotEmpty() && currentValue.isNotEmpty() -> {
-                    attributes[currentKey] = currentValue.toString().trim().removeSurrounding("\"").trim()
+                    val cleanValue = currentValue.toString().trim().removeSurrounding("\"").trim()
+                    if (cleanValue.isNotEmpty()) {
+                        attributes[currentKey] = cleanValue
+                    }
                     currentKey = ""
                     currentValue.clear()
                 }
                 char == ',' && !inQuotes -> {
                     if (currentKey.isNotEmpty() && currentValue.isNotEmpty()) {
-                        attributes[currentKey] = currentValue.toString().trim().removeSurrounding("\"").trim()
+                        val cleanValue = currentValue.toString().trim().removeSurrounding("\"").trim()
+                        if (cleanValue.isNotEmpty()) {
+                            attributes[currentKey] = cleanValue
+                        }
                     }
                     break
                 }
@@ -344,7 +353,10 @@ class IptvPlaylistParser {
         }
 
         if (currentKey.isNotEmpty() && currentValue.isNotEmpty()) {
-            attributes[currentKey] = currentValue.toString().trim().removeSurrounding("\"").trim()
+            val cleanValue = currentValue.toString().trim().removeSurrounding("\"").trim()
+            if (cleanValue.isNotEmpty()) {
+                attributes[currentKey] = cleanValue
+            }
         }
 
         return attributes
