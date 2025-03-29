@@ -6,9 +6,7 @@ import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
-import com.google.gson.JsonObject
 import java.io.InputStream
-import java.net.URLEncoder
 
 class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
     override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/patr0n/site/lists/power-sinema.m3u"
@@ -83,63 +81,6 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
 
     override suspend fun quickSearch(query: String): List<SearchResponse> = search(query)
 
-    private suspend fun fetchTMDBDetails(title: String): Map<String, Any?> {
-        try {
-            val tmdbApiKey = BuildConfig.TMDB_API_KEY ?: return mapOf()
-            val cleanTitle = title.trim()
-            // Film başlığından yıl bilgisini çıkar
-            val yearRegex = Regex("\\((\\d{4})\\)")
-            val yearMatch = yearRegex.find(title)
-            val year = yearMatch?.groupValues?.get(1)
-            val searchTitle = title.replace(yearRegex, "").trim()
-            
-            val searchUrl = "https://api.themoviedb.org/3/search/movie?api_key=$tmdbApiKey&query=${URLEncoder.encode(searchTitle, "UTF-8")}${if (year != null) "&year=$year" else ""}&language=tr-TR"
-            
-            val searchResponse = app.get(searchUrl).text
-            val searchData = parseJson<JsonObject>(searchResponse)
-            val results = searchData.getAsJsonArray("results")
-            
-            if (results?.size() ?: 0 > 0) {
-                val movie = results[0].asJsonObject
-                val movieId = movie.get("id")?.asInt ?: return mapOf()
-                val movieTitle = movie.get("title")?.asString ?: cleanTitle
-                
-                val detailsUrl = "https://api.themoviedb.org/3/movie/$movieId?api_key=$tmdbApiKey&append_to_response=credits&language=tr-TR"
-                val detailsResponse = app.get(detailsUrl).text
-                val details = parseJson<JsonObject>(detailsResponse)
-                
-                val credits = details.getAsJsonObject("credits")
-                val cast = credits?.getAsJsonArray("cast")
-                    ?.take(5)
-                    ?.mapNotNull { it.asJsonObject?.get("name")?.asString }
-                    ?.takeIf { it.isNotEmpty() }
-                    ?: emptyList()
-                
-                val director = credits?.getAsJsonArray("crew")
-                    ?.find { it.asJsonObject?.get("job")?.asString == "Director" }
-                    ?.asJsonObject?.get("name")?.asString
-                
-                val overview = details.get("overview")?.asString?.takeIf { it.isNotEmpty() }
-                    ?: movie.get("overview")?.asString?.takeIf { it.isNotEmpty() }
-                val rating = details.get("vote_average")?.asDouble
-                    ?: movie.get("vote_average")?.asDouble
-                
-                val result = mutableMapOf<String, Any?>()
-                result["tmdbId"] = movieId
-                result["title"] = movieTitle
-                if (!overview.isNullOrBlank()) result["overview"] = overview
-                if (rating != null) result["rating"] = rating
-                if (cast.isNotEmpty()) result["cast"] = cast
-                if (!director.isNullOrBlank()) result["director"] = director
-                
-                return result
-            }
-        } catch (e: Exception) {
-            Log.e("TMDB", "Error fetching TMDB details for '$title': ${e.message}", e)
-        }
-        return mapOf()
-    }
-
     override suspend fun load(url: String): LoadResponse {
         val watchKey = "watch_${url.hashCode()}"
         val progressKey = "progress_${url.hashCode()}"
@@ -182,39 +123,12 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
             }
         }
 
-        val tmdbDetails = fetchTMDBDetails(loadData.title)
-        
-        val movieInfo = buildString {
-            tmdbDetails["overview"]?.toString()?.let { overview ->
-                append("📝 Film Özeti:\n")
-                append(overview)
-                append("\n\n")
-            }
-            
-            val cast = tmdbDetails["cast"] as? List<String>
-            if (cast?.isNotEmpty() == true) {
-                append("🎭 Oyuncular:\n")
-                append(cast.joinToString("\n- ", "- "))
-                append("\n\n")
-            }
-            
-            tmdbDetails["director"]?.toString()?.let { director ->
-                append("🎬 Yönetmen:\n")
-                append("- $director")
-                append("\n\n")
-            }
-            
-            if (!nation.isNullOrEmpty()) {
-                append(nation)
-            }
-        }.toString()
-        
-        return newMovieLoadResponse(tmdbDetails["title"]?.toString() ?: loadData.title, url, TvType.Movie, loadData.url) {
+        return newMovieLoadResponse(loadData.title, url, TvType.Movie, loadData.url) {
             this.posterUrl = loadData.poster
-            this.plot = movieInfo
-            this.rating = (tmdbDetails["rating"] as? Double)?.times(10)?.toInt() ?: 0
+            this.plot = nation
             this.tags = listOf(loadData.group, loadData.nation)
             this.recommendations = recommendations
+            this.rating = if (isWatched) 5 else 0
             this.duration = if (watchProgress > 0) (watchProgress / 1000).toInt() else null
         }
     }
@@ -253,20 +167,7 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
         }
     }
 
-    data class LoadData(
-        val url: String,
-        val title: String,
-        val poster: String,
-        val group: String,
-        val nation: String,
-        val isWatched: Boolean = false,
-        val watchProgress: Long = 0L,
-        val tmdbId: Int? = null,
-        val overview: String? = null,
-        val rating: Double? = null,
-        val cast: List<String>? = null,
-        val director: String? = null
-    )
+    data class LoadData(val url: String, val title: String, val poster: String, val group: String, val nation: String, val isWatched: Boolean = false, val watchProgress: Long = 0L)
 
     private suspend fun fetchDataFromUrlOrJson(data: String): LoadData {
         if (data.startsWith("{")) {

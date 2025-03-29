@@ -1,25 +1,9 @@
-version = 3
-
-val tmdbApiKey = System.getenv("TMDB_SECRET_API") ?: ""
-
-android {
-    buildFeatures {
-        buildConfig = true
-    }
-    
-    defaultConfig {
-        buildConfigField("String", "TMDB_API_KEY", "\"${tmdbApiKey}\"")
-    }
-}
+version = 2.1
 
 cloudstream {
     authors     = listOf("GitLatte", "patr0nq", "keyiflerolsun")
     language    = "tr"
     description = "powerboard`un sinema arşivi"
-
-    dependencies {
-        implementation("com.google.code.gson:gson:2.8.9")
-    }
 
     /**
      * Status int as the following:
