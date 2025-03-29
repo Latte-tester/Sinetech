@@ -233,12 +233,12 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
     val nation: String,
     val isWatched: Boolean = false,
     val watchProgress: Long = 0L,
-    val year: Int? = null,
-    val director: String? = null,
-    val cast: List<String>? = null,
-    val rating: Double? = null,
-    val overview: String? = null,
-    val genres: List<String>? = null
+    var year: Int? = null,
+    var director: String? = null,
+    var cast: List<String>? = null,
+    var rating: Double? = null,
+    var overview: String? = null,
+    var genres: List<String>? = null
 )
 
     private suspend fun fetchDataFromUrlOrJson(data: String): LoadData {
