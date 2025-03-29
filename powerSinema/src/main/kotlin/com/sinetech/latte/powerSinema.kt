@@ -172,21 +172,21 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
                     append("\n\n")
                 }
                 if ((tmdbDetails["cast"] as? List<String>)?.isNotEmpty() == true) {
-                    append("Oyuncular: ${(tmdbDetails["cast"] as List<String>).joinToString(", ")}\n")
+                    append("🎭 Oyuncular: ${(tmdbDetails["cast"] as List<String>).joinToString(", ")}\n")
                 }
                 if (tmdbDetails["director"] != null) {
-                    append("Yönetmen: ${tmdbDetails["director"]}\n")
+                    append("🎬 Yönetmen: ${tmdbDetails["director"]}\n")
                 }
                 if (!nation.isNullOrEmpty()) {
+                    append("\n")
                     append(nation)
                 }
             }
             
             this.plot = movieInfo
-            this.rating = (tmdbDetails["rating"] as? Double)?.times(2)?.toInt() ?: (if (isWatched) 5 else 0)
+            this.rating = (tmdbDetails["rating"] as? Double)?.times(10)?.toInt() ?: (if (isWatched) 50 else 0)
             this.tags = listOf(loadData.group, loadData.nation)
             this.recommendations = recommendations
-            this.rating = if (isWatched) 5 else 0
             this.duration = if (watchProgress > 0) (watchProgress / 1000).toInt() else null
         }
     }
