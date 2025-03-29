@@ -20,10 +20,34 @@ class SinetechYOUTUBE(private val sharedPref: SharedPreferences?) : MainAPI() {
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val doc = Jsoup.connect(mainUrl).get()
-        val videos = parseVideos(doc)
+        val recentVideos = parseVideos(doc)
+        
+        val popularUrl = "$mainUrl/videos?view=0&sort=p&flow=grid"
+        val popularDoc = Jsoup.connect(popularUrl).get()
+        val popularVideos = parseVideos(popularDoc)
+        
+        val playlistsUrl = "$mainUrl/playlists"
+        val playlistsDoc = Jsoup.connect(playlistsUrl).get()
+        val playlists = playlistsDoc.select("div[id=contents] ytd-playlist-renderer").map { playlist ->
+            val playlistId = playlist.attr("playlist-id")
+            val title = playlist.select("h3 a").text()
+            val thumbnail = playlist.select("img").attr("src")
+            
+            newMovieSearchResponse(
+                title,
+                LoadData(playlistId, title, thumbnail, "", false, 0L).toJson(),
+                TvType.Movie
+            ) {
+                this.posterUrl = thumbnail
+            }
+        }
 
         return newHomePageResponse(
-            listOf(HomePageList("Son Yüklenenler", videos)),
+            listOf(
+                HomePageList("Son Yüklenenler", recentVideos),
+                HomePageList("En Popüler", popularVideos),
+                HomePageList("Oynatma Listeleri", playlists)
+            ),
             hasNext = false
         )
     }
