@@ -10,6 +10,10 @@ dependencies {
 }
 
 android {
+    buildFeatures {
+        buildConfig = true
+    }
+
     defaultConfig {
         buildConfigField("String", "TMDB_SECRET_API", System.getenv("TMDB_API_KEY") ?: "\"\"")
     }
