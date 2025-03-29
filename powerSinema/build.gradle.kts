@@ -1,22 +1,15 @@
 version = 2.1
 
-plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+android {
+    defaultConfig {
+        buildConfigField("String", "TMDB_API_KEY", System.getenv("TMDB_SECRET_API") ?: "\"\"")
+    }
 }
 
 dependencies {
-    implementation("com.google.code.gson:gson:2.10.1")
-}
-
-android {
-    buildFeatures {
-        buildConfig = true
-    }
-
-    defaultConfig {
-        buildConfigField("String", "TMDB_SECRET_API", System.getenv("TMDB_API_KEY") ?: "\"\"")
-    }
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation("com.squareup.okhttp3:okhttp:4.9.1")
 }
 
 cloudstream {
