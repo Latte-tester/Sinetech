@@ -1,0 +1,10 @@
+-keep class com.sinetech.latte.** { *; }
+-keep class com.google.api.** { *; }
+-keep class com.google.android.** { *; }
+-dontwarn com.google.api.**
+-dontwarn com.google.android.**
+-dontwarn kotlin.**
+-dontwarn kotlinx.**
+-keepattributes *Annotation*
+-keepattributes Signature
+-keepattributes Exceptions

@@ -1,0 +1,8 @@
+name=SinetechYOUTUBE
+version=1.0.0
+authors=SinetechOne
+description=SinetechOne YouTube kanalı için özel olarak tasarlanmış bir eklenti.
+website=https://www.youtube.com/@sinetechone
+language=tr
+status=release
+tvTypes=Movie,TvSeries
