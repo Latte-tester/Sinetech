@@ -16,3 +16,7 @@ cloudstream {
     tvTypes = listOf("Movie")
     iconUrl = "https://www.google.com/s2/favicons?domain=tr.canlitv.team&sz=%size%"
 }
+
+dependencies {
+    implementation("com.lagradost:cloudstream3-metadata:pre-release")
+}
