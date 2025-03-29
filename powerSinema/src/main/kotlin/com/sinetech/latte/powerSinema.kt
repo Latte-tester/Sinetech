@@ -6,7 +6,9 @@ import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
+import com.google.gson.JsonObject
 import java.io.InputStream
+import java.net.URLEncoder
 
 class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
     override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/patr0n/site/lists/power-sinema.m3u"
@@ -83,7 +85,7 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
 
     private suspend fun fetchTMDBDetails(title: String): Map<String, Any?> {
         val tmdbApiKey = BuildConfig.TMDB_API_KEY ?: return mapOf()
-        val searchUrl = "https://api.themoviedb.org/3/search/movie?api_key=$tmdbApiKey&query=${title.encodeUrl()}&language=tr-TR"
+        val searchUrl = "https://api.themoviedb.org/3/search/movie?api_key=$tmdbApiKey&query=${URLEncoder.encode(title, "UTF-8")}&language=tr-TR"
         
         val searchResponse = app.get(searchUrl).text
         val searchData = parseJson<JsonObject>(searchResponse)
