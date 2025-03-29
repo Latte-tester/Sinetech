@@ -1,9 +1,3 @@
-version = 1
-
-rootProject.name = "SinetechYOUTUBE"
-
-include(":app")
-
 plugins {
     id("com.android.library")
     id("org.jetbrains.kotlin.android")
@@ -13,7 +7,9 @@ android {
     compileSdk = 33
     defaultConfig {
         minSdk = 21
+        testOptions {
         targetSdk = 33
+    }
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
