@@ -177,7 +177,10 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
                 append(nation)
                 if (loadData.year != null) append("\nYıl: ${loadData.year}")
                 if (loadData.director != null) append("\nYönetmen: ${loadData.director}")
-                if (!loadData.cast.isNullOrEmpty()) append("\nOyuncular: ${loadData.cast.joinToString(", ")}")
+                if (!loadData.cast.isNullOrEmpty()) {
+                    val castList = loadData.cast
+                    append("\nOyuncular: ${castList.joinToString(", ")}")
+                }
                 if (loadData.overview != null) append("\n\n${loadData.overview}")
             }
             this.tags = buildList {
