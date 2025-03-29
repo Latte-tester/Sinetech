@@ -14,7 +14,7 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
     override val hasMainPage          = true
     override var lang                 = "tr"
     override val hasQuickSearch       = true
-    override val hasDownloadSupport   = false
+    override val hasDownloadSupport   = true
     override val supportedTypes       = setOf(TvType.Movie)
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
@@ -87,10 +87,11 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
         val isWatched = sharedPref?.getBoolean(watchKey, false) ?: false
         val watchProgress = sharedPref?.getLong(progressKey, 0L) ?: 0L
         val loadData = fetchDataFromUrlOrJson(url)
+
         val nation:String = if (loadData.group == "NSFW") {
-            "⚠️🔞🔞🔞 » ${loadData.group} | ${loadData.nation} « 🔞🔞🔞⚠️"
+            "⚠️🔞🔞🔞 » ${loadData.group} | ${loadData.nation} « 🔞🔞🔞⚠️\nDil Seçenekleri: $languageInfo"
         } else {
-            "» ${loadData.group} | ${loadData.nation} «"
+            "» ${loadData.group} | ${loadData.nation} «\nDil Seçenekleri: $languageInfo"
         }
 
         val kanallar        = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
@@ -283,7 +284,18 @@ class IptvPlaylistParser {
     private fun String.isExtendedM3u(): Boolean = startsWith(EXT_M3U)
 
     private fun String.getTitle(): String? {
-        return split(",").lastOrNull()?.replaceQuotesAndTrim()
+        val commaIndex = lastIndexOf(",")
+        return if (commaIndex >= 0) {
+            substring(commaIndex + 1).trim().let { title ->
+                if (title.startsWith("\"") && title.endsWith("\"")) {
+                    title.substring(1, title.length - 1)
+                } else {
+                    title
+                }
+            }
+        } else {
+            null
+        }
     }
 
     private fun String.getUrl(): String? {
@@ -299,16 +311,44 @@ class IptvPlaylistParser {
     }
 
     private fun String.getAttributes(): Map<String, String> {
-        val extInfRegex      = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
-        val attributesString = replace(extInfRegex, "").replaceQuotesAndTrim().split(",").first()
+        val extInfRegex = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
+        val attributesString = replace(extInfRegex, "").trim()
+        
+        val attributes = mutableMapOf<String, String>()
+        var currentKey = ""
+        var currentValue = StringBuilder()
+        var inQuotes = false
+        var i = 0
 
-        return attributesString
-            .split(Regex("\\s"))
-            .mapNotNull {
-                val pair = it.split("=")
-                if (pair.size == 2) pair.first() to pair.last().replaceQuotesAndTrim() else null
+        while (i < attributesString.length) {
+            val char = attributesString[i]
+            when {
+                char == '"' -> inQuotes = !inQuotes
+                char == '=' && !inQuotes -> {
+                    currentKey = currentValue.toString().trim()
+                    currentValue.clear()
+                }
+                char == ' ' && !inQuotes && currentKey.isNotEmpty() && currentValue.isNotEmpty() -> {
+                    attributes[currentKey] = currentValue.toString().trim().removeSurrounding("\"").trim()
+                    currentKey = ""
+                    currentValue.clear()
+                }
+                char == ',' && !inQuotes -> {
+                    if (currentKey.isNotEmpty() && currentValue.isNotEmpty()) {
+                        attributes[currentKey] = currentValue.toString().trim().removeSurrounding("\"").trim()
+                    }
+                    break
+                }
+                else -> currentValue.append(char)
             }
-            .toMap()
+            i++
+        }
+
+        if (currentKey.isNotEmpty() && currentValue.isNotEmpty()) {
+            attributes[currentKey] = currentValue.toString().trim().removeSurrounding("\"").trim()
+        }
+
+        return attributes
     }
 
     private fun String.getTagValue(key: String): String? {
