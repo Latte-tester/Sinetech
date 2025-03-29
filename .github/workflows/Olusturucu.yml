@@ -43,8 +43,6 @@ jobs:
         uses: android-actions/setup-android@v3.2.2
 
       - name: Build Plugins
-        env:
-          TMDB_SECRET_API: ${{ secrets.TMDB_SECRET_API }}
         run: |
           cd $GITHUB_WORKSPACE/src
           chmod +x gradlew
