@@ -16,36 +16,53 @@ import com.lagradost.cloudstream3.amap
 
 class YouTubeProvider(language: String, private val sharedPrefs: SharedPreferences?) : MainAPI() {
     override var mainUrl = MAIN_URL
-    override var name = "SinetechOne"
+    override var name = "SinetechYT"
     override val supportedTypes = setOf(TvType.Others)
     override val hasMainPage = true
     override var lang = language
 
     private val ytParser = YouTubeParser(this.name)
-    private val CHANNEL_ID = "@sinetechone"
 
     companion object {
         const val MAIN_URL = "https://www.youtube.com"
     }
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
+        val isTrendingEnabled = sharedPrefs?.getBoolean("trending", true) ?: true
         val sections = mutableListOf<HomePageList>()
-        
-        // Son Yüklenenler
-        val latestVideos = ytParser.channelToSearchResponseList("$MAIN_URL/$CHANNEL_ID/videos", page)
-        latestVideos?.let { sections.add(HomePageList("Son Yüklenenler", it)) }
-        
-        // En Popüler
-        val popularVideos = ytParser.channelToSearchResponseList("$MAIN_URL/$CHANNEL_ID/videos?sort=p", page)
-        popularVideos?.let { sections.add(HomePageList("En Popüler", it)) }
-        
-        // Oynatma Listeleri
-        val playlists = ytParser.channelToSearchResponseList("$MAIN_URL/$CHANNEL_ID/playlists", page)
-        playlists?.let { sections.add(HomePageList("Oynatma Listeleri", it)) }
+        if (isTrendingEnabled) {
+            val videos = ytParser.getTrendingVideoUrls(page)
+            videos?.let { sections.add(it) }
+        }
+        val playlistsData = sharedPrefs?.getStringSet("playlists", emptySet()) ?: emptySet()
+        if (playlistsData.isNotEmpty()) {
+            val triples = playlistsData.map { parseJson<Triple<String, String, Long>>(it) }
+            val list = triples.amap { data ->
+                val playlistUrl = data.first
+                val urlPath = playlistUrl.substringAfter("youtu").substringAfter("/")
+                val isPlaylist = urlPath.startsWith("playlist?list=")
+                val isChannel = urlPath.startsWith("@") || urlPath.startsWith("channel")
+                val customSections = if (isPlaylist && !isChannel) {
+                    ytParser.playlistToSearchResponseList(playlistUrl, page)
+                } else if (!isPlaylist && isChannel) {
+                    ytParser.channelToSearchResponseList(playlistUrl, page)
+                } else {
+                    null
+                }
+                customSections to data.third
+            }
+            list.sortedBy { it.second }.forEach {
+                val homepageSection = it.first
+                if (homepageSection != null) {
+                    sections.add(homepageSection)
+                }
+            }
+
+        }
         if (sections.isEmpty()) {
             sections.add(
                 HomePageList(
-                    "Henüz içerik yüklenemedi",
+                    "All sections are disabled. Go to the settings to enable them",
                     emptyList()
                 )
             )
@@ -56,7 +73,7 @@ class YouTubeProvider(language: String, private val sharedPrefs: SharedPreferenc
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        return ytParser.channelToSearchResponseList("$MAIN_URL/$CHANNEL_ID/search?query=$query", 1) ?: emptyList()
+        return ytParser.search(query)
     }
 
     override suspend fun load(url: String): LoadResponse {

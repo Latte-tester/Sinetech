@@ -15,7 +15,7 @@ import org.schabi.newpipe.extractor.services.youtube.linkHandler.YoutubeStreamLi
 open class YouTubeExtractor(private val hls: Boolean) : ExtractorApi() {
     override val mainUrl = "https://www.youtube.com"
     override val requiresReferer = false
-    override val name = "YouTube"
+    override val name = "SinetechYT"
 
     constructor() : this(true)
 

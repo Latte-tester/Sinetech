@@ -12,7 +12,7 @@ import org.schabi.newpipe.extractor.localization.Localization
 
 @CloudstreamPlugin
 class YouTubePlugin : Plugin() {
-    private val sharedPref = activity?.getSharedPreferences("Youtube", Context.MODE_PRIVATE)
+    private val sharedPref = activity?.getSharedPreferences("SinetechYT", Context.MODE_PRIVATE)
 
     override fun load(context: Context) {
         var language = sharedPref?.getString("language", "it")
