@@ -7,6 +7,8 @@ import com.lagradost.cloudstream3.utils.*
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import java.io.InputStream
+import com.lagradost.cloudstream3.mvvm.safeApiCall
+import com.lagradost.cloudstream3.metadata.Tmdb
 
 class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
     override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/patr0n/site/lists/power-sinema.m3u"
@@ -87,6 +89,20 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
         val isWatched = sharedPref?.getBoolean(watchKey, false) ?: false
         val watchProgress = sharedPref?.getLong(progressKey, 0L) ?: 0L
         val loadData = fetchDataFromUrlOrJson(url)
+        
+        // TMDB'den film detaylarını al
+        val tmdbData = safeApiCall {
+            Tmdb.getMovieDetails(BuildConfig.TMDB_SECRET_API, loadData.title, loadData.year)
+        }
+        
+        val updatedLoadData = loadData.copy(
+            year = tmdbData?.year,
+            director = tmdbData?.director,
+            actors = tmdbData?.actors,
+            rating = tmdbData?.rating,
+            plot = tmdbData?.plot,
+            genres = tmdbData?.genres
+        )
         val nation:String = if (loadData.group == "NSFW") {
             "⚠️🔞🔞🔞 » ${loadData.group} | ${loadData.nation} « 🔞🔞🔞⚠️"
         } else {
@@ -167,7 +183,21 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
         }
     }
 
-    data class LoadData(val url: String, val title: String, val poster: String, val group: String, val nation: String, val isWatched: Boolean = false, val watchProgress: Long = 0L)
+    data class LoadData(
+    val url: String,
+    val title: String,
+    val poster: String,
+    val group: String,
+    val nation: String,
+    val isWatched: Boolean = false,
+    val watchProgress: Long = 0L,
+    val year: Int? = null,
+    val director: String? = null,
+    val actors: List<String>? = null,
+    val rating: Float? = null,
+    val plot: String? = null,
+    val genres: List<String>? = null
+)
 
     private suspend fun fetchDataFromUrlOrJson(data: String): LoadData {
         if (data.startsWith("{")) {
