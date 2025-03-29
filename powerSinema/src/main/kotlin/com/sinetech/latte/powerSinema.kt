@@ -134,30 +134,37 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
     }
 
     override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
-        val loadData = fetchDataFromUrlOrJson(data)
-        Log.d("IPTV", "loadData » $loadData")
+        try {
+            val loadData = fetchDataFromUrlOrJson(data)
+            Log.d("IPTV", "loadData » $loadData")
 
-        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-        val kanal    = kanallar.items.first { it.url == loadData.url }
-        Log.d("IPTV", "kanal » $kanal")
+            val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
+            val kanal = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
+            Log.d("IPTV", "kanal » $kanal")
 
-        val watchKey = "watch_${data.hashCode()}"
-        val progressKey = "progress_${data.hashCode()}"
-        sharedPref?.edit()?.putBoolean(watchKey, true)?.apply()
+            val watchKey = "watch_${data.hashCode()}"
+            val progressKey = "progress_${data.hashCode()}"
+            sharedPref?.edit()?.putBoolean(watchKey, true)?.apply()
 
-        callback.invoke(
-            ExtractorLink(
-                source  = this.name,
-                name    = this.name,
-                url     = loadData.url,
-                headers = kanal.headers,
-                referer = kanal.headers["referrer"] ?: "",
-                quality = Qualities.Unknown.value,
-                isM3u8  = true
+            callback.invoke(
+                ExtractorLink(
+                    source = this.name,
+                    name = loadData.title,
+                    url = loadData.url,
+                    headers = kanal.headers + mapOf(
+                        "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+                    ),
+                    referer = kanal.headers["referrer"] ?: "",
+                    quality = Qualities.Unknown.value,
+                    isM3u8 = true
+                )
             )
-        )
 
-        return true
+            return true
+        } catch (e: Exception) {
+            Log.e("IPTV", "Error in loadLinks: ${e.message}", e)
+            return false
+        }
     }
 
     data class LoadData(val url: String, val title: String, val poster: String, val group: String, val nation: String, val isWatched: Boolean = false, val watchProgress: Long = 0L)
@@ -292,8 +299,8 @@ class IptvPlaylistParser {
                     title
                 }
             }.let { title ->
-                // Özel karakterleri temizle ve başlığı düzenle
-                title.replace(Regex("^[^a-zA-Z0-9]+"), "").ifEmpty { title }
+                // Özel karakterleri koruyarak başlığı düzenle
+                title.trim().ifEmpty { title }
             }
         } else {
             null
