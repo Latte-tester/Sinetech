@@ -87,11 +87,10 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
         val isWatched = sharedPref?.getBoolean(watchKey, false) ?: false
         val watchProgress = sharedPref?.getLong(progressKey, 0L) ?: 0L
         val loadData = fetchDataFromUrlOrJson(url)
-
         val nation:String = if (loadData.group == "NSFW") {
-            "⚠️🔞🔞🔞 » ${loadData.group} | ${loadData.nation} « 🔞🔞🔞⚠️\nDil Seçenekleri: $languageInfo"
+            "⚠️🔞🔞🔞 » ${loadData.group} | ${loadData.nation} « 🔞🔞🔞⚠️"
         } else {
-            "» ${loadData.group} | ${loadData.nation} «\nDil Seçenekleri: $languageInfo"
+            "» ${loadData.group} | ${loadData.nation} «"
         }
 
         val kanallar        = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
