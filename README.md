@@ -34,9 +34,18 @@ TMDB API kullanılarak filmler hakkında detaylı bilgi alınabilir. Bu bilgiler
 1. Eklentiyi indirin ve kurun.
 2. Ayarlar bölümünden TMDB API anahtarınızı girin.
 
-## Kullanım Talimatları
-- Eklentileri kurduktan sonra, ana sayfa üzerinden içeriklere ulaşabilirsiniz.
-- Arama bölümünden istediğiniz dizi veya filmi arayabilirsiniz.
+## Ortak Özellikler
+# Film ve Dizilere ait themoviedb.org bilgileri:
+- Slogan
+- Konu
+- Oyuncular
+- Yönetmen
+- Yapım yılı
+- Video süresü
+- Türleri
+- Ülke
+- Orjinial Dili
+- TMDB puanı
 
 ## Avantajlar
 - Kullanıcı dostu arayüz.
@@ -45,3 +54,6 @@ TMDB API kullanılarak filmler hakkında detaylı bilgi alınabilir. Bu bilgiler
 ## Liste sahipleri
 - [GitLatte](https://github.com/GitLatte)
 - [powerboard](https://forum.sinetech.tr/uye/powerboard.3822/)
+
+### Repoyu eklemek için:
+* Depo ekle kısmında Latte yazmanız yeterli olacaktır.
