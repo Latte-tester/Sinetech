@@ -91,18 +91,27 @@ class powerSinema(private val context: android.content.Context, private val shar
     private suspend fun fetchTMDBData(title: String): JSONObject? {
         return withContext(Dispatchers.IO) {
             try {
+                val apiKey = BuildConfig.TMDB_SECRET_API.trim('"')
+                if (apiKey.isEmpty()) {
+                    Log.e("TMDB", "API key is empty")
+                    return@withContext null
+                }
+
                 val encodedTitle = URLEncoder.encode(title.replace(Regex("\\([^)]*\\)"), "").trim(), "UTF-8")
-                val apiKey = BuildConfig.TMDB_SECRET_API
                 val searchUrl = "https://api.themoviedb.org/3/search/movie?api_key=$apiKey&query=$encodedTitle&language=tr-TR"
                 
-                val response = URL(searchUrl).readText()
+                val response = withContext(Dispatchers.IO) {
+                    URL(searchUrl).readText()
+                }
                 val jsonResponse = JSONObject(response)
                 val results = jsonResponse.getJSONArray("results")
                 
                 if (results.length() > 0) {
                     val movieId = results.getJSONObject(0).getInt("id")
                     val detailsUrl = "https://api.themoviedb.org/3/movie/$movieId?api_key=$apiKey&append_to_response=credits&language=tr-TR"
-                    val detailsResponse = URL(detailsUrl).readText()
+                    val detailsResponse = withContext(Dispatchers.IO) {
+                        URL(detailsUrl).readText()
+                    }
                     return@withContext JSONObject(detailsResponse)
                 }
                 null
