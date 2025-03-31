@@ -10,10 +10,10 @@ buildscript {
     }
 
    dependencies {
-        classpath("com.android.tools.build:gradle:8.7.3")
+        classpath("com.android.tools.build:gradle:7.4.2")
         // Cloudstream gradle plugin which makes everything work and builds plugins
-        classpath("com.github.recloudstream:gradle:-SNAPSHOT")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.0")
+        classpath("com.github.recloudstream:gradle:pre-release")
+        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.20")
     }
 }
 
@@ -21,7 +21,14 @@ allprojects {
     repositories {
         google()
         mavenCentral()
-        maven("https://jitpack.io")
+        maven {
+            url = uri("https://jitpack.io")
+            content {
+                includeGroup("com.github.recloudstream")
+                includeGroup("com.github.Blatzar")
+                includeGroup("com.github.vidstige")
+            }
+        }
     }
 }
 
