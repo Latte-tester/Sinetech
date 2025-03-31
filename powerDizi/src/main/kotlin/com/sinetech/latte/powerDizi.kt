@@ -132,9 +132,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 val match = episodeRegex.find(title)
                 if (match != null) {
                     val (_, season, episode) = match.destructured
-                    Episode(
-                        episode = episode.toInt(),
-                        season = season.toInt(),
+                    newEpisode(
                         data = LoadData(
                             kanal.url.toString(),
                             title,
@@ -143,7 +141,14 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                             kanal.attributes["tvg-country"]?.toString() ?: "TR",
                             season.toInt(),
                             episode.toInt()
-                        ).toJson()
+                        ).toJson(),
+                        name = title,
+                        season = season.toInt(),
+                        episode = episode.toInt(),
+                        posterUrl = kanal.attributes["tvg-logo"].toString(),
+                        rating = null,
+                        description = null,
+                        date = null
                     )
                 } else null
             }

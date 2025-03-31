@@ -21,5 +21,5 @@ data class TmdbMovieData(
         fun fromJson(json: String): TmdbMovieData = parseJson(json)
     }
 
-    fun toJson(): String = toJson(this)
+    fun toJson(): String = toJson()
 }

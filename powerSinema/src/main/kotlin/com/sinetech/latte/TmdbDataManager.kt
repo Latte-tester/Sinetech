@@ -29,7 +29,7 @@ class TmdbDataManager(private val context: Context) {
 
     private fun saveCache() {
         try {
-            val json = toJson(movieCache)
+            val json = toJson()
             cacheFile.writeText(json)
         } catch (e: Exception) {
             Log.e("TmdbDataManager", "Cache kaydedilirken hata oluştu: ${e.message}")
