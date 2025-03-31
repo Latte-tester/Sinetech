@@ -157,18 +157,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 val epProgressKey = "progress_${episode.data.hashCode()}"
                 val epIsWatched = sharedPref?.getBoolean(epWatchKey, false) ?: false
                 val epWatchProgress = sharedPref?.getLong(epProgressKey, 0L) ?: 0L
-                episode.apply {
-                    this.posterUrl = loadData.poster
-                    this.name = episode.title
-                    this.rating = if (epIsWatched) 5 else 0
-                    this.description = if (epWatchProgress > 0) {
-                        val seconds = epWatchProgress / 1000
-                        val hours = seconds / 3600
-                        val minutes = (seconds % 3600) / 60
-                        val remainingSeconds = seconds % 60
-                        "İzleme süresi: ${if (hours > 0) "${hours} saat " else ""}${if (minutes > 0) "${minutes} dakika " else ""}${if (remainingSeconds > 0 || (hours == 0L && minutes == 0L)) "${remainingSeconds} saniye" else ""}".trim()
-                    } else null
-                }
+                episode
             }
         ) {
             this.posterUrl = loadData.poster
