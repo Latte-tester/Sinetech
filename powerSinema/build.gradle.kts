@@ -10,7 +10,7 @@ android {
     }
 
     defaultConfig {
-        buildConfigField("String", "TMDB_SECRET_API", System.getenv("TMDB_API_KEY") ?: "\"\"")
+        buildConfigField("String", "TMDB_SECRET_API", System.getenv("TMDB_SECRET_API") ?: "\"\"")
     }
 }
 
