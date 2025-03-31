@@ -35,7 +35,7 @@ TMDB API kullanılarak filmler hakkında detaylı bilgi alınabilir. Bu bilgiler
 2. Ayarlar bölümünden TMDB API anahtarınızı girin.
 
 ## Ortak Özellikler
-# Film ve Dizilere ait themoviedb.org bilgileri:
+Film ve Dizilere ait themoviedb.org bilgileri:
 - Slogan
 - Konu
 - Oyuncular
