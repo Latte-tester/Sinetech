@@ -172,7 +172,6 @@ class powerSinema(private val context: android.content.Context, private val shar
             this.backgroundPosterUrl = tmdbData?.backdropPath
             this.actors = tmdbData?.cast?.map { ActorData(Actor(it)) } ?: emptyList()
             this.comingSoon = false
-            this.addTrailer = tmdbData?.backdropPath
         }
     }
 
