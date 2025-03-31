@@ -7,9 +7,10 @@ import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import java.io.File
 
 class TmdbDataManager(private val context: Context) {
-    private val tmdbApiKey = BuildConfig.TMDB_SECRET_API
+    private val tmdbApi = TmdbApi()
     private val cacheFile = File(context.filesDir, "tmdb_movie_cache.json")
     private val movieCache = mutableMapOf<String, TmdbMovieData>()
+    private val cacheValidityPeriod = 24 * 60 * 60 * 1000 // 24 saat (milisaniye cinsinden)
 
     init {
         loadCache()
@@ -29,7 +30,7 @@ class TmdbDataManager(private val context: Context) {
 
     private fun saveCache() {
         try {
-            val json = toJson()
+            val json = movieCache.toJson()
             cacheFile.writeText(json)
         } catch (e: Exception) {
             Log.e("TmdbDataManager", "Cache kaydedilirken hata oluştu: ${e.message}")
@@ -38,25 +39,20 @@ class TmdbDataManager(private val context: Context) {
 
     suspend fun updateMovieData(movieTitle: String) {
         try {
-            // TMDB API'den film bilgilerini al
-            // API entegrasyonu burada yapılacak
-            // Örnek veri yapısı:
-            val movieData = TmdbMovieData(
-                movieId = "sample_id",
-                title = movieTitle,
-                originalTitle = movieTitle,
-                year = 2024,
-                director = "Örnek Yönetmen",
-                cast = listOf("Oyuncu 1", "Oyuncu 2"),
-                overview = "Film özeti burada olacak",
-                genres = listOf("Aksiyon", "Macera"),
-                rating = 8.5,
-                posterPath = null,
-                backdropPath = null
-            )
+            val cachedMovie = movieCache[movieTitle]
+            val currentTime = System.currentTimeMillis()
 
-            movieCache[movieTitle] = movieData
-            saveCache()
+            // Cache'de film varsa ve son güncelleme üzerinden 24 saat geçmediyse, cache'den al
+            if (cachedMovie != null && (currentTime - cachedMovie.lastUpdated) < cacheValidityPeriod) {
+                return
+            }
+
+            // TMDB API'den film bilgilerini al
+            val movieData = tmdbApi.searchMovie(movieTitle)
+            if (movieData != null) {
+                movieCache[movieTitle] = movieData
+                saveCache()
+            }
         } catch (e: Exception) {
             Log.e("TmdbDataManager", "Film verisi güncellenirken hata oluştu: ${e.message}")
         }

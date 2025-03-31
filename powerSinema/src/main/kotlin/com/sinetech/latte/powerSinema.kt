@@ -97,18 +97,24 @@ class powerSinema(private val context: android.content.Context, private val shar
 
         // TMDB verilerini al
         val tmdbData = tmdbApi.searchMovie(loadData.title)
-        val plot = if (tmdbData != null) {
-            buildString {
-                append(tmdbData.overview ?: "")
-                append("\n\nYönetmen: ${tmdbData.director ?: "Bilinmiyor"}")
-                append("\nOyuncular: ${tmdbData.cast.joinToString(", ") { it }}")
-                append("\nTür: ${tmdbData.genres.joinToString(", ") { it }}")
-                append("\nYıl: ${tmdbData.year ?: "Bilinmiyor"}")
-                append("\nIMDB Puanı: ${tmdbData.rating ?: "Bilinmiyor"}")
-                append("\n\n$nation")
+        val plot = buildString {
+            if (tmdbData != null) {
+                if (!tmdbData.overview.isNullOrBlank()) {
+                    append(tmdbData.overview)
+                    append("\n\n")
+                }
+                append("Yönetmen: ${tmdbData.director ?: "Bilinmiyor"}\n")
+                if (tmdbData.cast.isNotEmpty()) {
+                    append("Oyuncular: ${tmdbData.cast.joinToString(", ")}\n")
+                }
+                if (tmdbData.genres.isNotEmpty()) {
+                    append("Tür: ${tmdbData.genres.joinToString(", ")}\n")
+                }
+                append("Yıl: ${tmdbData.year ?: "Bilinmiyor"}\n")
+                append("IMDB Puanı: ${tmdbData.rating?.toString() ?: "Bilinmiyor"}")
+                append("\n\n")
             }
-        } else {
-            nation
+            append(nation)
         }
 
         val kanallar        = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
