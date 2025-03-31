@@ -92,7 +92,7 @@ class powerSinema(private val context: android.content.Context, private val shar
         return withContext(Dispatchers.IO) {
             try {
                 val encodedTitle = URLEncoder.encode(title.replace(Regex("\\([^)]*\\)"), "").trim(), "UTF-8")
-                val apiKey = "b8262d2c431250a66749f75a03e10d2e"
+                val apiKey = BuildConfig.TMDB_SECRET_API
                 val searchUrl = "https://api.themoviedb.org/3/search/movie?api_key=$apiKey&query=$encodedTitle&language=tr-TR"
                 
                 val response = URL(searchUrl).readText()
@@ -156,12 +156,13 @@ class powerSinema(private val context: android.content.Context, private val shar
                     }
                 }
                 
-                if (overview.isNotEmpty()) append("${overview}\n\n")
-                if (releaseDate.isNotEmpty()) append("Yıl: $releaseDate\n")
-                if (rating > 0) append("TMDB Puanı: $rating\n")
-                if (director.isNotEmpty()) append("Yönetmen: $director\n")
-                if (castList.isNotEmpty()) append("Oyuncular: ${castList.joinToString(", ")}\n")
-                if (genreList.isNotEmpty()) append("Türler: ${genreList.joinToString(", ")}\n")
+                if (overview.isNotEmpty()) append("📝 Konu:\n${overview}\n\n")
+                if (releaseDate.isNotEmpty()) append("📅 Yıl: $releaseDate\n")
+                if (rating > 0) append("⭐ TMDB Puanı: $rating\n")
+                if (director.isNotEmpty()) append("🎬 Yönetmen: $director\n")
+                if (castList.isNotEmpty()) append("👥 Oyuncular: ${castList.joinToString(", ")}\n")
+                if (genreList.isNotEmpty()) append("🎭 Türler: ${genreList.joinToString(", ")}\n")
+                append("\n")
             }
             append("\nFilm Grubu: ${loadData.group}\n")
             append("Ülke: ${loadData.nation}")
