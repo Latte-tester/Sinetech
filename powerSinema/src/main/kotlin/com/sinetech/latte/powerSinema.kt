@@ -142,6 +142,11 @@ class powerSinema(private val context: android.content.Context, private val shar
                 val overview = tmdbData.optString("overview", "")
                 val releaseDate = tmdbData.optString("release_date", "").split("-").firstOrNull() ?: ""
                 val rating = tmdbData.optDouble("vote_average", 0.0)
+                val popularity = tmdbData.optDouble("popularity", 0.0)
+                val tagline = tmdbData.optString("tagline", "")
+                val budget = tmdbData.optInt("budget", 0)
+                val revenue = tmdbData.optInt("revenue", 0)
+                
                 val genres = tmdbData.getJSONArray("genres")
                 val genreList = mutableListOf<String>()
                 for (i in 0 until genres.length()) {
@@ -151,7 +156,7 @@ class powerSinema(private val context: android.content.Context, private val shar
                 val credits = tmdbData.getJSONObject("credits")
                 val cast = credits.getJSONArray("cast")
                 val castList = mutableListOf<String>()
-                for (i in 0 until minOf(cast.length(), 5)) {
+                for (i in 0 until minOf(cast.length(), 10)) {
                     castList.add(cast.getJSONObject(i).getString("name"))
                 }
                 
@@ -165,16 +170,24 @@ class powerSinema(private val context: android.content.Context, private val shar
                     }
                 }
                 
+                val companies = tmdbData.getJSONArray("production_companies")
+                val companyList = mutableListOf<String>()
+                for (i in 0 until companies.length()) {
+                    companyList.add(companies.getJSONObject(i).getString("name"))
+                }
+                
+                if (tagline.isNotEmpty()) append("💭 Slogan: ${tagline}\n\n")
                 if (overview.isNotEmpty()) append("📝 Konu:\n${overview}\n\n")
                 if (releaseDate.isNotEmpty()) append("📅 Yıl: $releaseDate\n\n")
                 if (rating > 0) append("⭐ TMDB Puanı: $rating\n\n")
+                if (popularity > 0) append("📈 Popülerlik: $popularity\n\n")
                 if (director.isNotEmpty()) append("🎬 Yönetmen: $director\n\n")
                 if (castList.isNotEmpty()) append("👥 Oyuncular: ${castList.joinToString(", ")}\n\n")
                 if (genreList.isNotEmpty()) append("🎭 Türler: ${genreList.joinToString(", ")}\n\n")
-                append("\n")
+                if (companyList.isNotEmpty()) append("🏢 Yapım Şirketleri: ${companyList.joinToString(", ")}\n\n")
+                if (budget > 0) append("💰 Bütçe: $${budget.toDouble() / 1000000} Milyon\n\n")
+                if (revenue > 0) append("💵 Hasılat: $${revenue.toDouble() / 1000000} Milyon\n\n")
             }
-            append("\nFilm Grubu: ${loadData.group}\n")
-            append("Ülke: ${loadData.nation}")
         }
 
         val kanallar        = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
