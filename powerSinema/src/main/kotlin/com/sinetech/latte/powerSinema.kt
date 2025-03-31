@@ -207,10 +207,23 @@ class powerSinema(private val context: android.content.Context, private val shar
 
         return newMovieLoadResponse(loadData.title, url, TvType.Movie, loadData.url) {
             this.posterUrl = loadData.poster
-            this.plot = nation
-            this.tags = listOf(loadData.group, loadData.nation)
+            this.plot = buildString {
+                append(nation)
+                if (loadData.year != null) append("\nYıl: ${loadData.year}")
+                if (loadData.director != null) append("\nYönetmen: ${loadData.director}")
+                if (!loadData.cast.isNullOrEmpty()) {
+                    val castList = loadData.cast
+                    append("\nOyuncular: ${castList.joinToString(", ")}")
+                }
+                if (loadData.overview != null) append("\n\n${loadData.overview}")
+            }
+            this.tags = buildList {
+                add(loadData.group)
+                add(loadData.nation)
+                loadData.genres?.takeIf { it.isNotEmpty() }?.let { addAll(it) }
+            }
             this.recommendations = recommendations
-            this.rating = if (isWatched) 5 else 0
+            this.rating = loadData.rating?.times(2)?.toInt() ?: if (isWatched) 5 else 0
             this.duration = if (watchProgress > 0) (watchProgress / 1000).toInt() else null
             this.backgroundPosterUrl = tmdbData?.backdropPath
             this.actors = tmdbData?.cast?.map { ActorData(Actor(it)) } ?: emptyList()
