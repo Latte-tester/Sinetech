@@ -191,12 +191,12 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 if (overview.isNotEmpty()) append("📝 <b>Konu:</b><br>${overview}<br><br>")
                 if (firstAirDate.isNotEmpty()) append("📅 <b>İlk Yayın Tarihi:</b> $firstAirDate<br>")
                 if (rating != null) append("⭐ <b>TMDB Puanı:</b> $rating / 10<br>")
-                if (genreList.isNotEmpty()) append("🎭 <b>Türler:</b> ${genreList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
+                if (genreList.isNotEmpty()) append("🎭 <b>Dizi Türü:</b> ${genreList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
                 if (castList.isNotEmpty()) append("👥 <b>Oyuncular:</b> ${castList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
                 append("<br>")
             }
             
-            val nation = if (loadData.group == "NSFW") {
+            val nation = if (listOf("adult", "erotic", "erotik", "porn", "porno").any { loadData.group.contains(it, ignoreCase = true) }) {
                 "⚠️🔞🔞🔞 » ${loadData.group} | ${loadData.nation} « 🔞🔞🔞⚠️"
             } else {
                 "» ${loadData.group} | ${loadData.nation} «"
@@ -242,7 +242,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             }
         ) {
             this.posterUrl = loadData.poster
-            this.plot = nation
+            this.plot = plot
             this.tags = listOf(loadData.group, loadData.nation)
         }
     }
