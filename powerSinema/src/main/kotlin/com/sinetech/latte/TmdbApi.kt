@@ -7,13 +7,17 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.json.JSONObject
 
-class TmdbApi {
-    private val tmdbApiKey = BuildConfig.TMDB_SECRET_API
+class TmdbApi(private val tmdbApiKey: String) {
     private val baseUrl = "https://api.themoviedb.org/3"
     private val client = OkHttpClient()
     private val language = "tr-TR"
 
     suspend fun searchMovie(title: String): TmdbMovieData? {
+        if (title.isBlank()) {
+            Log.e("TmdbApi", "Film adı boş olamaz")
+            return null
+        }
+
         try {
             val searchUrl = "$baseUrl/search/movie?api_key=$tmdbApiKey&language=$language&query=${title.encodeUrl()}"
             val response = makeRequest(searchUrl)
@@ -21,9 +25,14 @@ class TmdbApi {
             val results = jsonObject.getJSONArray("results")
 
             if (results.length() > 0) {
-                val movieJson = results.getJSONObject(0)
-                val movieId = movieJson.getString("id")
+                val bestMatch = (0 until results.length())
+                    .map { results.getJSONObject(it) }
+                    .maxByOrNull { it.getDouble("vote_count") } ?: results.getJSONObject(0)
+
+                val movieId = bestMatch.getString("id")
                 return getMovieDetails(movieId)
+            } else {
+                Log.i("TmdbApi", "'$title' için sonuç bulunamadı")
             }
         } catch (e: Exception) {
             Log.e("TmdbApi", "Film arama hatası: ${e.message}")
