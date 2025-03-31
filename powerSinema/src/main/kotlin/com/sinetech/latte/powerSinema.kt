@@ -7,13 +7,10 @@ import com.lagradost.cloudstream3.utils.*
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import java.io.InputStream
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import retrofit2.http.GET
-import retrofit2.http.Query
-import com.sinetech.latte.BuildConfig
 
 class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
+    private val tmdbApi = TmdbApi()
+    private lateinit var tmdbDataManager: TmdbDataManager
     override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/patr0n/site/lists/power-sinema.m3u"
     override var name                 = "powerSinema"
     override val hasMainPage          = true
@@ -98,6 +95,22 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
             "» ${loadData.group} | ${loadData.nation} «"
         }
 
+        // TMDB verilerini al
+        val tmdbData = tmdbApi.searchMovie(loadData.title)
+        val plot = if (tmdbData != null) {
+            buildString {
+                append(tmdbData.overview ?: "")
+                append("\n\nYönetmen: ${tmdbData.director ?: "Bilinmiyor"}")
+                append("\nOyuncular: ${tmdbData.cast.joinToString(", ") { it }}")
+                append("\nTür: ${tmdbData.genres.joinToString(", ") { it }}")
+                append("\nYıl: ${tmdbData.year ?: "Bilinmiyor"}")
+                append("\nIMDB Puanı: ${tmdbData.rating ?: "Bilinmiyor"}")
+                append("\n\n$nation")
+            }
+        } else {
+            nation
+        }
+
         val kanallar        = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
         val recommendations = mutableListOf<LiveSearchResponse>()
 
@@ -128,29 +141,17 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
             }
         }
 
-        val movieDetails = try {
-            val searchResponse = tmdbApi.searchMovie(BuildConfig.TMDB_API_KEY, loadData.title)
-            val movieId = searchResponse.results.firstOrNull()?.id
-            if (movieId != null) {
-                tmdbApi.getMovieDetails(BuildConfig.TMDB_API_KEY, movieId)
-            } else null
-        } catch (e: Exception) {
-            Log.e("TMDB", "Error fetching movie details: ${e.message}")
-            null
-        }
-
         return newMovieLoadResponse(loadData.title, url, TvType.Movie, loadData.url) {
-            this.posterUrl = loadData.poster
-            this.plot = movieDetails?.overview ?: nation
-            this.tags = listOf(loadData.group, loadData.nation) + (movieDetails?.genres?.map { it.name } ?: emptyList())
+            this.posterUrl = tmdbData?.posterPath ?: loadData.poster
+            this.plot = plot
+            this.tags = if (tmdbData != null) {
+                tmdbData.genres + listOf(loadData.group, loadData.nation)
+            } else {
+                listOf(loadData.group, loadData.nation)
+            }
             this.recommendations = recommendations
-            this.rating = movieDetails?.vote_average?.toInt() ?: (if (isWatched) 5 else 0)
-            this.year = movieDetails?.release_date?.take(4)?.toIntOrNull()
-            this.actors = movieDetails?.credits?.cast?.take(5)?.map { ActorData(it.name) } ?: emptyList()
+            this.rating = if (isWatched) 5 else 0
             this.duration = if (watchProgress > 0) (watchProgress / 1000).toInt() else null
-            this.tags = (this.tags ?: emptyList()) + listOfNotNull(
-                movieDetails?.credits?.crew?.find { it.job == "Director" }?.name?.let { "Yönetmen: $it" }
-            )
         }
     }
 
@@ -188,61 +189,7 @@ class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
         }
     }
 
-    data class LoadData(val url: String, val title: String, val poster: String, val group: String, val nation: String, val isWatched: Boolean = false, val watchProgress: Long = 0L, val tmdbId: Int? = null)
-
-    data class TMDBMovie(
-        val id: Int,
-        val title: String,
-        val overview: String,
-        val release_date: String,
-        val vote_average: Double,
-        val genres: List<Genre>,
-        val credits: Credits
-    )
-
-    data class Genre(val name: String)
-    data class Credits(
-        val cast: List<Cast>,
-        val crew: List<Crew>
-    )
-    data class Cast(val name: String)
-    data class Crew(
-        val name: String,
-        val job: String
-    )
-
-    interface TMDBApi {
-        @GET("search/movie")
-        suspend fun searchMovie(
-            @Query("api_key") apiKey: String,
-            @Query("query") query: String,
-            @Query("language") language: String = "tr-TR"
-        ): TMDBSearchResponse
-
-        @GET("movie/{movie_id}")
-        suspend fun getMovieDetails(
-            @Query("api_key") apiKey: String,
-            @Query("movie_id") movieId: Int,
-            @Query("language") language: String = "tr-TR",
-            @Query("append_to_response") appendToResponse: String = "credits"
-        ): TMDBMovie
-    }
-
-    data class TMDBSearchResponse(
-        val results: List<TMDBSearchResult>
-    )
-
-    data class TMDBSearchResult(
-        val id: Int,
-        val title: String
-    )
-
-    private val retrofit = Retrofit.Builder()
-        .baseUrl("https://api.themoviedb.org/3/")
-        .addConverterFactory(GsonConverterFactory.create())
-        .build()
-
-    private val tmdbApi = retrofit.create(TMDBApi::class.java)
+    data class LoadData(val url: String, val title: String, val poster: String, val group: String, val nation: String, val isWatched: Boolean = false, val watchProgress: Long = 0L)
 
     private suspend fun fetchDataFromUrlOrJson(data: String): LoadData {
         if (data.startsWith("{")) {

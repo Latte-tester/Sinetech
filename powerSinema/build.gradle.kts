@@ -16,18 +16,3 @@ cloudstream {
     tvTypes = listOf("Movie")
     iconUrl = "https://www.google.com/s2/favicons?domain=tr.canlitv.team&sz=%size%"
 }
-
-dependencies {
-    implementation("com.squareup.retrofit2:retrofit:2.9.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation("com.squareup.okhttp3:okhttp:4.9.3")
-}
-
-android {
-    buildFeatures {
-        buildConfig = true
-    }
-    defaultConfig {
-        buildConfigField("String", "TMDB_API_KEY", System.getenv("TMDB_SECRET_API") ?: "\"\"")
-    }
-}
