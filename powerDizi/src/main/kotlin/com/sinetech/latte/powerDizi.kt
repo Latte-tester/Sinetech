@@ -7,6 +7,12 @@ import com.lagradost.cloudstream3.utils.*
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import java.io.InputStream
+import com.sinetech.latte.BuildConfig
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.net.URL
+import java.net.URLEncoder
 
 class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
     override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/patr0n/refs/heads/site/lists/power-yabanci-dizi.m3u"
@@ -111,16 +117,91 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
 
     override suspend fun quickSearch(query: String): List<SearchResponse> = search(query)
 
+    private suspend fun fetchTMDBData(title: String): JSONObject? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val apiKey = BuildConfig.TMDB_SECRET_API.trim('"')
+                if (apiKey.isEmpty()) {
+                    Log.e("TMDB", "API key is empty")
+                    return@withContext null
+                }
+
+                val encodedTitle = URLEncoder.encode(title.replace(Regex("\\([^)]*\\)"), "").trim(), "UTF-8")
+                val searchUrl = "https://api.themoviedb.org/3/search/tv?api_key=$apiKey&query=$encodedTitle&language=tr-TR"
+                
+                val response = withContext(Dispatchers.IO) {
+                    URL(searchUrl).readText()
+                }
+                val jsonResponse = JSONObject(response)
+                val results = jsonResponse.getJSONArray("results")
+                
+                if (results.length() > 0) {
+                    val tvId = results.getJSONObject(0).getInt("id")
+                    val detailsUrl = "https://api.themoviedb.org/3/tv/$tvId?api_key=$apiKey&append_to_response=credits&language=tr-TR"
+                    val detailsResponse = withContext(Dispatchers.IO) {
+                        URL(detailsUrl).readText()
+                    }
+                    return@withContext JSONObject(detailsResponse)
+                }
+                null
+            } catch (e: Exception) {
+                Log.e("TMDB", "Error fetching TMDB data: ${e.message}")
+                null
+            }
+        }
+    }
+
     override suspend fun load(url: String): LoadResponse {
         val watchKey = "watch_${url.hashCode()}"
         val progressKey = "progress_${url.hashCode()}"
         val isWatched = sharedPref?.getBoolean(watchKey, false) ?: false
         val watchProgress = sharedPref?.getLong(progressKey, 0L) ?: 0L
         val loadData = fetchDataFromUrlOrJson(url)
-        val nation:String = if (loadData.group == "NSFW") {
-            "⚠️🔞🔞🔞 » ${loadData.group} | ${loadData.nation} « 🔞🔞🔞⚠️"
-        } else {
-            "» ${loadData.group} | ${loadData.nation} «"
+        
+        val tmdbData = fetchTMDBData(loadData.title.replace(Regex("-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*"), ""))
+        
+        val plot = buildString {
+            if (tmdbData != null) {
+                val overview = tmdbData.optString("overview", "")
+                val firstAirDate = tmdbData.optString("first_air_date", "").split("-").firstOrNull() ?: ""
+                val ratingValue = tmdbData.optDouble("vote_average", -1.0)
+                val rating = if (ratingValue >= 0) String.format("%.1f", ratingValue) else null
+                val tagline = tmdbData.optString("tagline", "")
+                
+                val genresArray = tmdbData.optJSONArray("genres")
+                val genreList = mutableListOf<String>()
+                if (genresArray != null) {
+                    for (i in 0 until genresArray.length()) {
+                        genreList.add(genresArray.optJSONObject(i)?.optString("name") ?: "")
+                    }
+                }
+                
+                val creditsObject = tmdbData.optJSONObject("credits")
+                val castList = mutableListOf<String>()
+                if (creditsObject != null) {
+                    val castArray = creditsObject.optJSONArray("cast")
+                    if (castArray != null) {
+                        for (i in 0 until minOf(castArray.length(), 10)) {
+                            castList.add(castArray.optJSONObject(i)?.optString("name") ?: "")
+                        }
+                    }
+                }
+                
+                if (tagline.isNotEmpty()) append("💭 <b>Slogan:</b><br>${tagline}<br><br>")
+                if (overview.isNotEmpty()) append("📝 <b>Konu:</b><br>${overview}<br><br>")
+                if (firstAirDate.isNotEmpty()) append("📅 <b>İlk Yayın Tarihi:</b> $firstAirDate<br>")
+                if (rating != null) append("⭐ <b>TMDB Puanı:</b> $rating / 10<br>")
+                if (genreList.isNotEmpty()) append("🎭 <b>Türler:</b> ${genreList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
+                if (castList.isNotEmpty()) append("👥 <b>Oyuncular:</b> ${castList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
+                append("<br>")
+            }
+            
+            val nation = if (loadData.group == "NSFW") {
+                "⚠️🔞🔞🔞 » ${loadData.group} | ${loadData.nation} « 🔞🔞🔞⚠️"
+            } else {
+                "» ${loadData.group} | ${loadData.nation} «"
+            }
+            append(nation)
         }
 
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
