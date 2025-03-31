@@ -8,9 +8,9 @@ import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import java.io.InputStream
 
-class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
+class powerSinema(private val context: android.content.Context, private val sharedPref: SharedPreferences?) : MainAPI() {
     private val tmdbApi = TmdbApi()
-    private val tmdbDataManager = TmdbDataManager(app)
+    private val tmdbDataManager = TmdbDataManager(context)
     override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/patr0n/site/lists/power-sinema.m3u"
     override var name                 = "powerSinema"
     override val hasMainPage          = true
