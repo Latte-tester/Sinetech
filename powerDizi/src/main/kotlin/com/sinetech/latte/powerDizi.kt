@@ -133,8 +133,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 if (match != null) {
                     val (_, season, episode) = match.destructured
                     newEpisode(
-                        episode = episode.toInt(),
-                        season = season.toInt(),
+                        url = kanal.url.toString(),
                         data = LoadData(
                             kanal.url.toString(),
                             title,
@@ -143,7 +142,9 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                             kanal.attributes["tvg-country"]?.toString() ?: "TR",
                             season.toInt(),
                             episode.toInt()
-                        ).toJson()
+                        ).toJson(),
+                        season = season.toInt(),
+                        episode = episode.toInt()
                     )
                 } else null
             }
