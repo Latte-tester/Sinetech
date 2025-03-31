@@ -7,7 +7,7 @@ import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import java.io.File
 
 class TmdbDataManager(private val context: Context) {
-    private val tmdbApiKey = System.getenv("TMDB_SECRET_API")
+    private val tmdbApiKey = BuildConfig.TMDB_SECRET_API
     private val cacheFile = File(context.filesDir, "tmdb_movie_cache.json")
     private val movieCache = mutableMapOf<String, TmdbMovieData>()
 

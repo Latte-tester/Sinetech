@@ -8,7 +8,7 @@ import okhttp3.Request
 import org.json.JSONObject
 
 class TmdbApi {
-    private val tmdbApiKey = System.getenv("TMDB_SECRET_API")
+    private val tmdbApiKey = BuildConfig.TMDB_SECRET_API
     private val baseUrl = "https://api.themoviedb.org/3"
     private val client = OkHttpClient()
     private val language = "tr-TR"

@@ -10,7 +10,7 @@ import java.io.InputStream
 
 class powerSinema(private val sharedPref: SharedPreferences?) : MainAPI() {
     private val tmdbApi = TmdbApi()
-    private lateinit var tmdbDataManager: TmdbDataManager
+    private val tmdbDataManager = TmdbDataManager(app)
     override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/patr0n/site/lists/power-sinema.m3u"
     override var name                 = "powerSinema"
     override val hasMainPage          = true

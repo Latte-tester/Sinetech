@@ -1,5 +1,15 @@
 version = 3
 
+android {
+    buildFeatures {
+        buildConfig = true
+    }
+}
+
+buildConfig {
+    buildConfigField("String", "TMDB_SECRET_API", "\"3b0b95d3f6c1c2f3c8f3c3f3c8f3c3f3\"")
+}
+
 cloudstream {
     authors     = listOf("GitLatte", "patr0nq", "keyiflerolsun")
     language    = "tr"
