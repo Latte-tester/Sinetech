@@ -105,6 +105,8 @@ class powerSinema(private val context: android.content.Context, private val shar
             Log.e("TMDB", "TMDB verilerini alırken hata oluştu: ${e.message}")
         }
         val plot = buildString {
+            append("Film Grubu: ${loadData.group}\n")
+            append("Ülke: ${loadData.nation}\n\n")
             if (tmdbData != null) {
                 if (!tmdbData.overview.isNullOrBlank()) {
                     append(tmdbData.overview)
@@ -119,9 +121,7 @@ class powerSinema(private val context: android.content.Context, private val shar
                 }
                 append("Yıl: ${tmdbData.year ?: "Bilinmiyor"}\n")
                 append("IMDB Puanı: ${tmdbData.rating?.toString() ?: "Bilinmiyor"}")
-                append("\n\n")
             }
-            append(nation)
         }
 
         val kanallar        = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
