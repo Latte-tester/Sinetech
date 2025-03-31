@@ -42,5 +42,6 @@ TMDB API kullanılarak filmler hakkında detaylı bilgi alınabilir. Bu bilgiler
 - Kullanıcı dostu arayüz.
 - TMDB entegrasyonu sayesinde detaylı içerik bilgisi.
 
-## Daha Fazla Bilgi
-Eklentiler hakkında daha fazla bilgi için [GitHub](https://github.com/GitLatte/patr0n) sayfamızı ziyaret edebilirsiniz.
+## Liste sahipleri
+- [GitLatte](https://github.com/GitLatte)
+- [powerboard](https://forum.sinetech.tr/uye/powerboard.3822/)
