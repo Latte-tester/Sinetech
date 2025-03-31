@@ -95,8 +95,9 @@ class powerSinema(private val context: android.content.Context, private val shar
             "» ${loadData.group} | ${loadData.nation} «"
         }
 
-        // TMDB verilerini al
-        val tmdbData = tmdbApi.searchMovie(loadData.title)
+        // TMDB verilerini al ve güncelle
+        tmdbDataManager.updateMovieData(loadData.title)
+        val tmdbData = tmdbDataManager.getMovieData(loadData.title)
         val plot = buildString {
             if (tmdbData != null) {
                 if (!tmdbData.overview.isNullOrBlank()) {
