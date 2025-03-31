@@ -14,5 +14,5 @@ cloudstream {
     **/
     status  = 1 // will be 3 if unspecified
     tvTypes = listOf("TvSeries")
-    iconUrl = "https://raw.githubusercontent.com/GitLatte/Sinetech/main/powerDizi/src/main/resources/favicon.svg"
+    iconUrl = "https://raw.githubusercontent.com/GitLatte/Sinetech/refs/heads/main/powerDizi/src/main/resources/favicon.png"
 }
