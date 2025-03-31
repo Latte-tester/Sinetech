@@ -198,11 +198,11 @@ class powerSinema(private val context: android.content.Context, private val shar
 
         return newMovieLoadResponse(loadData.title, url, TvType.Movie, loadData.url) {
             this.posterUrl = loadData.poster
-            this.plot = nation
+            this.plot = plot
             this.tags = listOf(loadData.group, loadData.nation)
             this.recommendations = recommendations
-            this.rating = if (isWatched) 5 else 0
-            this.duration = if (watchProgress > 0) (watchProgress / 1000).toInt() else null
+            this.rating = tmdbData?.optDouble("vote_average", 0.0)?.toFloat() ?: (if (isWatched) 5 else 0)
+            this.duration = if (watchProgress > 0) (watchProgress / 1000).toInt() else tmdbData?.optInt("runtime", 0)
             this.comingSoon = false
         }
     }
