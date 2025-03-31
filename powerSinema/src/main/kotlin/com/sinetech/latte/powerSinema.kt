@@ -156,7 +156,7 @@ class powerSinema(private val context: android.content.Context, private val shar
                 val credits = tmdbData.getJSONObject("credits")
                 val cast = credits.getJSONArray("cast")
                 val castList = mutableListOf<String>()
-                for (i in 0 until minOf(cast.length(), 10)) {
+                for (i in 0 until minOf(cast.length(), 15)) {
                     castList.add(cast.getJSONObject(i).getString("name"))
                 }
                 
@@ -176,17 +176,17 @@ class powerSinema(private val context: android.content.Context, private val shar
                     companyList.add(companies.getJSONObject(i).getString("name"))
                 }
                 
-                if (tagline.isNotEmpty()) append("💭 Slogan: ${tagline}\n\n")
+                if (tagline.isNotEmpty()) append("💭 Slogan:\n${tagline}\n\n")
                 if (overview.isNotEmpty()) append("📝 Konu:\n${overview}\n\n")
-                if (releaseDate.isNotEmpty()) append("📅 Yıl: $releaseDate\n\n")
-                if (rating > 0) append("⭐ TMDB Puanı: $rating\n\n")
-                if (popularity > 0) append("📈 Popülerlik: $popularity\n\n")
-                if (director.isNotEmpty()) append("🎬 Yönetmen: $director\n\n")
-                if (castList.isNotEmpty()) append("👥 Oyuncular: ${castList.joinToString(", ")}\n\n")
-                if (genreList.isNotEmpty()) append("🎭 Türler: ${genreList.joinToString(", ")}\n\n")
-                if (companyList.isNotEmpty()) append("🏢 Yapım Şirketleri: ${companyList.joinToString(", ")}\n\n")
-                if (budget > 0) append("💰 Bütçe: $${budget.toDouble() / 1000000} Milyon\n\n")
-                if (revenue > 0) append("💵 Hasılat: $${revenue.toDouble() / 1000000} Milyon\n\n")
+                if (releaseDate.isNotEmpty()) append("📅 Yıl:\n$releaseDate\n\n")
+                if (rating > 0) append("⭐ TMDB Puanı:\n$rating\n\n")
+                if (popularity > 0) append("📈 Popülerlik:\n$popularity\n\n")
+                if (director.isNotEmpty()) append("🎬 Yönetmen:\n$director\n\n")
+                if (castList.isNotEmpty()) append("👥 Oyuncular:\n${castList.joinToString("\n")}\n\n")
+                if (genreList.isNotEmpty()) append("🎭 Türler:\n${genreList.joinToString("\n")}\n\n")
+                if (companyList.isNotEmpty()) append("🏢 Yapım Şirketleri:\n${companyList.joinToString("\n")}\n\n")
+                if (budget > 0) append("💰 Bütçe:\n$${budget.toDouble() / 1000000} Milyon\n\n")
+                if (revenue > 0) append("💵 Hasılat:\n$${revenue.toDouble() / 1000000} Milyon\n\n")
             }
         }
 
