@@ -89,11 +89,6 @@ class powerSinema(private val context: android.content.Context, private val shar
         val isWatched = sharedPref?.getBoolean(watchKey, false) ?: false
         val watchProgress = sharedPref?.getLong(progressKey, 0L) ?: 0L
         val loadData = fetchDataFromUrlOrJson(url)
-        val nation:String = if (loadData.group == "NSFW") {
-            "⚠️🔞🔞🔞 » ${loadData.group} | ${loadData.nation} « 🔞🔞🔞⚠️"
-        } else {
-            "» ${loadData.group} | ${loadData.nation} «"
-        }
 
         // TMDB verilerini al ve güncelle
         var tmdbData: TmdbMovieData? = null
@@ -104,9 +99,14 @@ class powerSinema(private val context: android.content.Context, private val shar
         } catch (e: Exception) {
             Log.e("TMDB", "TMDB verilerini alırken hata oluştu: ${e.message}")
         }
+
+        val nation:String = if (loadData.group == "NSFW") {
+            "⚠️🔞🔞🔞 » ${loadData.group} | ${loadData.nation} « 🔞🔞🔞⚠️"
+        } else {
+            "» ${loadData.group} | ${loadData.nation} «"
+        }
+
         val plot = buildString {
-            append("Film Grubu: ${loadData.group}\n")
-            append("Ülke: ${loadData.nation}\n\n")
             if (tmdbData != null) {
                 if (!tmdbData.overview.isNullOrBlank()) {
                     append(tmdbData.overview)
@@ -120,8 +120,11 @@ class powerSinema(private val context: android.content.Context, private val shar
                     append("Tür: ${tmdbData.genres.joinToString(", ")}\n")
                 }
                 append("Yıl: ${tmdbData.year ?: "Bilinmiyor"}\n")
-                append("IMDB Puanı: ${tmdbData.rating?.toString() ?: "Bilinmiyor"}")
+                append("IMDB Puanı: ${tmdbData.rating?.toString() ?: "Bilinmiyor"}\n\n")
             }
+            append("Film Grubu: ${loadData.group}\n")
+            append("Ülke: ${loadData.nation}")
+
         }
 
         val kanallar        = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
@@ -163,7 +166,8 @@ class powerSinema(private val context: android.content.Context, private val shar
                 listOf(loadData.group, loadData.nation)
             }
             this.recommendations = recommendations
-            this.rating = if (isWatched) 5 else 0
+            this.rating = tmdbData?.rating?.toInt() ?: (if (isWatched) 5 else 0)
+            this.year = tmdbData?.year
             this.duration = if (watchProgress > 0) (watchProgress / 1000).toInt() else null
         }
     }
