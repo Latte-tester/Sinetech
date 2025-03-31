@@ -141,52 +141,66 @@ class powerSinema(private val context: android.content.Context, private val shar
             if (tmdbData != null) {
                 val overview = tmdbData.optString("overview", "")
                 val releaseDate = tmdbData.optString("release_date", "").split("-").firstOrNull() ?: ""
-                val rating = tmdbData.optDouble("vote_average", 0.0)
-                val popularity = tmdbData.optDouble("popularity", 0.0)
+                val ratingValue = tmdbData.optDouble("vote_average", -1.0)
+                val rating = if (ratingValue >= 0) String.format("%.1f", ratingValue) else null
                 val tagline = tmdbData.optString("tagline", "")
-                val budget = tmdbData.optInt("budget", 0)
-                val revenue = tmdbData.optInt("revenue", 0)
+                val budget = tmdbData.optLong("budget", 0L)
+                val revenue = tmdbData.optLong("revenue", 0L)
                 
-                val genres = tmdbData.getJSONArray("genres")
+                val genresArray = tmdbData.optJSONArray("genres")
                 val genreList = mutableListOf<String>()
-                for (i in 0 until genres.length()) {
-                    genreList.add(genres.getJSONObject(i).getString("name"))
-                }
-                
-                val credits = tmdbData.getJSONObject("credits")
-                val cast = credits.getJSONArray("cast")
-                val castList = mutableListOf<String>()
-                for (i in 0 until minOf(cast.length(), 15)) {
-                    castList.add(cast.getJSONObject(i).getString("name"))
-                }
-                
-                val crew = credits.getJSONArray("crew")
-                var director = ""
-                for (i in 0 until crew.length()) {
-                    val member = crew.getJSONObject(i)
-                    if (member.getString("job") == "Director") {
-                        director = member.getString("name")
-                        break
+                if (genresArray != null) {
+                    for (i in 0 until genresArray.length()) {
+                        genreList.add(genresArray.optJSONObject(i)?.optString("name") ?: "")
                     }
                 }
                 
-                val companies = tmdbData.getJSONArray("production_companies")
-                val companyList = mutableListOf<String>()
-                for (i in 0 until companies.length()) {
-                    companyList.add(companies.getJSONObject(i).getString("name"))
+                val creditsObject = tmdbData.optJSONObject("credits")
+                val castList = mutableListOf<String>()
+                var director = ""
+                if (creditsObject != null) {
+                    val castArray = creditsObject.optJSONArray("cast")
+                    if (castArray != null) {
+                        for (i in 0 until minOf(castArray.length(), 10)) {
+                            castList.add(castArray.optJSONObject(i)?.optString("name") ?: "")
+                        }
+                    }
+                    val crewArray = creditsObject.optJSONArray("crew")
+                    if (crewArray != null) {
+                        for (i in 0 until crewArray.length()) {
+                            val member = crewArray.optJSONObject(i)
+                            if (member?.optString("job") == "Director") {
+                                director = member.optString("name", "")
+                                break
+                            }
+                        }
+                    }
                 }
                 
-                if (tagline.isNotEmpty()) append("💭 Slogan:\n${tagline}\n\n")
-                if (overview.isNotEmpty()) append("📝 Konu:\n${overview}\n\n")
-                if (releaseDate.isNotEmpty()) append("📅 Yıl:\n$releaseDate\n\n")
-                if (rating > 0) append("⭐ TMDB Puanı:\n$rating\n\n")
-                if (popularity > 0) append("📈 Popülerlik:\n$popularity\n\n")
-                if (director.isNotEmpty()) append("🎬 Yönetmen:\n$director\n\n")
-                if (castList.isNotEmpty()) append("👥 Oyuncular:\n${castList.joinToString("\n")}\n\n")
-                if (genreList.isNotEmpty()) append("🎭 Türler:\n${genreList.joinToString("\n")}\n\n")
-                if (companyList.isNotEmpty()) append("🏢 Yapım Şirketleri:\n${companyList.joinToString("\n")}\n\n")
-                if (budget > 0) append("💰 Bütçe:\n$${budget.toDouble() / 1000000} Milyon\n\n")
-                if (revenue > 0) append("💵 Hasılat:\n$${revenue.toDouble() / 1000000} Milyon\n\n")
+                val companiesArray = tmdbData.optJSONArray("production_companies")
+                val companyList = mutableListOf<String>()
+                if (companiesArray != null) {
+                    for (i in 0 until companiesArray.length()) {
+                        companyList.add(companiesArray.optJSONObject(i)?.optString("name") ?: "")
+                    }
+                }
+
+                val numberFormat = java.text.NumberFormat.getNumberInstance(java.util.Locale.US)
+                
+                if (tagline.isNotEmpty()) append("💭 <b>Slogan:</b><br>${tagline}<br><br>")
+                if (overview.isNotEmpty()) append("📝 <b>Konu:</b><br>${overview}<br><br>")
+                if (releaseDate.isNotEmpty()) append("📅 <b>Yıl:</b> $releaseDate<br>")
+                if (rating != null) append("⭐ <b>TMDB Puanı:</b> $rating / 10<br>")
+                if (director.isNotEmpty()) append("🎬 <b>Yönetmen:</b> $director<br>")
+                if (genreList.isNotEmpty()) append("🎭 <b>Türler:</b> ${genreList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
+                if (castList.isNotEmpty()) append("👥 <b>Oyuncular:</b> ${castList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
+                if (companyList.isNotEmpty()) append("🏢 <b>Yapım Şirketleri:</b> ${companyList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
+                if (budget > 0) append("💰 <b>Bütçe:</b> $${numberFormat.format(budget)}<br>")
+                if (revenue > 0) append("💵 <b>Hasılat:</b> $${numberFormat.format(revenue)}<br>")
+                
+                append("<br>")
+            } else {
+                append("<i>Film detayları TMDB'den alınamadı.</i><br><br>")
             }
         }
 
