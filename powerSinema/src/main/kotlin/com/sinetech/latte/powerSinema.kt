@@ -185,11 +185,11 @@ class powerSinema(private val context: android.content.Context, private val shar
                     }
                 }
 
-                val numberFormat = java.text.NumberFormat.getNumberInstance(java.util.Locale("tr", "TR"))
+                val numberFormat = java.text.NumberFormat.getNumberInstance(java.util.Locale.TR)
                 
                 if (tagline.isNotEmpty()) append("💭 <b>Slogan:</b><br>${tagline}<br><br>")
                 if (overview.isNotEmpty()) append("📝 <b>Konu:</b><br>${overview}<br><br>")
-                if (releaseDate.isNotEmpty()) append("📅 <b>Yıl:</b> $releaseDate<br>")
+                if (releaseDate.isNotEmpty()) append("📅 <b>Yapım Yılı:</b> $releaseDate<br>")
                 if (rating != null) append("⭐ <b>TMDB Puanı:</b> $rating / 10<br>")
                 if (director.isNotEmpty()) append("🎬 <b>Yönetmen:</b> $director<br>")
                 if (genreList.isNotEmpty()) append("🎭 <b>Türler:</b> ${genreList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
@@ -200,7 +200,7 @@ class powerSinema(private val context: android.content.Context, private val shar
                 
                 append("<br>")
             } else {
-                append("<i>Film detayları TMDB'den alınamadı.</i><br><br>")
+                append("<i>Film detayları alınamadı.</i><br><br>")
             }
         }
 
