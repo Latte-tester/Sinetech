@@ -185,7 +185,7 @@ class powerSinema(private val context: android.content.Context, private val shar
                     }
                 }
 
-                val numberFormat = java.text.NumberFormat.getNumberInstance(java.util.Locale.US)
+                val numberFormat = java.text.NumberFormat.getNumberInstance(java.util.Locale("tr", "TR"))
                 
                 if (tagline.isNotEmpty()) append("💭 <b>Slogan:</b><br>${tagline}<br><br>")
                 if (overview.isNotEmpty()) append("📝 <b>Konu:</b><br>${overview}<br><br>")
