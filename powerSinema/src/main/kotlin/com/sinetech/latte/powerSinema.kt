@@ -6,15 +6,10 @@ import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
-import com.google.gson.Gson
-import com.google.gson.JsonObject
-import okhttp3.OkHttpClient
-import okhttp3.Request
 import java.io.InputStream
 
-class powerSinema(private val context: android.content.Context, private val sharedPref: SharedPreferences?, private val tmdbApiKey: String = BuildConfig.TMDB_SECRET_API) : MainAPI() {
-    private val tmdbApi = TmdbApi(tmdbApiKey)
-    private val tmdbDataManager = TmdbDataManager(context, tmdbApi)
+class powerSinema(private val context: android.content.Context, private val sharedPref: SharedPreferences?) : MainAPI() {
+
     override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/patr0n/site/lists/power-sinema.m3u"
     override var name                 = "powerSinema"
     override val hasMainPage          = true
@@ -94,17 +89,6 @@ class powerSinema(private val context: android.content.Context, private val shar
         val watchProgress = sharedPref?.getLong(progressKey, 0L) ?: 0L
         val loadData = fetchDataFromUrlOrJson(url)
 
-        // TMDB verilerini al ve güncelle
-        var tmdbData: TmdbMovieData? = null
-        try {
-            tmdbDataManager.updateMovieData(loadData.title)
-            tmdbData = tmdbDataManager.getMovieData(loadData.title)
-            Log.d("TMDB", "Film verileri: $tmdbData")
-        } catch (e: Exception) {
-            Log.e("TMDB", "TMDB verilerini alırken hata oluştu: ${e.message}")
-            tmdbData = null
-        }
-
         val nation:String = if (loadData.group == "NSFW") {
             "⚠️🔞🔞🔞 » ${loadData.group} | ${loadData.nation} « 🔞🔞🔞⚠️"
         } else {
@@ -112,21 +96,6 @@ class powerSinema(private val context: android.content.Context, private val shar
         }
 
         val plot = buildString {
-            if (tmdbData != null) {
-                if (!tmdbData.overview.isNullOrBlank()) {
-                    append(tmdbData.overview)
-                    append("\n\n")
-                }
-                append("Yönetmen: ${tmdbData.director ?: "Bilinmiyor"}\n")
-                if (tmdbData.cast.isNotEmpty()) {
-                    append("Oyuncular: ${tmdbData.cast.joinToString(", ")}\n")
-                }
-                if (tmdbData.genres.isNotEmpty()) {
-                    append("Tür: ${tmdbData.genres.joinToString(", ")}\n")
-                }
-                append("Yıl: ${tmdbData.year ?: "Bilinmiyor"}\n")
-                append("IMDB Puanı: ${tmdbData.rating?.toString() ?: "Bilinmiyor"}\n\n")
-            }
             append("Film Grubu: ${loadData.group}\n")
             append("Ülke: ${loadData.nation}")
         }
@@ -157,76 +126,16 @@ class powerSinema(private val context: android.content.Context, private val shar
                     this.posterUrl = rcPosterUrl
                     this.lang = rcNation
                 })
-
-            }
-        }
-
-        // TMDB API'den film detaylarını çek
-        val tmdbApiKey = BuildConfig.TMDB_API_KEY
-        if (tmdbApiKey.isNotEmpty()) {
-            try {
-                val tmdbClient = OkHttpClient()
-                val searchRequest = Request.Builder()
-                    .url("https://api.themoviedb.org/3/search/movie?api_key=$tmdbApiKey&query=${loadData.title}&language=tr-TR")
-                    .build()
-                val searchResponse = tmdbClient.newCall(searchRequest).execute()
-                val searchJson = searchResponse.body?.string()?.let { Gson().fromJson(it, JsonObject::class.java) }
-                
-                val movieId = searchJson?.getAsJsonArray("results")?.firstOrNull()?.asJsonObject?.get("id")?.asInt
-                if (movieId != null) {
-                    val detailRequest = Request.Builder()
-                        .url("https://api.themoviedb.org/3/movie/$movieId?api_key=$tmdbApiKey&append_to_response=credits&language=tr-TR")
-                        .build()
-                    val detailResponse = tmdbClient.newCall(detailRequest).execute()
-                    val movieDetail = detailResponse.body?.string()?.let { Gson().fromJson(it, JsonObject::class.java) }
-                    
-                    if (movieDetail != null) {
-                        val year = movieDetail.get("release_date")?.asString?.take(4)?.toIntOrNull()
-                        val director = movieDetail.getAsJsonObject("credits")?.getAsJsonArray("crew")
-                            ?.firstOrNull { it.asJsonObject.get("job")?.asString == "Director" }
-                            ?.asJsonObject?.get("name")?.asString
-                        val cast = movieDetail.getAsJsonObject("credits")?.getAsJsonArray("cast")
-                            ?.take(5)?.map { it.asJsonObject.get("name")?.asString ?: "" } ?: emptyList()
-                        val rating = movieDetail.get("vote_average")?.asDouble
-                        val overview = movieDetail.get("overview")?.asString
-                        val genres = movieDetail.getAsJsonArray("genres")
-                            ?.map { it.asJsonObject.get("name")?.asString ?: "" } ?: emptyList()
-                        
-                        loadData.year = year
-                        loadData.director = director
-                        loadData.cast = cast
-                        loadData.rating = rating
-                        loadData.overview = overview
-                        loadData.genres = genres
-                    }
-                }
-            } catch (e: Exception) {
-                Log.e("TMDB", "Error fetching movie details: ${e.message}", e)
             }
         }
 
         return newMovieLoadResponse(loadData.title, url, TvType.Movie, loadData.url) {
             this.posterUrl = loadData.poster
-            this.plot = buildString {
-                append(nation)
-                if (loadData.year != null) append("\nYıl: ${loadData.year}")
-                if (loadData.director != null) append("\nYönetmen: ${loadData.director}")
-                if (!loadData.cast.isNullOrEmpty()) {
-                    val castList = loadData.cast
-                    append("\nOyuncular: ${castList.joinToString(", ")}")
-                }
-                if (loadData.overview != null) append("\n\n${loadData.overview}")
-            }
-            this.tags = buildList {
-                add(loadData.group)
-                add(loadData.nation)
-                loadData.genres?.takeIf { it.isNotEmpty() }?.let { addAll(it) }
-            }
+            this.plot = nation
+            this.tags = listOf(loadData.group, loadData.nation)
             this.recommendations = recommendations
-            this.rating = loadData.rating?.times(2)?.toInt() ?: if (isWatched) 5 else 0
+            this.rating = if (isWatched) 5 else 0
             this.duration = if (watchProgress > 0) (watchProgress / 1000).toInt() else null
-            this.backgroundPosterUrl = tmdbData?.backdropPath
-            this.actors = tmdbData?.cast?.map { ActorData(Actor(it)) } ?: emptyList()
             this.comingSoon = false
         }
     }
@@ -272,13 +181,7 @@ class powerSinema(private val context: android.content.Context, private val shar
     val group: String,
     val nation: String,
     val isWatched: Boolean = false,
-    val watchProgress: Long = 0L,
-    var year: Int? = null,
-    var director: String? = null,
-    var cast: List<String>? = null,
-    var rating: Double? = null,
-    var overview: String? = null,
-    var genres: List<String>? = null
+    val watchProgress: Long = 0L
 )
 
     private suspend fun fetchDataFromUrlOrJson(data: String): LoadData {

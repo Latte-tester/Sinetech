@@ -42,14 +42,7 @@ jobs:
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3.2.2
 
-      - name: Set TMDB API Key
-        env:
-          TMDB_SECRET_API: ${{ secrets.TMDB_SECRET_API }}
-        run: echo "TMDB_SECRET_API=$TMDB_SECRET_API" >> $GITHUB_ENV
-
       - name: Build Plugins
-        env:
-          TMDB_SECRET_API: ${{ secrets.TMDB_SECRET_API }}
         run: |
           cd $GITHUB_WORKSPACE/src
           chmod +x gradlew
