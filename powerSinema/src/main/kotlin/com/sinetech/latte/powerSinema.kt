@@ -146,6 +146,8 @@ class powerSinema(private val context: android.content.Context, private val shar
                 val tagline = tmdbData.optString("tagline", "")
                 val budget = tmdbData.optLong("budget", 0L)
                 val revenue = tmdbData.optLong("revenue", 0L)
+                val originalName = tmdbData.optString("original_name", "")
+                val originalLanguage = tmdbData.optString("original_language", "")
                 
                 val genresArray = tmdbData.optJSONArray("genres")
                 val genreList = mutableListOf<String>()
@@ -195,6 +197,12 @@ class powerSinema(private val context: android.content.Context, private val shar
                 if (tagline.isNotEmpty()) append("💭 <b>Slogan:</b><br>${tagline}<br><br>")
                 if (overview.isNotEmpty()) append("📝 <b>Konu:</b><br>${overview}<br><br>")
                 if (releaseDate.isNotEmpty()) append("📅 <b>Yapım Yılı:</b> $releaseDate<br>")
+                if (originalName.isNotEmpty()) append("📜 <b>Orijinal Ad:</b> $originalName<br>")
+                if (originalLanguage.isNotEmpty()) {
+                    val langCode = originalLanguage.lowercase()
+                    val turkishName = languageMap[langCode] ?: originalLanguage
+                    append("🌐 <b>Orijinal Dil:</b> $turkishName<br>")
+                }
                 if (rating != null) append("⭐ <b>TMDB Puanı:</b> $rating / 10<br>")
                 if (director.isNotEmpty()) append("🎬 <b>Yönetmen:</b> $director<br>")
                 if (genreList.isNotEmpty()) append("🎭 <b>Film Türü:</b> ${genreList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
@@ -533,4 +541,58 @@ class IptvPlaylistParser {
 sealed class PlaylistParserException(message: String) : Exception(message) {
 
     class InvalidHeader : PlaylistParserException("Invalid file header. Header doesn't start with #EXTM3U")
+}
+
+val languageMap = mapOf(
+    // Temel Diller
+    "en" to "İngilizce",
+    "tr" to "Türkçe",
+    "ja" to "Japonca", // jp yerine ja daha standart ISO 639-1 kodudur
+    "de" to "Almanca",
+    "fr" to "Fransızca",
+    "es" to "İspanyolca",
+    "it" to "İtalyanca",
+    "ru" to "Rusça",
+    "pt" to "Portekizce",
+    "ko" to "Korece",
+    "zh" to "Çince", // Genellikle Mandarin için kullanılır
+    "hi" to "Hintçe",
+    "ar" to "Arapça",
+
+    // Avrupa Dilleri
+    "nl" to "Felemenkçe", // veya "Hollandaca"
+    "sv" to "İsveççe",
+    "no" to "Norveççe",
+    "da" to "Danca",
+    "fi" to "Fince",
+    "pl" to "Lehçe", // veya "Polonyaca"
+    "cs" to "Çekçe",
+    "hu" to "Macarca",
+    "ro" to "Rumence",
+    "el" to "Yunanca", // Greek
+    "uk" to "Ukraynaca",
+    "bg" to "Bulgarca",
+    "sr" to "Sırpça",
+    "hr" to "Hırvatça",
+    "sk" to "Slovakça",
+    "sl" to "Slovence",
+
+    // Asya Dilleri
+    "th" to "Tayca",
+    "vi" to "Vietnamca",
+    "id" to "Endonezce",
+    "ms" to "Malayca",
+    "tl" to "Tagalogca", // Filipince
+    "fa" to "Farsça", // İran
+    "he" to "İbranice", // veya "iw"
+
+    // Diğer
+    "la" to "Latince",
+    "xx" to "Belirsiz",
+    "mul" to "Çok Dilli" 
+
+)
+
+fun getTurkishLanguageName(code: String?): String? {
+    return languageMap[code?.lowercase()]
 }
