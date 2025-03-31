@@ -92,7 +92,7 @@ class powerSinema(private val context: android.content.Context, private val shar
         return withContext(Dispatchers.IO) {
             try {
                 val encodedTitle = URLEncoder.encode(title.replace(Regex("\\([^)]*\\)"), "").trim(), "UTF-8")
-                val apiKey = BuildConfig.TMDB_SECRET_API
+                val apiKey = "b8262d2c431250a66749f75a03e10d2e"
                 val searchUrl = "https://api.themoviedb.org/3/search/movie?api_key=$apiKey&query=$encodedTitle&language=tr-TR"
                 
                 val response = URL(searchUrl).readText()
