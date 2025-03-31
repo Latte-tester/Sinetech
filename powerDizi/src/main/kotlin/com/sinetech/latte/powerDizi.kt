@@ -133,6 +133,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 if (match != null) {
                     val (_, season, episode) = match.destructured
                     newEpisode(
+                        url = kanal.url.toString(),
                         data = LoadData(
                             kanal.url.toString(),
                             title,
