@@ -20,6 +20,8 @@ jobs:
 
       - name: Gradle Önbelleğini Temizle
         run: |
+          chmod +x ./gradlew
+
           ./gradlew clean
           ./gradlew cleanBuildCache
           rm -rf ~/.gradle/caches/
