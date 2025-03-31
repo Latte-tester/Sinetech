@@ -98,6 +98,7 @@ class powerSinema(private val context: android.content.Context, private val shar
             Log.d("TMDB", "Film verileri: $tmdbData")
         } catch (e: Exception) {
             Log.e("TMDB", "TMDB verilerini alırken hata oluştu: ${e.message}")
+            tmdbData = null
         }
 
         val nation:String = if (loadData.group == "NSFW") {
@@ -124,7 +125,6 @@ class powerSinema(private val context: android.content.Context, private val shar
             }
             append("Film Grubu: ${loadData.group}\n")
             append("Ülke: ${loadData.nation}")
-
         }
 
         val kanallar        = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
@@ -169,6 +169,10 @@ class powerSinema(private val context: android.content.Context, private val shar
             this.rating = tmdbData?.rating?.toInt() ?: (if (isWatched) 5 else 0)
             this.year = tmdbData?.year
             this.duration = if (watchProgress > 0) (watchProgress / 1000).toInt() else null
+            this.backgroundPosterUrl = tmdbData?.backdropPath
+            this.actors = tmdbData?.cast?.map { ActorData(Actor(it)) } ?: emptyList()
+            this.comingSoon = false
+            this.addTrailer = tmdbData?.backdropPath
         }
     }
 
