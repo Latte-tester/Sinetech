@@ -195,7 +195,11 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 if (firstAirDate.isNotEmpty()) append("📅 <b>İlk Yayın Tarihi:</b> $firstAirDate<br>")
                 if (rating != null) append("⭐ <b>TMDB Puanı:</b> $rating / 10<br>")
                 if (originalName.isNotEmpty()) append("📜 <b>Orijinal Ad:</b> $originalName<br>")
-                if (originalLanguage.isNotEmpty()) append("🌐 <b>Orijinal Dil:</b> $originalLanguage<br>")
+                if (originalLanguage.isNotEmpty()) {
+                    val langCode = originalLanguage.lowercase()
+                    val turkishName = languageMap[langCode] ?: originalLanguage
+                    append("🌐 <b>Orijinal Dil:</b> $turkishName<br>")
+                }
                 if (numberOfSeasons > 1) append("📅 <b>Toplam Sezon:</b> $numberOfSeasons<br>")
                 if (genreList.isNotEmpty()) append("🎭 <b>Dizi Türü:</b> ${genreList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
                 if (castList.isNotEmpty()) append("👥 <b>Oyuncular:</b> ${castList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
@@ -478,4 +482,58 @@ class IptvPlaylistParser {
 sealed class PlaylistParserException(message: String) : Exception(message) {
 
     class InvalidHeader : PlaylistParserException("Invalid file header. Header doesn't start with #EXTM3U")
+}
+
+val languageMap = mapOf(
+    // Temel Diller
+    "en" to "İngilizce",
+    "tr" to "Türkçe",
+    "ja" to "Japonca", // jp yerine ja daha standart ISO 639-1 kodudur
+    "de" to "Almanca",
+    "fr" to "Fransızca",
+    "es" to "İspanyolca",
+    "it" to "İtalyanca",
+    "ru" to "Rusça",
+    "pt" to "Portekizce",
+    "ko" to "Korece",
+    "zh" to "Çince", // Genellikle Mandarin için kullanılır
+    "hi" to "Hintçe",
+    "ar" to "Arapça",
+
+    // Avrupa Dilleri
+    "nl" to "Felemenkçe", // veya "Hollandaca"
+    "sv" to "İsveççe",
+    "no" to "Norveççe",
+    "da" to "Danca",
+    "fi" to "Fince",
+    "pl" to "Lehçe", // veya "Polonyaca"
+    "cs" to "Çekçe",
+    "hu" to "Macarca",
+    "ro" to "Rumence",
+    "el" to "Yunanca", // Greek
+    "uk" to "Ukraynaca",
+    "bg" to "Bulgarca",
+    "sr" to "Sırpça",
+    "hr" to "Hırvatça",
+    "sk" to "Slovakça",
+    "sl" to "Slovence",
+
+    // Asya Dilleri
+    "th" to "Tayca",
+    "vi" to "Vietnamca",
+    "id" to "Endonezce",
+    "ms" to "Malayca",
+    "tl" to "Tagalogca", // Filipince
+    "fa" to "Farsça", // İran
+    "he" to "İbranice", // veya "iw"
+
+    // Diğer
+    "la" to "Latince",
+    "xx" to "Belirsiz",
+    "mul" to "Çok Dilli" 
+
+)
+
+fun getTurkishLanguageName(code: String?): String? {
+    return languageMap[code?.lowercase()]
 }
