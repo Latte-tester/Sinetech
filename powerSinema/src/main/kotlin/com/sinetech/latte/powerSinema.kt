@@ -7,6 +7,12 @@ import com.lagradost.cloudstream3.utils.*
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import java.io.InputStream
+import com.lagradost.cloudstream3.BuildConfig
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import org.json.JSONObject
+import java.net.URL
+import java.net.URLEncoder
 
 class powerSinema(private val context: android.content.Context, private val sharedPref: SharedPreferences?) : MainAPI() {
 
@@ -82,6 +88,31 @@ class powerSinema(private val context: android.content.Context, private val shar
 
     override suspend fun quickSearch(query: String): List<SearchResponse> = search(query)
 
+    private suspend fun fetchTMDBData(title: String): JSONObject? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val encodedTitle = URLEncoder.encode(title.replace(Regex("\\([^)]*\\)"), "").trim(), "UTF-8")
+                val apiKey = BuildConfig.TMDB_SECRET_API
+                val searchUrl = "https://api.themoviedb.org/3/search/movie?api_key=$apiKey&query=$encodedTitle&language=tr-TR"
+                
+                val response = URL(searchUrl).readText()
+                val jsonResponse = JSONObject(response)
+                val results = jsonResponse.getJSONArray("results")
+                
+                if (results.length() > 0) {
+                    val movieId = results.getJSONObject(0).getInt("id")
+                    val detailsUrl = "https://api.themoviedb.org/3/movie/$movieId?api_key=$apiKey&append_to_response=credits&language=tr-TR"
+                    val detailsResponse = URL(detailsUrl).readText()
+                    return@withContext JSONObject(detailsResponse)
+                }
+                null
+            } catch (e: Exception) {
+                Log.e("TMDB", "Error fetching TMDB data: ${e.message}")
+                null
+            }
+        }
+    }
+
     override suspend fun load(url: String): LoadResponse {
         val watchKey = "watch_${url.hashCode()}"
         val progressKey = "progress_${url.hashCode()}"
@@ -95,8 +126,44 @@ class powerSinema(private val context: android.content.Context, private val shar
             "» ${loadData.group} | ${loadData.nation} «"
         }
 
+        val tmdbData = fetchTMDBData(loadData.title)
+        
         val plot = buildString {
-            append("Film Grubu: ${loadData.group}\n")
+            if (tmdbData != null) {
+                val overview = tmdbData.optString("overview", "")
+                val releaseDate = tmdbData.optString("release_date", "").split("-").firstOrNull() ?: ""
+                val rating = tmdbData.optDouble("vote_average", 0.0)
+                val genres = tmdbData.getJSONArray("genres")
+                val genreList = mutableListOf<String>()
+                for (i in 0 until genres.length()) {
+                    genreList.add(genres.getJSONObject(i).getString("name"))
+                }
+                
+                val credits = tmdbData.getJSONObject("credits")
+                val cast = credits.getJSONArray("cast")
+                val castList = mutableListOf<String>()
+                for (i in 0 until minOf(cast.length(), 5)) {
+                    castList.add(cast.getJSONObject(i).getString("name"))
+                }
+                
+                val crew = credits.getJSONArray("crew")
+                var director = ""
+                for (i in 0 until crew.length()) {
+                    val member = crew.getJSONObject(i)
+                    if (member.getString("job") == "Director") {
+                        director = member.getString("name")
+                        break
+                    }
+                }
+                
+                if (overview.isNotEmpty()) append("${overview}\n\n")
+                if (releaseDate.isNotEmpty()) append("Yıl: $releaseDate\n")
+                if (rating > 0) append("TMDB Puanı: $rating\n")
+                if (director.isNotEmpty()) append("Yönetmen: $director\n")
+                if (castList.isNotEmpty()) append("Oyuncular: ${castList.joinToString(", ")}\n")
+                if (genreList.isNotEmpty()) append("Türler: ${genreList.joinToString(", ")}\n")
+            }
+            append("\nFilm Grubu: ${loadData.group}\n")
             append("Ülke: ${loadData.nation}")
         }
 
