@@ -167,7 +167,10 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 val ratingValue = tmdbData.optDouble("vote_average", -1.0)
                 val rating = if (ratingValue >= 0) String.format("%.1f", ratingValue) else null
                 val tagline = tmdbData.optString("tagline", "")
-                
+                val originalName = tmdbData.optString("original_name", "")
+                val originalLanguage = tmdbData.optString("original_language", "")
+                val numberOfSeasons = tmdbData.optInt("number_of_seasons", 1)
+
                 val genresArray = tmdbData.optJSONArray("genres")
                 val genreList = mutableListOf<String>()
                 if (genresArray != null) {
@@ -191,6 +194,9 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 if (overview.isNotEmpty()) append("📝 <b>Konu:</b><br>${overview}<br><br>")
                 if (firstAirDate.isNotEmpty()) append("📅 <b>İlk Yayın Tarihi:</b> $firstAirDate<br>")
                 if (rating != null) append("⭐ <b>TMDB Puanı:</b> $rating / 10<br>")
+                if (originalName.isNotEmpty()) append("📜 <b>Orijinal Ad:</b> $originalName<br>")
+                if (originalLanguage.isNotEmpty()) append("🌐 <b>Orijinal Dil:</b> $originalLanguage<br>")
+                if (numberOfSeasons > 1) append("📅 <b>Toplam Sezon:</b> $numberOfSeasons<br>")
                 if (genreList.isNotEmpty()) append("🎭 <b>Dizi Türü:</b> ${genreList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
                 if (castList.isNotEmpty()) append("👥 <b>Oyuncular:</b> ${castList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
                 append("<br>")
