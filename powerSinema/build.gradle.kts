@@ -10,7 +10,8 @@ android {
     }
 
     defaultConfig {
-        buildConfigField("String", "TMDB_SECRET_API", System.getenv("TMDB_SECRET_API") ?: "\"\"")
+        val apiKey = project.findProperty("tmdbApiKey")?.toString() ?: ""
+        buildConfigField("String", "TMDB_SECRET_API", "\"$apiKey\"")
     }
 }
 
