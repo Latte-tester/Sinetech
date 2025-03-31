@@ -166,11 +166,11 @@ class powerSinema(private val context: android.content.Context, private val shar
                 }
                 
                 if (overview.isNotEmpty()) append("📝 Konu:\n${overview}\n\n")
-                if (releaseDate.isNotEmpty()) append("📅 Yıl: $releaseDate\n")
-                if (rating > 0) append("⭐ TMDB Puanı: $rating\n")
-                if (director.isNotEmpty()) append("🎬 Yönetmen: $director\n")
-                if (castList.isNotEmpty()) append("👥 Oyuncular: ${castList.joinToString(", ")}\n")
-                if (genreList.isNotEmpty()) append("🎭 Türler: ${genreList.joinToString(", ")}\n")
+                if (releaseDate.isNotEmpty()) append("📅 Yıl: $releaseDate\n\n")
+                if (rating > 0) append("⭐ TMDB Puanı: $rating\n\n")
+                if (director.isNotEmpty()) append("🎬 Yönetmen: $director\n\n")
+                if (castList.isNotEmpty()) append("👥 Oyuncular: ${castList.joinToString(", ")}\n\n")
+                if (genreList.isNotEmpty()) append("🎭 Türler: ${genreList.joinToString(", ")}\n\n")
                 append("\n")
             }
             append("\nFilm Grubu: ${loadData.group}\n")
