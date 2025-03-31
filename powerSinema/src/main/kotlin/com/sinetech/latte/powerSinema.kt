@@ -10,7 +10,7 @@ import java.io.InputStream
 
 class powerSinema(private val context: android.content.Context, private val sharedPref: SharedPreferences?, private val tmdbApiKey: String = BuildConfig.TMDB_SECRET_API) : MainAPI() {
     private val tmdbApi = TmdbApi(tmdbApiKey)
-    private val tmdbDataManager = TmdbDataManager(context)
+    private val tmdbDataManager = TmdbDataManager(context, tmdbApi)
     override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/patr0n/site/lists/power-sinema.m3u"
     override var name                 = "powerSinema"
     override val hasMainPage          = true
@@ -96,9 +96,10 @@ class powerSinema(private val context: android.content.Context, private val shar
         }
 
         // TMDB verilerini al ve güncelle
+        var tmdbData: TmdbMovieData? = null
         try {
             tmdbDataManager.updateMovieData(loadData.title)
-            val tmdbData = tmdbDataManager.getMovieData(loadData.title)
+            tmdbData = tmdbDataManager.getMovieData(loadData.title)
             Log.d("TMDB", "Film verileri: $tmdbData")
         } catch (e: Exception) {
             Log.e("TMDB", "TMDB verilerini alırken hata oluştu: ${e.message}")
