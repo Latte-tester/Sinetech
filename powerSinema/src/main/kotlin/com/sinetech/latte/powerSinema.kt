@@ -185,7 +185,12 @@ class powerSinema(private val context: android.content.Context, private val shar
                     }
                 }
 
-                val numberFormat = java.text.NumberFormat.getNumberInstance(java.util.Locale.TR)
+                val numberFormat = try {
+                    java.text.NumberFormat.getNumberInstance(java.util.Locale("tr", "TR"))
+                } catch (e: Exception) {
+                    Log.e("LocaleError", "TR Locale alınamadı, US kullanılıyor.", e)
+                    java.text.NumberFormat.getNumberInstance(java.util.Locale.US)
+                }
                 
                 if (tagline.isNotEmpty()) append("💭 <b>Slogan:</b><br>${tagline}<br><br>")
                 if (overview.isNotEmpty()) append("📝 <b>Konu:</b><br>${overview}<br><br>")
@@ -195,8 +200,26 @@ class powerSinema(private val context: android.content.Context, private val shar
                 if (genreList.isNotEmpty()) append("🎭 <b>Türler:</b> ${genreList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
                 if (castList.isNotEmpty()) append("👥 <b>Oyuncular:</b> ${castList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
                 if (companyList.isNotEmpty()) append("🏢 <b>Yapım Şirketleri:</b> ${companyList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
-                if (budget > 0) append("💰 <b>Bütçe:</b> $${numberFormat.format(budget)}<br>")
-                if (revenue > 0) append("💵 <b>Hasılat:</b> $${numberFormat.format(revenue)}<br>")
+                if (budget > 0) {
+                    try {
+                        val formattedBudget = numberFormat.format(budget)
+                        append("💰 <b>Bütçe:</b> $${formattedBudget}<br>")
+                        Log.d("FormatDebug", "Bütçe formatlandı (TR): $formattedBudget")
+                    } catch (e: Exception) {
+                        Log.e("FormatError", "Bütçe formatlanırken hata (TR): $budget", e)
+                        append("💰 <b>Bütçe:</b> $${budget} (Formatlama Hatası)<br>")
+                    }
+                }
+                if (revenue > 0) {
+                    try {
+                        val formattedRevenue = numberFormat.format(revenue)
+                        append("💵 <b>Hasılat:</b> $${formattedRevenue}<br>")
+                        Log.d("FormatDebug", "Hasılat formatlandı (TR): $formattedRevenue")
+                    } catch (e: Exception) {
+                        Log.e("FormatError", "Hasılat formatlanırken hata (TR): $revenue", e)
+                        append("💵 <b>Hasılat:</b> $${revenue} (Formatlama Hatası)<br>")
+                    }
+                }
                 
                 append("<br>")
             } else {
