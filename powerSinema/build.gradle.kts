@@ -1,4 +1,4 @@
-version = 2.1
+version = 3
 
 cloudstream {
     authors     = listOf("GitLatte", "patr0nq", "keyiflerolsun")
