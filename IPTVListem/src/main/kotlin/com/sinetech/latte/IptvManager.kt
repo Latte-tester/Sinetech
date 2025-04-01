@@ -69,7 +69,7 @@ object IptvManager {
             HomePageList(
                 name = group,
                 list = groupChannels.map { channel ->
-                    LiveTvSearchResponse(
+                    newLiveTvSearchResponse(
                         name = channel.name,
                         url = channel.url,
                         apiName = "IPTVListem",
