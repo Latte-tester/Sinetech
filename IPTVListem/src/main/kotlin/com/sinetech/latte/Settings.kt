@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -15,7 +16,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.Toast
-import com.lagradost.cloudstream3.plugins.R
+import com.lagradost.cloudstream3.R
 
 class Settings(private val plugin: IPTVListemPlugin) : DialogFragment() {
     lateinit var iptvListem: IPTVListemPlugin.IPTVListem
@@ -29,17 +30,17 @@ class Settings(private val plugin: IPTVListemPlugin) : DialogFragment() {
         val addButton = view.findViewById<Button>(R.id.add_button)
         val urlInput = view.findViewById<EditText>(R.id.url_input)
 
-        iptvListem = plugin.IPTVListem()
+        iptvListem = plugin.IPTVListem(requireContext())
         val lists = iptvListem.getIptvLists()
         val selectedLists = iptvListem.getSelectedLists()
 
         val adapter = IptvListAdapter(lists.toMutableList(), selectedLists.toMutableList()) { url, isSelected ->
             if (isSelected) {
                 if (!selectedLists.contains(url)) {
-                    selectedLists.remove(url)
+                    selectedLists.add(url)
                 }
             } else {
-                selectedLists.add(url)
+                selectedLists.remove(url)
             }
             iptvListem.updateSelectedLists(selectedLists)
         }
@@ -97,13 +98,11 @@ class IptvListAdapter(
                 .setTitle("Listeyi Sil")
                 .setMessage("Bu IPTV listesini silmek istediğinizden emin misiniz?")
                 .setPositiveButton("Evet") { _, _ ->
-                    val fragmentManager = (activity as? FragmentActivity)?.supportFragmentManager
-                    if (activity != null) {
-                        val currentFragment = activity.supportFragmentManager.findFragmentByTag("Settings") as? Settings
-                        currentFragment?.iptvListem?.removeIptvList(item)
-                        items.removeAt(position)
-                        notifyItemRemoved(position)
-                    }
+                    val activity = context as? FragmentActivity
+                    val currentFragment = activity?.supportFragmentManager?.findFragmentByTag("Settings") as? Settings
+                    currentFragment?.iptvListem?.removeIptvList(item)
+                    items.removeAt(position)
+                    notifyItemRemoved(position)
                 }
                 .setNegativeButton("Hayır", null)
                 .show()
@@ -118,4 +117,4 @@ class IptvListAdapter(
         notifyItemInserted(items.size - 1)
     }
 }
-import com.lagradost.cloudstream3.plugins.R
+import com.lagradost.cloudstream3.R
