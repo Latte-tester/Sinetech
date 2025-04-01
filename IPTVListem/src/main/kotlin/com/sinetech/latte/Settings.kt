@@ -14,7 +14,6 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.Toast
-import com.lagradost.cloudstream3.AcraApplication.Companion.getKey
 import com.lagradost.cloudstream3.plugins.R
 
 class Settings(private val plugin: IPTVListemPlugin) : DialogFragment() {
@@ -29,7 +28,7 @@ class Settings(private val plugin: IPTVListemPlugin) : DialogFragment() {
         val addButton = view.findViewById<Button>(R.id.add_button)
         val urlInput = view.findViewById<EditText>(R.id.url_input)
 
-        iptvListem = plugin.mainApi as IPTVListemPlugin.IPTVListem
+        iptvListem = plugin.mainApi
         val lists = iptvListem.getIptvLists()
         val selectedLists = iptvListem.getSelectedLists()
 
@@ -37,9 +36,11 @@ class Settings(private val plugin: IPTVListemPlugin) : DialogFragment() {
             if (isSelected) {
                 if (!selectedLists.contains(url)) {
                     selectedLists.add(url)
+iptvListem.updateSelectedLists(selectedLists)
                 }
             } else {
                 selectedLists.remove(url)
+iptvListem.updateSelectedLists(selectedLists)
             }
             iptvListem.updateSelectedLists(selectedLists)
         }
@@ -99,9 +100,7 @@ class IptvListAdapter(
                 .setPositiveButton("Evet") { _, _ ->
                     val activity = context as? Activity
                     if (activity != null) {
-                        val currentFragment = activity.supportFragmentManager
-                            .findFragmentByTag("Settings") as? Settings
-                        
+                        val currentFragment = activity.supportFragmentManager.findFragmentByTag("Settings") as? Settings
                         currentFragment?.iptvListem?.removeIptvList(item)
                         items.removeAt(position)
                         notifyItemRemoved(position)
