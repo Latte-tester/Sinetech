@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:key="add_list"
+        android:title="IPTV Listesi Ekle"
+        android:summary="Yeni bir IPTV listesi eklemek için tıklayın" />
+    
+    <Preference
+        android:key="manage_lists"
+        android:title="Listeleri Yönet"
+        android:summary="Mevcut IPTV listelerini düzenleyin veya silin" />
+</PreferenceScreen>

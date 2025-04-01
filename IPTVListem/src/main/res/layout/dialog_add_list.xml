@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <EditText
+        android:id="@+id/url_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="IPTV Liste URL'si"
+        android:inputType="textUri"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:id="@+id/language_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Dil (isteğe bağlı)"
+        android:inputType="text"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:id="@+id/country_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Ülke (isteğe bağlı)"
+        android:inputType="text"
+        android:layout_marginBottom="8dp" />
+
+    <EditText
+        android:id="@+id/password_input"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Şifre (isteğe bağlı)"
+        android:inputType="textPassword" />
+
+</LinearLayout>
