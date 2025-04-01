@@ -95,16 +95,15 @@ class IptvListAdapter(
                 .setTitle("Listeyi Sil")
                 .setMessage("Bu IPTV listesini silmek istediğinizden emin misiniz?")
                 .setPositiveButton("Evet") { _, _ ->
-                    val iptvListem = (context as FragmentActivity)
-                        .supportFragmentManager
-                        .fragments
-                        .filterIsInstance<Settings>()
-                        .firstOrNull()
-                        ?.iptvListem
-
-                    iptvListem?.removeIptvList(item)
-                    items.removeAt(position)
-                    notifyItemRemoved(position)
+                    val activity = context as? Activity
+                    if (activity != null) {
+                        val currentFragment = activity.supportFragmentManager
+                            .findFragmentByTag("Settings") as? Settings
+                        
+                        currentFragment?.iptvListem?.removeIptvList(item)
+                        items.removeAt(position)
+                        notifyItemRemoved(position)
+                    }
                 }
                 .setNegativeButton("Hayır", null)
                 .show()

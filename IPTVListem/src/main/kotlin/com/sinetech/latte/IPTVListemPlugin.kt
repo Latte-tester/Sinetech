@@ -23,12 +23,16 @@ class IPTVListemPlugin : Plugin() {
 
     override fun load(context: Context) {
         // Register main API
-        registerMainAPI(IPTVListem(context))
+        val api = IPTVListem(context)
+        registerMainAPI(api)
 
-        val activity = context as AppCompatActivity
+        // Set up settings button click handler
         openSettings = {
-            val frag = Settings(this)
-            frag.show(activity.supportFragmentManager, "Settings")
+            val activity = context as? Activity
+            if (activity != null) {
+                val frag = Settings(this)
+                frag.show(activity.supportFragmentManager, "Settings")
+            }
         }
     }
 
