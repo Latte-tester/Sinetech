@@ -33,7 +33,7 @@ class IPTVListemPlugin : Plugin() {
         override val hasMainPage = true
         override val hasQuickSearch = true
         override val hasDownloadSupport = false
-        override val hasSettings = true
+        override val hasSettings = false
 
         private var channels = mutableListOf<IptvManager.Channel>()
 
