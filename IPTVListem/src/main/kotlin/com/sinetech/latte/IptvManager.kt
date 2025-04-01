@@ -2,6 +2,7 @@ package com.sinetech.latte
 
 import com.lagradost.cloudstream3.HomePageList
 import com.lagradost.cloudstream3.TvType
+import com.lagradost.cloudstream3.newLiveSearchResponse
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.Qualities
 import java.io.BufferedReader
@@ -69,13 +70,14 @@ object IptvManager {
             HomePageList(
                 name = group,
                 list = groupChannels.map { channel ->
-                    newLiveTvSearchResponse(
+                    newLiveSearchResponse(
                         name = channel.name,
                         url = channel.url,
-                        apiName = "IPTVListem",
-                        type = TvType.Live,
-                        posterUrl = channel.logo
-                    )
+                        type = TvType.Live
+                    ) {
+                        this.posterUrl = channel.logo
+                        this.apiName = "IPTVListem"
+                    }
                 }
             )
         }
