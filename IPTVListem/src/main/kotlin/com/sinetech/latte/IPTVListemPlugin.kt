@@ -1,5 +1,6 @@
 package com.sinetech.latte
 
+import android.app.Activity
 import android.content.Context
 import android.content.SharedPreferences
 import android.widget.Toast
@@ -46,11 +47,11 @@ class IPTVListemPlugin : Plugin() {
 
         private var channels = mutableListOf<IptvManager.Channel>()
 
-        private fun getIptvLists(): List<String> {
+        fun getIptvLists(): List<String> {
             return getKey<List<String>>(IPTV_LISTS_KEY) ?: emptyList()
         }
 
-        private fun getSelectedLists(): List<String> {
+        fun getSelectedLists(): List<String> {
             return getKey<List<String>>(SELECTED_LISTS_KEY) ?: emptyList()
         }
 

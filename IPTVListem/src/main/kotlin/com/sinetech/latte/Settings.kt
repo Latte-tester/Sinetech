@@ -1,5 +1,6 @@
 package com.sinetech.latte
 
+import android.app.Activity
 import android.app.Dialog
 import android.os.Bundle
 import android.view.View
@@ -9,11 +10,12 @@ import androidx.fragment.app.DialogFragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.Toast
 import com.lagradost.cloudstream3.AcraApplication.Companion.getKey
-import com.lagradost.cloudstream3.R
+import com.lagradost.cloudstream3.plugins.R
 
 class Settings(private val plugin: IPTVListemPlugin) : DialogFragment() {
     private lateinit var iptvListem: IPTVListemPlugin.IPTVListem
