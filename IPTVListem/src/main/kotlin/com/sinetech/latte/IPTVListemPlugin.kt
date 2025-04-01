@@ -24,6 +24,12 @@ class IPTVListemPlugin : Plugin() {
     override fun load(context: Context) {
         // Register main API
         registerMainAPI(IPTVListem(context))
+
+        val activity = context as AppCompatActivity
+        openSettings = {
+            val frag = Settings(this)
+            frag.show(activity.supportFragmentManager, "Settings")
+        }
     }
 
     class IPTVListem(private val context: Context) : MainAPI() {
@@ -33,7 +39,6 @@ class IPTVListemPlugin : Plugin() {
         override val hasMainPage = true
         override val hasQuickSearch = true
         override val hasDownloadSupport = false
-        override val hasSettings = false
 
         private var channels = mutableListOf<IptvManager.Channel>()
 

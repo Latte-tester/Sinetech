@@ -11,29 +11,19 @@
         android:layout_height="wrap_content"
         android:hint="IPTV Liste URL'si"
         android:inputType="textUri"
-        android:layout_marginBottom="8dp" />
+        android:padding="8dp" />
 
-    <EditText
-        android:id="@+id/language_input"
+    <Button
+        android:id="@+id/add_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Dil (isteğe bağlı)"
-        android:inputType="text"
-        android:layout_marginBottom="8dp" />
+        android:layout_marginTop="8dp"
+        android:text="Ekle" />
 
-    <EditText
-        android:id="@+id/country_input"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="Ülke (isteğe bağlı)"
-        android:inputType="text"
-        android:layout_marginBottom="8dp" />
-
-    <EditText
-        android:id="@+id/password_input"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Şifre (isteğe bağlı)"
-        android:inputType="textPassword" />
+        android:layout_marginTop="16dp" />
 
 </LinearLayout>
