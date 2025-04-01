@@ -31,8 +31,9 @@ class IPTVListemPlugin : Plugin() {
         override var mainUrl = ""
         override val supportedTypes = setOf(TvType.Live)
         override val hasMainPage = true
-        override val hasQuickSearch       = true
+        override val hasQuickSearch = true
         override val hasDownloadSupport = false
+        override val hasSettings = true
 
         private var channels = mutableListOf<IptvManager.Channel>()
 
