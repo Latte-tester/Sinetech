@@ -14,6 +14,7 @@ import com.lagradost.cloudstream3.plugins.CloudstreamPlugin
 import com.lagradost.cloudstream3.plugins.Plugin
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.Qualities
+import androidx.fragment.app.FragmentManager
 
 @CloudstreamPlugin
 class IPTVListemPlugin : Plugin() {
@@ -32,7 +33,8 @@ class IPTVListemPlugin : Plugin() {
             val activity = context as? Activity
             if (activity != null) {
                 val frag = Settings(this)
-                frag.show(activity.supportFragmentManager, "Settings")
+                val fragmentManager = activity.supportFragmentManager
+                frag.show(fragmentManager, "Settings")
             }
         }
     }

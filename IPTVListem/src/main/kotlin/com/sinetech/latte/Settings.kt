@@ -7,6 +7,7 @@ import android.view.View
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.FragmentManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -22,23 +23,23 @@ class Settings(private val plugin: IPTVListemPlugin) : DialogFragment() {
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireContext())
         val inflater = requireActivity().layoutInflater
-        val view = inflater.inflate(com.sinetech.latte.R.layout.settings_iptv, null)
+        val view = inflater.inflate(R.layout.settings_iptv, null)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
         val addButton = view.findViewById<Button>(R.id.add_button)
         val urlInput = view.findViewById<EditText>(R.id.url_input)
 
-        iptvListem = plugin.mainApi
+        iptvListem = plugin.IPTVListem()
         val lists = iptvListem.getIptvLists()
         val selectedLists = iptvListem.getSelectedLists()
 
         val adapter = IptvListAdapter(lists.toMutableList(), selectedLists.toMutableList()) { url, isSelected ->
             if (isSelected) {
                 if (!selectedLists.contains(url)) {
-                    selectedLists.add(url)
+                    selectedLists.remove(url)
                 }
             } else {
-                selectedLists.remove(url)
+                selectedLists.add(url)
             }
             iptvListem.updateSelectedLists(selectedLists)
         }
