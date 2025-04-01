@@ -97,7 +97,7 @@ class IptvListAdapter(
                 .setTitle("Listeyi Sil")
                 .setMessage("Bu IPTV listesini silmek istediğinizden emin misiniz?")
                 .setPositiveButton("Evet") { _, _ ->
-                    val activity = context as? Activity
+                    val fragmentManager = (activity as? FragmentActivity)?.supportFragmentManager
                     if (activity != null) {
                         val currentFragment = activity.supportFragmentManager.findFragmentByTag("Settings") as? Settings
                         currentFragment?.iptvListem?.removeIptvList(item)
@@ -118,3 +118,4 @@ class IptvListAdapter(
         notifyItemInserted(items.size - 1)
     }
 }
+import com.lagradost.cloudstream3.plugins.R

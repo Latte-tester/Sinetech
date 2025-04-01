@@ -33,7 +33,7 @@ class IPTVListemPlugin : Plugin() {
             val activity = context as? Activity
             if (activity != null) {
                 val frag = Settings(this)
-                val fragmentManager = activity.supportFragmentManager
+                val fragmentManager = (activity as? FragmentActivity)?.supportFragmentManager
                 frag.show(fragmentManager, "Settings")
             }
         }
