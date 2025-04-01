@@ -1,7 +1,6 @@
 package com.sinetech.latte
 
 import com.lagradost.cloudstream3.HomePageList
-import com.lagradost.cloudstream3.LiveTvSearchResponse
 import com.lagradost.cloudstream3.TvType
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.Qualities
