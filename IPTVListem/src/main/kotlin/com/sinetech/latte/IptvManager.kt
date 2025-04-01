@@ -65,19 +65,16 @@ object IptvManager {
         return channels
     }
 
-    fun createHomePageList(channels: List<Channel>): List<HomePageList> {
+    fun createHomePageList(mainApi: IPTVListemPlugin.IPTVListem, channels: List<Channel>): List<HomePageList> {
         return channels.groupBy { it.group }.map { (group, groupChannels) ->
             HomePageList(
                 name = group,
                 list = groupChannels.map { channel ->
-                    newLiveSearchResponse(
+                    mainApi.newLiveSearchResponse(
                         name = channel.name,
                         url = channel.url,
                         type = TvType.Live
-                    ) {
-                        this.posterUrl = channel.logo
-                        this.apiName = "IPTVListem"
-                    }
+                    ) { posterUrl = channel.logo }
                 }
             )
         }

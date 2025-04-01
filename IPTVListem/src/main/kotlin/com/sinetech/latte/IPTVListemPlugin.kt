@@ -81,7 +81,7 @@ class IPTVListemPlugin : Plugin() {
                 }
             }
 
-            val homePageLists = IptvManager.createHomePageList(channels)
+            val homePageLists = IptvManager.createHomePageList(this, channels)
             return HomePageResponse(homePageLists)
         }
 
