@@ -17,12 +17,12 @@ import android.widget.Toast
 import com.lagradost.cloudstream3.plugins.R
 
 class Settings(private val plugin: IPTVListemPlugin) : DialogFragment() {
-    private lateinit var iptvListem: IPTVListemPlugin.IPTVListem
+    lateinit var iptvListem: IPTVListemPlugin.IPTVListem
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val builder = AlertDialog.Builder(requireContext())
         val inflater = requireActivity().layoutInflater
-        val view = inflater.inflate(R.layout.settings_iptv, null)
+        val view = inflater.inflate(com.sinetech.latte.R.layout.settings_iptv, null)
 
         val recyclerView = view.findViewById<RecyclerView>(R.id.recycler_view)
         val addButton = view.findViewById<Button>(R.id.add_button)
@@ -36,11 +36,9 @@ class Settings(private val plugin: IPTVListemPlugin) : DialogFragment() {
             if (isSelected) {
                 if (!selectedLists.contains(url)) {
                     selectedLists.add(url)
-iptvListem.updateSelectedLists(selectedLists)
                 }
             } else {
                 selectedLists.remove(url)
-iptvListem.updateSelectedLists(selectedLists)
             }
             iptvListem.updateSelectedLists(selectedLists)
         }
