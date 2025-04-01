@@ -3,6 +3,6 @@
     "description": "Sinetech.tr Özel Cloudstream Deposu",
     "manifestVersion": 1,
     "pluginLists": [
-      "https://raw.githubusercontent.com/Latte-tester/Sinetech/master/builds/plugins.json"
+      "https://raw.githubusercontent.com/Latte-tester/Sinetech/builds/plugins.json"
     ]
 }
