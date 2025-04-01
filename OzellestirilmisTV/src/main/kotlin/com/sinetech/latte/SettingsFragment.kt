@@ -99,8 +99,6 @@ class PlaylistAdapter(
     private val listener: PlaylistActionListener
 ) : RecyclerView.Adapter<PlaylistAdapter.ViewHolder>() {
 
-    override fun getItemCount() = playlists.size
-
     interface PlaylistActionListener {
         fun onPlaylistEnabled(url: String, enabled: Boolean)
         fun onPlaylistRemoved(url: String)
@@ -110,26 +108,6 @@ class PlaylistAdapter(
         val checkbox: CheckBox = view.findViewById(R.id.playlistEnabledCheckbox)
         val urlText: TextView = view.findViewById(R.id.playlistUrlText)
         val removeButton: ImageButton = view.findViewById(R.id.removePlaylistButton)
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context)
-            .inflate(R.layout.playlist_item, parent, false)
-        return ViewHolder(view)
-    }
-
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val url = playlists[position]
-        holder.urlText.text = url
-        holder.checkbox.isChecked = enabledPlaylists.contains(url)
-
-        holder.checkbox.setOnCheckedChangeListener { _, isChecked ->
-            listener.onPlaylistEnabled(url, isChecked)
-        }
-
-        holder.removeButton.setOnClickListener {
-            listener.onPlaylistRemoved(url)
-        }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

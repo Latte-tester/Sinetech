@@ -13,6 +13,20 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.URL
 
+data class M3uPlaylistItem(
+    val url: String,
+    val title: String,
+    val attributes: Map<String, String>
+)
+
+data class LoadData(
+    val streamUrl: String,
+    val title: String,
+    val posterUrl: String,
+    val group: String,
+    val nation: String
+)
+
 class OzellestirilmisTV(private val sharedPref: SharedPreferences?) : MainAPI() {
     override var mainUrl              = ""
     override var name                 = "OzellestirilmisTV"
