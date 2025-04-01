@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.widget.Toast
 import androidx.preference.PreferenceManager
+import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.AcraApplication.Companion.getKey
 import com.lagradost.cloudstream3.AcraApplication.Companion.setKey
 import com.lagradost.cloudstream3.MainAPI
@@ -15,8 +16,10 @@ import com.lagradost.cloudstream3.utils.Qualities
 
 @CloudstreamPlugin
 class IPTVListemPlugin : Plugin() {
-    private val IPTV_LISTS_KEY = "iptv_lists"
-    private val SELECTED_LISTS_KEY = "selected_iptv_lists"
+    companion object {
+        private const val IPTV_LISTS_KEY = "iptv_lists"
+        private const val SELECTED_LISTS_KEY = "selected_iptv_lists"
+    }
 
     override fun load(context: Context) {
         // Register main API
