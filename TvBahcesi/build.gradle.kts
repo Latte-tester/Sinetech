@@ -1,4 +1,4 @@
-version = 3
+version = 1
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
@@ -11,9 +11,9 @@ android {
 }
 
 cloudstream {
-    authors     = listOf("GitLatte", "patr0nq")
+    authors     = listOf("GitLatte", "patr0nq", "keyiflerolsun")
     language    = "tr"
-    description = "TvGarden televizyon listesi"
+    description = "TvGarden televizyon listesi. @keyiflerolsun Canlı TV eklentisinden yararlanılmıştır."
 
     /**
      * Status int as the following:
