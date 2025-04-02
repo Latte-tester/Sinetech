@@ -1,10 +1,13 @@
-version = 1
+version = 3
 
 dependencies {
-    implementation("com.lagradost:cloudstream3:pre-release")
-    implementation("com.squareup.okhttp3:okhttp:4.9.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+}
+
+android {
+    buildFeatures {
+        buildConfig = true
+    }
 }
 
 cloudstream {
