@@ -1,6 +1,6 @@
-# 🚀 Sinetech Eklentileri 
+# 🚀 Latte - Sinetech Cloudstream Eklentisi Deposu
 
-![Latte Repository Banner](img/banner.png) <!-- Sonradan eklenebilir -->
+![Latte Repository Banner](img/banner.png)
 
 📦 **Kullanıma Hazır Eklentiler**
 | Eklenti | Versiyon | Lisans |
