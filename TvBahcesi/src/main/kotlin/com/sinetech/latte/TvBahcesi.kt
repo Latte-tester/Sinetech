@@ -24,6 +24,7 @@ class TvBahcesi : MainAPI() {
     private val mapper = jacksonObjectMapper()
     private var lastUpdate: Instant = Instant.EPOCH
     private val updateInterval = Duration.ofHours(2)
+    private val defaultPosterUrl = "https://raw.githubusercontent.com/GitLatte/m3ueditor/refs/heads/site/images/kanal-gorselleri/referans/isimsizkanal.png"
 
     data class Channel(
         val nanoid: String,
@@ -124,8 +125,7 @@ class TvBahcesi : MainAPI() {
                                     url = url,
                                     type = TvType.Live
                                 ) {
-                                    this.posterUrl = ""
-                                    this.quality = Qualities.Unknown.value
+                                    this.posterUrl = defaultPosterUrl
                                 }
                             }
                     },
