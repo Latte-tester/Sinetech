@@ -1,125 +1,175 @@
+// ! https://github.com/keyiflerolsun/Kekik-cloudstream/blob/master/CanliTV/src/main/kotlin/com/keyiflerolsun/CanliTV.kt
+
 package com.sinetech.latte
 
+import android.util.Log
 import com.lagradost.cloudstream3.*
+import com.lagradost.cloudstream3.utils.*
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
-import com.lagradost.cloudstream3.utils.ExtractorLink
-import com.lagradost.cloudstream3.utils.Qualities
 import java.io.InputStream
 
 class TvBahcesi : MainAPI() {
-    override var lang                  = "en"
-    override var mainUrl               = "https://raw.githubusercontent.com/Latte-tester/Sinetech/refs/heads/main/TvBahcesi/src/main/resources/m3u/tvbahcesi.m3u"
-    override var name                  = "Tv Bahçesi"
-    override val hasMainPage           = true
-    override val hasChromecastSupport  = true
-    override val supportedTypes        = setOf(
-        TvType.Live,
-    )
-    private val defaultPosterUrl       = "https://raw.githubusercontent.com/GitLatte/m3ueditor/refs/heads/site/images/kanal-gorselleri/referans/isimsizkanal.png"
+    override var mainUrl              = "https://raw.githubusercontent.com/Latte-tester/Sinetech/refs/heads/main/TvBahcesi/src/main/resources/m3u/tvbahcesi.m3u"
+    private val defaultPosterUrl      = "https://raw.githubusercontent.com/GitLatte/m3ueditor/refs/heads/site/images/kanal-gorselleri/referans/isimsizkanal.png"
+    override var name                 = "Tv Bahçesi"
+    override val hasMainPage          = true
+    override var lang                 = "tr"
+    override val hasQuickSearch       = true
+    override val hasDownloadSupport   = false
+    override val supportedTypes       = setOf(TvType.Live)
 
-    override suspend fun getMainPage(
-        page: Int,
-        request : MainPageRequest
-    ): HomePageResponse {
-        val data = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-        return newHomePageResponse(data.items.groupBy{it.attributes["group-title"]}.map { group ->
-            val title = group.key ?: ""
-            val show = group.value.map { channel ->
-                val streamurl = channel.url.toString()
-                val channelname = channel.title.toString()
-                val posterurl = channel.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
-                val nation = channel.attributes["group-title"].toString()
-                newLiveSearchResponse(
-                    channelname,
-                    LoadData(streamurl, channelname, posterurl, nation).toJson(),
-                    this@TvBahcesi.name,
-                    TvType.Live,
-                    posterurl,
-                    lang = channel.attributes["group-title"]
-                )
-            }
-            HomePageList(
-                title,
-                show,
-                isHorizontalImages = true
-            )
-        })
+    override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
+        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
+
+        return newHomePageResponse(
+            kanallar.items.groupBy { it.attributes["group-title"] }.map { group ->
+                val title = group.key ?: ""
+                val show  = group.value.map { kanal ->
+                    val streamurl   = kanal.url.toString()
+                    val channelname = kanal.title.toString()
+                    val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
+                    val chGroup     = kanal.attributes["group-title"].toString()
+                    val nation      = kanal.attributes["tvg-country"].toString()
+
+                    newLiveSearchResponse(
+                        channelname,
+                        LoadData(streamurl, channelname, posterurl, chGroup, nation).toJson(),
+                        type = TvType.Live
+                    ) {
+                        this.posterUrl = posterurl
+                        this.lang = nation
+                    }
+                }
+
+
+                HomePageList(title, show, isHorizontalImages = true)
+            },
+            hasNext = false
+        )
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val data = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
+        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
 
-        return data.items.filter { it.attributes["tvg-id"]?.contains(query) ?: false }.map { channel ->
-                val streamurl = channel.url.toString()
-                val channelname = channel.attributes["tvg-id"].toString()
-                val posterurl = channel.attributes["tvg-logo"].toString()
-                val nation = channel.attributes["group-title"].toString()
-                newLiveSearchResponse(
-                    channelname,
-                    LoadData(streamurl, channelname, posterurl, nation).toJson(),
-                    this@TvBahcesi.name,
-                    TvType.Live,
-                    posterurl,
-                )
+        return kanallar.items.filter { it.title.toString().lowercase().contains(query.lowercase()) }.map { kanal ->
+            val streamurl   = kanal.url.toString()
+            val channelname = kanal.title.toString()
+            val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
+            val chGroup     = kanal.attributes["group-title"].toString()
+            val nation      = kanal.attributes["tvg-country"].toString()
+
+            newLiveSearchResponse(
+                channelname,
+                LoadData(streamurl, channelname, posterurl, chGroup, nation).toJson(),
+                type = TvType.Live
+            ) {
+                this.posterUrl = posterurl
+                this.lang = nation
+            }
+
         }
     }
 
-    override suspend fun load(url: String): LoadResponse {
-        val data = parseJson<LoadData>(url)
-        return newLiveStreamLoadResponse(
-            data.title,
-            data.url,
-            this.name,
-            url,
-            data.poster,
-            plot = data.nation
-        )
-    }
-    data class LoadData(
-        val url: String,
-        val title: String,
-        val poster: String,
-        val nation: String
+    override suspend fun quickSearch(query: String): List<SearchResponse> = search(query)
 
-    )
-    override suspend fun loadLinks(
-        data: String,
-        isCasting: Boolean,
-        subtitleCallback: (SubtitleFile) -> Unit,
-        callback: (ExtractorLink) -> Unit
-    ): Boolean {
-        val loadData = parseJson<LoadData>(data)
+    override suspend fun load(url: String): LoadResponse {
+        val loadData = fetchDataFromUrlOrJson(url)
+        val nation = if (listOf("adult", "erotic", "erotik", "porn", "porno").any { loadData.group.contains(it, ignoreCase = true) }) {
+            "⚠️🔞🔞🔞 » ${loadData.group} | ${loadData.nation} « 🔞🔞🔞⚠️"
+        } else {
+            "» ${loadData.group} | ${loadData.nation} «"
+        }
+
+        val kanallar        = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
+        val recommendations = mutableListOf<LiveSearchResponse>()
+
+        for (kanal in kanallar.items) {
+            if (kanal.attributes["group-title"].toString() == loadData.group) {
+                val rcStreamUrl   = kanal.url.toString()
+                val rcChannelName = kanal.title.toString()
+                if (rcChannelName == loadData.title) continue
+
+                val rcPosterUrl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
+                val rcChGroup     = kanal.attributes["group-title"].toString()
+                val rcNation      = kanal.attributes["tvg-country"].toString()
+
+                recommendations.add(newLiveSearchResponse(
+                    rcChannelName,
+                    LoadData(rcStreamUrl, rcChannelName, rcPosterUrl, rcChGroup, rcNation).toJson(),
+                    type = TvType.Live
+                ) {
+                    this.posterUrl = rcPosterUrl
+                    this.lang = rcNation
+                })
+
+            }
+        }
+
+        return newLiveStreamLoadResponse(loadData.title, loadData.url, url) {
+            this.posterUrl = loadData.poster
+            this.plot = nation
+            this.tags = listOf(loadData.group, loadData.nation)
+            this.recommendations = recommendations
+        }
+    }
+
+    override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
+        val loadData = fetchDataFromUrlOrJson(data)
+        Log.d("IPTV", "loadData » $loadData")
+
+        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
+        val kanal    = kanallar.items.first { it.url == loadData.url }
+        Log.d("IPTV", "kanal » $kanal")
+
         callback.invoke(
             ExtractorLink(
-                this.name,
-                loadData.title,
-                loadData.url,
-                "",
-                Qualities.Unknown.value,
-                isM3u8 = true
+                source  = this.name,
+                name    = this.name,
+                url     = loadData.url,
+                headers = kanal.headers,
+                referer = kanal.headers["referrer"] ?: "",
+                quality = Qualities.Unknown.value,
+                isM3u8  = true
             )
         )
+
         return true
+    }
+
+    data class LoadData(val url: String, val title: String, val poster: String, val group: String, val nation: String)
+
+    private suspend fun fetchDataFromUrlOrJson(data: String): LoadData {
+        if (data.startsWith("{")) {
+            return parseJson<LoadData>(data)
+        } else {
+            val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
+            val kanal    = kanallar.items.first { it.url == data }
+
+            val streamurl   = kanal.url.toString()
+            val channelname = kanal.title.toString()
+            val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
+            val chGroup     = kanal.attributes["group-title"].toString()
+            val nation      = kanal.attributes["tvg-country"].toString()
+
+            return LoadData(streamurl, channelname, posterurl, chGroup, nation)
+        }
     }
 }
 
-
 data class Playlist(
-    val items: List<PlaylistItem> = emptyList(),
+    val items: List<PlaylistItem> = emptyList()
 )
 
 data class PlaylistItem(
-    val title: String? = null,
+    val title: String?                  = null,
     val attributes: Map<String, String> = emptyMap(),
-    val headers: Map<String, String> = emptyMap(),
-    val url: String? = null,
-    val userAgent: String? = null,
+    val headers: Map<String, String>    = emptyMap(),
+    val url: String?                    = null,
+    val userAgent: String?              = null
 )
 
-
 class IptvPlaylistParser {
-
 
     fun parseM3U(content: String): Playlist {
         return parseM3U(content.byteInputStream())
@@ -141,33 +191,42 @@ class IptvPlaylistParser {
         while (line != null) {
             if (line.isNotEmpty()) {
                 if (line.startsWith(EXT_INF)) {
-                    val title = line.getTitle()
+                    val title      = line.getTitle()
                     val attributes = line.getAttributes()
+
                     playlistItems.add(PlaylistItem(title, attributes))
                 } else if (line.startsWith(EXT_VLC_OPT)) {
-                    val item = playlistItems[currentIndex]
-                    val userAgent = line.getTagValue("http-user-agent")
-                    val referrer = line.getTagValue("http-referrer")
-                    val headers = if (referrer != null) {
-                        item.headers + mapOf("referrer" to referrer)
-                    } else item.headers
-                    playlistItems[currentIndex] =
-                        item.copy(userAgent = userAgent, headers = headers)
+                    val item      = playlistItems[currentIndex]
+                    val userAgent = item.userAgent ?: line.getTagValue("http-user-agent")
+                    val referrer  = line.getTagValue("http-referrer")
+
+                    val headers = mutableMapOf<String, String>()
+
+                    if (userAgent != null) {
+                        headers["user-agent"] = userAgent
+                    }
+
+                    if (referrer != null) {
+                        headers["referrer"] = referrer
+                    }
+
+                    playlistItems[currentIndex] = item.copy(
+                        userAgent = userAgent,
+                        headers   = headers
+                    )
                 } else {
                     if (!line.startsWith("#")) {
-                        val item = playlistItems[currentIndex]
-                        val url = line.getUrl()
-                        val userAgent = line.getUrlParameter("user-agent")
-                        val referrer = line.getUrlParameter("referer")
-                        val urlHeaders = if (referrer != null) {
-                            item.headers + mapOf("referrer" to referrer)
-                        } else item.headers
-                        playlistItems[currentIndex] =
-                            item.copy(
-                                url = url,
-                                headers = item.headers + urlHeaders,
-                                userAgent = userAgent
-                            )
+                        val item       = playlistItems[currentIndex]
+                        val url        = line.getUrl()
+                        val userAgent  = line.getUrlParameter("user-agent")
+                        val referrer   = line.getUrlParameter("referer")
+                        val urlHeaders = if (referrer != null) {item.headers + mapOf("referrer" to referrer)} else item.headers
+
+                        playlistItems[currentIndex] = item.copy(
+                            url       = url,
+                            headers   = item.headers + urlHeaders,
+                            userAgent = userAgent ?: item.userAgent
+                        )
                         currentIndex++
                     }
                 }
@@ -192,48 +251,41 @@ class IptvPlaylistParser {
         return split("|").firstOrNull()?.replaceQuotesAndTrim()
     }
 
-    private fun String.getUrlParameters(): Map<String, String> {
-        val urlRegex = Regex("^(.*)\\|", RegexOption.IGNORE_CASE)
-        val headersString = replace(urlRegex, "").replaceQuotesAndTrim()
-        return headersString.split("&").mapNotNull {
-            val pair = it.split("=")
-            if (pair.size == 2) pair.first() to pair.last() else null
-        }.toMap()
-    }
-
     private fun String.getUrlParameter(key: String): String? {
-        val urlRegex = Regex("^(.*)\\|", RegexOption.IGNORE_CASE)
-        val keyRegex = Regex("$key=(\\w[^&]*)", RegexOption.IGNORE_CASE)
+        val urlRegex     = Regex("^(.*)\\|", RegexOption.IGNORE_CASE)
+        val keyRegex     = Regex("$key=(\\w[^&]*)", RegexOption.IGNORE_CASE)
         val paramsString = replace(urlRegex, "").replaceQuotesAndTrim()
+
         return keyRegex.find(paramsString)?.groups?.get(1)?.value
     }
 
     private fun String.getAttributes(): Map<String, String> {
-        val extInfRegex = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
+        val extInfRegex      = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
         val attributesString = replace(extInfRegex, "").replaceQuotesAndTrim().split(",").first()
-        return attributesString.split(Regex("\\s")).mapNotNull {
-            val pair = it.split("=")
-            if (pair.size == 2) pair.first() to pair.last()
-                .replaceQuotesAndTrim() else null
-        }.toMap()
+
+        return attributesString
+            .split(Regex("\\s"))
+            .mapNotNull {
+                val pair = it.split("=")
+                if (pair.size == 2) pair.first() to pair.last().replaceQuotesAndTrim() else null
+            }
+            .toMap()
     }
 
     private fun String.getTagValue(key: String): String? {
         val keyRegex = Regex("$key=(.*)", RegexOption.IGNORE_CASE)
+
         return keyRegex.find(this)?.groups?.get(1)?.value?.replaceQuotesAndTrim()
     }
 
     companion object {
-        const val EXT_M3U = "#EXTM3U"
-        const val EXT_INF = "#EXTINF"
+        const val EXT_M3U     = "#EXTM3U"
+        const val EXT_INF     = "#EXTINF"
         const val EXT_VLC_OPT = "#EXTVLCOPT"
     }
-
 }
 
 sealed class PlaylistParserException(message: String) : Exception(message) {
 
-    class InvalidHeader :
-        PlaylistParserException("Invalid file header. Header doesn't start with #EXTM3U")
-
+    class InvalidHeader : PlaylistParserException("Invalid file header. Header doesn't start with #EXTM3U")
 }
