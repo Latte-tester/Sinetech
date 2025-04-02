@@ -99,4 +99,4 @@ dependencies {
 
 ---
 
-🔔 **Not:** Repoyu eklemek için Cloudstream içerisindeki Depo Ekle alanında Depo URL kısmına "Latte" yazmanız yeterlidir.
+🔔 **Not:** Repoyu eklemek için Cloudstream içerisindeki Depo Ekle alanında Depo URL kısmına **"Latte"** yazmanız yeterlidir.
