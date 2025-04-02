@@ -8,6 +8,8 @@ import com.lagradost.cloudstream3.utils.*
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.Qualities
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.File
@@ -36,7 +38,8 @@ class TvBahcesi : MainAPI() {
         val isGeoBlocked: Boolean
     )
 
-    private fun fetchChannels(): List<Channel> {
+    private suspend fun fetchChannels(): List<Channel> {
+        return withContext(Dispatchers.IO) {
         val channels = mutableListOf<Channel>()
         try {
             val request = Request.Builder()
@@ -105,15 +108,16 @@ class TvBahcesi : MainAPI() {
         return m3u.toString()
     }
 
-    private fun updateChannelList() {
+    private suspend fun updateChannelList() {
         val now = Instant.now()
         if (Duration.between(lastUpdate, now) >= updateInterval) {
             val channels = fetchChannels()
             val m3uContent = generateM3U(channels)
 
-            File("channels/tvbahcesi.m3u").apply {
-                parentFile?.mkdirs()
-                writeText(m3uContent)
+            withContext(Dispatchers.IO) {
+                val file = File(app.getExternalFilesDir(null), "channels/tvbahcesi.m3u")
+                file.parentFile?.mkdirs()
+                file.writeText(m3uContent)
             }
 
             lastUpdate = now
