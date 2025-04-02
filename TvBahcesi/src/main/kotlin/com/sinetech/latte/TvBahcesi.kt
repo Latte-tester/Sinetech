@@ -38,26 +38,48 @@ class TvBahcesi : MainAPI() {
 
     private fun fetchChannels(): List<Channel> {
         val channels = mutableListOf<Channel>()
-        val request = Request.Builder()
-            .url(mainUrl)
-            .build()
-
-        val response = client.newCall(request).execute()
-        val countryFiles = response.body?.string()?.let { parseJson<List<String>>(it) } ?: emptyList()
-
-        for (file in countryFiles) {
-            if (!file.endsWith(".json")) continue
-
-            val countryRequest = Request.Builder()
-                .url("$mainUrl/$file")
+        try {
+            val request = Request.Builder()
+                .url(mainUrl)
                 .build()
 
-            val countryResponse = client.newCall(countryRequest).execute()
-            val countryChannels = countryResponse.body?.string()?.let {
-                mapper.readValue<List<Channel>>(it)
-            } ?: emptyList()
+            client.newCall(request).execute().use { response ->
+                if (!response.isSuccessful) {
+                    throw Exception("Failed to fetch country list: ${response.code}")
+                }
 
-            channels.addAll(countryChannels)
+                val body = response.body?.string() ?: throw Exception("Empty response body")
+                val countryFiles = try {
+                    parseJson<List<String>>(body)
+                } catch (e: Exception) {
+                    throw Exception("Failed to parse country list: ${e.message}")
+                }
+
+                for (file in countryFiles) {
+                    if (!file.endsWith(".json")) continue
+
+                    val countryRequest = Request.Builder()
+                        .url("$mainUrl/$file")
+                        .build()
+
+                    client.newCall(countryRequest).execute().use { countryResponse ->
+                        if (!countryResponse.isSuccessful) {
+                            continue
+                        }
+
+                        val countryBody = countryResponse.body?.string() ?: continue
+                        try {
+                            val countryChannels = mapper.readValue<List<Channel>>(countryBody)
+                            channels.addAll(countryChannels)
+                        } catch (e: Exception) {
+                            continue
+                        }
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            // Log the error or handle it appropriately
+            e.printStackTrace()
         }
 
         return channels
