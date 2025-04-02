@@ -42,6 +42,11 @@ class IptvPlaylistParser {
     private fun parseAttributes(line: String): MutableMap<String, Any> {
         val attributes = mutableMapOf<String, Any>()
         val regex = "([a-zA-Z-]+)=\"([^\"]*)\"|".toRegex()
+        val durationRegex = "#EXTINF:([\\d.]+)".toRegex()
+
+        durationRegex.find(line)?.let { match ->
+            attributes["duration"] = match.groupValues[1]
+        }
 
         regex.findAll(line).forEach { matchResult ->
             val (key, value) = matchResult.destructured

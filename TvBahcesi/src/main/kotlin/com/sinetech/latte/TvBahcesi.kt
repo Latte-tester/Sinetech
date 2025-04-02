@@ -62,27 +62,13 @@ class TvBahcesi : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ): Boolean {
-        // Url'yi temizle ve kontrol et
-        val cleanUrl = data.trim()
-        if (cleanUrl.isEmpty()) return false
-        
-        // M3U8 bağlantısı için ExtractorLink oluştur
         callback.invoke(
             ExtractorLink(
                 source = this.name,
                 name = this.name,
-                url = cleanUrl,
+                url = data,
                 referer = "",
                 quality = Qualities.Unknown.value,
-                headers = mapOf(
-                    "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-                    "Accept" to "*/*",
-                    "Origin" to "",
-                    "Sec-Fetch-Site" to "cross-site",
-                    "Sec-Fetch-Mode" to "cors",
-                    "Sec-Fetch-Dest" to "empty",
-                    "Referer" to ""
-                ),
                 isM3u8 = true
             )
         )
