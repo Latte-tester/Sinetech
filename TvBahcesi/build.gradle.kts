@@ -7,14 +7,6 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.13.1")
 }
 
-android.libraryVariants.all {
-    outputs.all {
-        val outputImpl = this as com.android.build.gradle.internal.api.BaseVariantOutputImpl
-        if (outputImpl.outputFileName.endsWith(".aar"))
-            outputImpl.outputFileName = "${project.name}.cs3"
-    }
-}
-
 cloudstream {
     authors     = listOf("GitLatte", "patr0nq")
     language    = "tr"
