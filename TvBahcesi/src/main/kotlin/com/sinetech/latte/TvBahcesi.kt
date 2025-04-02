@@ -13,7 +13,7 @@ class TvBahcesi : MainAPI() {
     override val hasMainPage = true
     private val defaultPosterUrl = "https://raw.githubusercontent.com/GitLatte/m3ueditor/refs/heads/site/images/kanal-gorselleri/referans/isimsizkanal.png"
 
-    private fun getCountryName(countryCode: String): String {
+    private suspend fun getCountryName(countryCode: String): String {
         val countriesJson = app.get("https://raw.githubusercontent.com/GitLatte/Sinetech/refs/heads/main/TvBahcesi/src/main/resources/countries.json").text
         val countryNames = AppUtils.parseJson<Map<String, String>>(countriesJson)
         return countryNames.getOrDefault(countryCode.lowercase(), countryCode.uppercase())
