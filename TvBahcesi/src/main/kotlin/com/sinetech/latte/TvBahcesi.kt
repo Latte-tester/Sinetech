@@ -28,10 +28,10 @@ class TvBahcesi : MainAPI() {
         val m3uText = app.get(mainUrl).text
         val playlist = IptvPlaylistParser().parseM3U(m3uText)
         
-        val groupedChannels = playlist.items.groupBy { it.attributes["tvg-country"]?.toString() ?: "other" }
+        val groupedChannels = playlist.items.groupBy { it.attributes["group-title"]?.toString() ?: "other" }
         val sortedGroups = groupedChannels.entries.sortedWith(compareBy { 
             when(it.key) {
-                "tr" -> "0" // Türkiye kanalları en üstte
+                "Türkiye" -> "0" // Türkiye kanalları en üstte
                 else -> it.key
             }
         })
