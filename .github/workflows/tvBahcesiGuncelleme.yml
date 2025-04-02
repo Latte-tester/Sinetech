@@ -112,6 +112,7 @@ jobs:
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "GitHub Actions"
+          git pull origin main
           git add TvBahcesi/src/main/resources/m3u/tvbahcesi.m3u
           git commit -m "Tv Bahçesi Güncellendi" || exit 0
-          git push
+          git push origin main
