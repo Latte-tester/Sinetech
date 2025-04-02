@@ -1,4 +1,4 @@
-name: TV Baheçesi`ni Güncelle
+name: TV Bahçesi Listesini Güncelle
 
 on:
   workflow_dispatch:

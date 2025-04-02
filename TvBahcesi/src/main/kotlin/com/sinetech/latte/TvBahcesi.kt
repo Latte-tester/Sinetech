@@ -234,7 +234,12 @@ class IptvPlaylistParser {
 
             line = reader.readLine()
         }
-        return Playlist(playlistItems)
+        // Türkiye kanallarını listenin başına al
+        val sortedItems = playlistItems.sortedWith(compareBy<PlaylistItem> { 
+            it.attributes["tvg-country"]?.lowercase() != "tr"
+        })
+        
+        return Playlist(sortedItems)
     }
 
     private fun String.replaceQuotesAndTrim(): String {
@@ -244,7 +249,7 @@ class IptvPlaylistParser {
     private fun String.isExtendedM3u(): Boolean = startsWith(EXT_M3U)
 
     private fun String.getTitle(): String? {
-        return split(",").lastOrNull()?.replaceQuotesAndTrim()
+        return split(",").lastOrNull()?.replaceQuotesAndTrim()?.let { cleanAttributeValue(it) }
     }
 
     private fun String.getUrl(): String? {
@@ -267,7 +272,7 @@ class IptvPlaylistParser {
             .split(Regex("\\s"))
             .mapNotNull {
                 val pair = it.split("=")
-                if (pair.size == 2) pair.first() to pair.last().replaceQuotesAndTrim() else null
+                if (pair.size == 2) pair.first() to cleanAttributeValue(pair.last().replaceQuotesAndTrim()) else null
             }
             .toMap()
     }
@@ -276,6 +281,13 @@ class IptvPlaylistParser {
         val keyRegex = Regex("$key=(.*)", RegexOption.IGNORE_CASE)
 
         return keyRegex.find(this)?.groups?.get(1)?.value?.replaceQuotesAndTrim()
+    }
+
+    private fun cleanAttributeValue(value: String): String {
+        return value.replace(Regex("like Gecko\\) Chrome/[\\d.]+\\s*Safari/[\\d.]+\\s*CrKey/[\\d.]+"), "")
+            .replace(Regex(",like Gecko\\) Chrome.*?"), "")
+            .replace(Regex("\\s*,\\s*$"), "")
+            .trim()
     }
 
     companion object {
