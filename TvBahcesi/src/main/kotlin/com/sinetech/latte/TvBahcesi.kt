@@ -23,14 +23,14 @@ class TvBahcesi : MainAPI() {
         request : MainPageRequest
     ): HomePageResponse {
         val data = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-        return HomePageResponse(data.items.groupBy{it.attributes["group-title"]}.map { group ->
+        return newHomePageResponse(data.items.groupBy{it.attributes["group-title"]}.map { group ->
             val title = group.key ?: ""
             val show = group.value.map { channel ->
                 val streamurl = channel.url.toString()
                 val channelname = channel.title.toString()
                 val posterurl = channel.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
                 val nation = channel.attributes["group-title"].toString()
-                LiveSearchResponse(
+                newLiveSearchResponse(
                     channelname,
                     LoadData(streamurl, channelname, posterurl, nation).toJson(),
                     this@TvBahcesi.name,
@@ -55,7 +55,7 @@ class TvBahcesi : MainAPI() {
                 val channelname = channel.attributes["tvg-id"].toString()
                 val posterurl = channel.attributes["tvg-logo"].toString()
                 val nation = channel.attributes["group-title"].toString()
-                LiveSearchResponse(
+                newLiveSearchResponse(
                     channelname,
                     LoadData(streamurl, channelname, posterurl, nation).toJson(),
                     this@TvBahcesi.name,
@@ -67,7 +67,7 @@ class TvBahcesi : MainAPI() {
 
     override suspend fun load(url: String): LoadResponse {
         val data = parseJson<LoadData>(url)
-        return LiveStreamLoadResponse(
+        return newLiveStreamLoadResponse(
             data.title,
             data.url,
             this.name,
