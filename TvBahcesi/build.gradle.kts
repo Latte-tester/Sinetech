@@ -24,5 +24,5 @@ cloudstream {
     **/
     status  = 1 // will be 3 if unspecified
     tvTypes = listOf("Live")
-    iconUrl = "https://raw.githubusercontent.com/GitLatte/Sinetech/refs/heads/main/img/powersinema/favicon.ico"
+    iconUrl = "https://raw.githubusercontent.com/Latte/Sinetech/master/img/tvbahcesi/tvbahcesi.png"
 }
