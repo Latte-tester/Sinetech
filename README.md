@@ -53,15 +53,8 @@
 |-------|-----------|
 | Slogan | `movie.tagline` |
 | Yönetmen | `credits.crew[0].name` |
-| Süre | `runtime` dakika |
+| Süre | `runtime` minute |
 | Çıkış Tarihi | `release_date` |
-
-```bash
-# Hızlı Kurulum
-1. Son sürümü [indirin](https://github.com/GitLatte)
-2. Ayarlar > API Anahtarı bölümüne TMDB key'inizi girin
-3. "Filmleri Yükle" butonuna tıklayın
-```
 
 ---
 
