@@ -18,11 +18,11 @@ class TvBahcesi : MainAPI() {
 
     private suspend fun getCountryName(countryCode: String): String {
         val countriesJson = app::class.java.getResource("/countries.json")?.readText()
-            ?: return countryCode.uppercase()
+            ?: return countryCode.replaceFirstChar { it.uppercase() }
         val countryNames = AppUtils.tryParseJson<Map<String, String>>(countriesJson)
-            ?: return countryCode.uppercase()
-        return countryNames.getOrDefault(countryCode.lowercase(), countryCode.uppercase())
-    }
+            ?: return countryCode.replaceFirstChar { it.uppercase() }
+        return countryNames.getOrDefault(countryCode.lowercase(), countryCode.replaceFirstChar { it.uppercase() })
+    }    
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val m3uText = app.get(mainUrl).text
@@ -59,7 +59,6 @@ class TvBahcesi : MainAPI() {
     override suspend fun loadLinks(
         data: String,
         isCasting: Boolean,
-        subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ): Boolean {
         callback.invoke(

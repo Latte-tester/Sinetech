@@ -3,9 +3,7 @@ package com.sinetech.latte
 data class M3UItem(
     val title: String? = null,
     val url: String? = null,
-    val attributes: Map<String, Any> = emptyMap(),
-    val season: Int = 1,
-    val episode: Int = 0
+    val attributes: Map<String, Any> = emptyMap()
 )
 
 data class M3UPlaylist(
