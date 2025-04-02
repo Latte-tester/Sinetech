@@ -6,15 +6,7 @@ data class M3UItem(
     val attributes: Map<String, Any> = emptyMap(),
     val season: Int = 1,
     val episode: Int = 0
-) {
-    fun copy(
-        title: String? = this.title,
-        url: String? = this.url,
-        attributes: Map<String, Any> = this.attributes,
-        season: Int = this.season,
-        episode: Int = this.episode
-    ) = M3UItem(title, url, attributes, season, episode)
-}
+)
 
 data class M3UPlaylist(
     val items: List<M3UItem> = emptyList()
