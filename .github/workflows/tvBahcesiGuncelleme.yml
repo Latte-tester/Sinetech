@@ -1,0 +1,117 @@
+name: TV Bahçesi Listesini Güncelle
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 */2 * * *'  # Her 2 saatte bir çalışır
+  push:
+    paths:
+      - 'TvBahcesi/src/main/kotlin/com/sinetech/latte/TvBahcesi.kt'
+
+jobs:
+  generate-m3u:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests
+
+      - name: M3u dosyasını oluştur
+        run: |
+          cat > generate_m3u.py << 'EOL'
+          import json
+          import requests
+          import os
+
+          def fetch_channels():
+              base_url = "https://raw.githubusercontent.com/TVGarden/tv-garden-channel-list/main/channels/raw/countries"
+              channels = []
+              
+              try:
+                  # Önce dizindeki tüm JSON dosyalarının listesini al
+                  index_url = "https://api.github.com/repos/TVGarden/tv-garden-channel-list/contents/channels/raw/countries"
+                  response = requests.get(index_url)
+                  if response.status_code == 200:
+                      files = response.json()
+                      country_files = [file['name'] for file in files if file['name'].endswith('.json')]
+                      
+                      # Her ülke dosyası için kanalları al
+                      for country_file in country_files:
+                          country_url = f"{base_url}/{country_file}"
+                          response = requests.get(country_url)
+                          if response.status_code == 200:
+                              try:
+                                  country_channels = response.json()
+                                  if isinstance(country_channels, list):
+                                      channels.extend(country_channels)
+                              except json.JSONDecodeError as e:
+                                  print(f"Error decoding {country_file}: {e}")
+                                  continue
+                  
+                  return channels
+              except Exception as e:
+                  print(f"Error fetching channels: {e}")
+                  return []
+
+          def get_country_name(country_code):
+              try:
+                  with open('TvBahcesi/src/main/resources/countries.json', 'r', encoding='utf-8') as f:
+                      country_names = json.load(f)
+              except Exception as e:
+                  print(f"Error loading countries.json: {e}")
+                  country_names = {}
+
+              return country_names.get(country_code.lower(), country_code.upper())
+
+          def generate_m3u(channels):
+              m3u_content = ["#EXTM3U"]
+              
+              for channel in channels:
+                  for index, url in enumerate(channel['iptv_urls']):
+                      if url.endswith('.m3u8'):
+                          channel_name = f"{channel['name']} ({index + 1})" if len(channel['iptv_urls']) > 1 else channel['name']
+                          country_code = channel['country'].lower()
+                          country_name = get_country_name(country_code)
+                          channel_id = channel_name.replace(" ", "").replace("-", "").replace(".", "").replace("'", "")
+                          
+                          m3u_content.append(f"#EXTINF:-1 tvg-id=\"{channel_id}\" "
+                                          f"tvg-name=\"{channel_name}\" "
+                                          f"tvg-country=\"{country_code}\" "
+                                          f"tvg-language=\"{country_code}\" "
+                                          f"group-title=\"{country_name}\",{channel_name}")
+                          m3u_content.append(url)
+              
+              return '\n'.join(m3u_content)
+
+          if __name__ == '__main__':
+              channels = fetch_channels()
+              if channels:
+                  m3u_content = generate_m3u(channels)
+                  
+                  # M3U dosyasını kaydet
+                  os.makedirs('TvBahcesi/src/main/resources/m3u', exist_ok=True)
+                  with open('TvBahcesi/src/main/resources/m3u/tvbahcesi.m3u', 'w', encoding='utf-8') as f:
+                      f.write(m3u_content)
+                  print("M3U file generated successfully!")
+              else:
+                  print("No channels found or error occurred")
+          EOL
+
+          python generate_m3u.py
+
+      - name: Commit and push if changed
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
+          git add TvBahcesi/src/main/resources/m3u/tvbahcesi.m3u
+          git commit -m "Tv Bahçesi Güncellendi" || exit 0
+          git push
