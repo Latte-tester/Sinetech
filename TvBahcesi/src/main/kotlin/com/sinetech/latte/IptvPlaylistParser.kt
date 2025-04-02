@@ -43,20 +43,29 @@ class IptvPlaylistParser {
 
     private fun parseAttributes(line: String): MutableMap<String, Any> {
         val attributes = mutableMapOf<String, Any>()
-        val regex = "([a-zA-Z-]+)=\"([^\"]*)\"".toRegex()
+        val regex = "([a-zA-Z-]+)=\"([^\"]*)\"|".toRegex()
 
         regex.findAll(line).forEach { matchResult ->
             val (key, value) = matchResult.destructured
-            attributes[key] = value
+            val cleanValue = cleanAttributeValue(value)
+            attributes[key] = cleanValue
         }
 
         return attributes
     }
 
+    private fun cleanAttributeValue(value: String): String {
+        return value.replace(Regex("like Gecko\\) Chrome/[\\d.]+\\s*Safari/[\\d.]+\\s*CrKey/[\\d.]+"), "")
+            .replace(Regex(",like Gecko\\) Chrome.*?"), "")
+            .replace(Regex("\\s*,\\s*$"), "")
+            .trim()
+    }
+
     private fun extractTitle(line: String): String? {
         val commaIndex = line.lastIndexOf(",")
         return if (commaIndex != -1 && commaIndex + 1 < line.length) {
-            line.substring(commaIndex + 1).trim()
+            val title = line.substring(commaIndex + 1).trim()
+            cleanAttributeValue(title)
         } else {
             null
         }
