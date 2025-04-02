@@ -23,13 +23,21 @@ class TvBahcesi : MainAPI() {
         val m3uText = app.get(mainUrl).text
         val playlist = IptvPlaylistParser().parseM3U(m3uText)
         
+        val groupedChannels = playlist.items.groupBy { it.attributes["tvg-country"]?.toString() ?: "other" }
+        val sortedGroups = groupedChannels.entries.sortedWith(compareBy { 
+            when(it.key) {
+                "tr" -> "0" // Türkiye kanalları en üstte
+                else -> it.key
+            }
+        })
+
         return newHomePageResponse(
-            playlist.items.groupBy { it.attributes["group-title"]?.toString() ?: "Diğer" }.map { (group, channels) ->
+            sortedGroups.map { (countryCode, channels) ->
                 HomePageList(
-                    name = group,
+                    name = getCountryName(countryCode),
                     list = channels.map { channel ->
                         newLiveSearchResponse(
-                            name = channel.title ?: "",
+                            name = "<b>${channel.title ?: ""}</b>",
                             url = channel.url ?: "",
                             type = TvType.Live
                         ) {
@@ -49,20 +57,17 @@ class TvBahcesi : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ): Boolean {
-        if (data.endsWith(".m3u8")) {
-            callback.invoke(
-                ExtractorLink(
-                    source = name,
-                    name = name,
-                    url = data,
-                    referer = "",
-                    quality = Qualities.Unknown.value,
-                    isM3u8 = true,
-                    headers = emptyMap()
-                )
+        callback.invoke(
+            ExtractorLink(
+                source = name,
+                name = name,
+                url = data,
+                referer = "",
+                quality = Qualities.Unknown.value,
+                isM3u8 = true,
+                headers = emptyMap()
             )
-            return true
-        }
-        return false
+        )
+        return true
     }
 }
