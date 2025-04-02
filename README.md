@@ -7,7 +7,7 @@
 |---------|----------|--------|
 | [PowerDizi](powerDizi) | ![](https://img.shields.io/badge/version-3-blue) | [MIT](LICENSE) |
 | [PowerSinema](powerSinema) | ![](https://img.shields.io/badge/version-3-blue) | [MIT](LICENSE) |
-| [TvBahcesi](TvBahcesi) | ![](https://img.shields.io/badge/version-3-orange) | [MIT](LICENSE) |
+| [TvBahcesi](TvBahcesi) | ![](https://img.shields.io/badge/version-1-orange) | [MIT](LICENSE) |
 
 ---
 
