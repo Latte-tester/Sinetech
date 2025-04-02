@@ -3,8 +3,8 @@ package com.sinetech.latte
 import android.content.Context
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
-import com.lagradost.cloudstream3.MainAPI
-import com.lagradost.cloudstream3.TvType
+import com.lagradost.cloudstream3.*
+import com.lagradost.cloudstream3.utils.*
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.Qualities
@@ -105,7 +105,7 @@ class TvBahcesi : MainAPI() {
         updateChannelList()
         val channels = fetchChannels()
         
-        return newHomePageResponse(
+        return HomePageResponse(
             channels.groupBy { it.country }.map { (country, countryChannels) ->
                 HomePageList(
                     name = country.uppercase(),
@@ -119,14 +119,13 @@ class TvBahcesi : MainAPI() {
                                     channel.name
                                 }
 
-                                newMovieSearchResponse(
+                                LiveSearchResponse(
                                     name = title,
                                     url = url,
+                                    posterUrl = "",
+                                    quality = SearchQuality.Unknown,
                                     type = TvType.Live
-                                ) {
-                                    this.posterUrl = ""
-                                    this.quality = Qualities.Unknown.value
-                                }
+                                )
                             }
                     },
                     isHorizontalImages = true
@@ -149,7 +148,8 @@ class TvBahcesi : MainAPI() {
                 url = data,
                 referer = "",
                 quality = Qualities.Unknown.value,
-                isM3u8 = true
+                isM3u8 = true,
+                headers = emptyMap()
             )
         )
         return true
