@@ -93,7 +93,10 @@ dependencies {
 | [patr0nq](https://github.com/patr0nq) | Güncelleme ve Geliştirme Ortağı|
 | [keyiflerolsun](https://github.com/keyiflerolsun) | Eklenti kodları ilham kaynağı |
 | [doGior](https://github.com/DoGior) | Eklenti kodları ilham kaynağı |
-| [powerboard](https://forum.sinetech.tr/uye/powerboard.3822/) | PowerDizi-PowerSinema liste yöneticisi |
+| [powerboard](https://forum.sinetech.tr/uye/powerboard.3822/) | PowerDizi-PowerSinema liste sahibi |
+| [tıngırmıngır](https://forum.sinetech.tr/uye/tingirmingir.137/) | TMDB ve Tv Bahçesi ilham kaynağı |
+| [mooncrown](https://forum.sinetech.tr/uye/mooncrown.10472/) | Sinema/Dizi eklentisi "İzlemeye Devam Et" başlatıcısı |
+| [nedirne](https://forum.sinetech.tr/uye/nedirne.13409/) | Sinema/Dizi eklentisi TMDB olayını başlatma sebebi |
 
 📬 **Destek İletişim:** [Latte](https://forum.sinetech.tr/konu/powerboard-film-ve-dizi-arsivine-ozel-cloudstream-deposu.3672/)
 
