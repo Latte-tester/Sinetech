@@ -119,13 +119,14 @@ class TvBahcesi : MainAPI() {
                                     channel.name
                                 }
 
-                                LiveSearchResponse(
+                                newLiveSearchResponse(
                                     name = title,
                                     url = url,
-                                    posterUrl = "",
-                                    quality = SearchQuality.Unknown,
                                     type = TvType.Live
-                                )
+                                ) {
+                                    this.posterUrl = ""
+                                    this.quality = Qualities.Unknown.value
+                                }
                             }
                     },
                     isHorizontalImages = true
