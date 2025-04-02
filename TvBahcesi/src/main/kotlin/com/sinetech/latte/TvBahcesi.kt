@@ -7,7 +7,7 @@ import com.lagradost.cloudstream3.utils.Qualities
 
 class TvBahcesi : MainAPI() {
     override var name = "TV Bahçesi"
-    override var mainUrl = "https://raw.githubusercontent.com/GitLatte/Sinetech/builds/channels/tvbahcesi.m3u"
+    override var mainUrl = "https://raw.githubusercontent.com/GitLatte/Sinetech/builds/TvBahcesi/src/main/resources/m3u/tvbahcesi.m3u"
     override val supportedTypes = setOf(TvType.Live)
     override val hasMainPage = true
     private val defaultPosterUrl = "https://raw.githubusercontent.com/GitLatte/m3ueditor/refs/heads/site/images/kanal-gorselleri/referans/isimsizkanal.png"
