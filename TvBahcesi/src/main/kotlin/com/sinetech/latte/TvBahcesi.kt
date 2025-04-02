@@ -69,10 +69,10 @@ class TvBahcesi : MainAPI() {
                 url = data,
                 referer = "",
                 quality = Qualities.Unknown.value,
-                isM3u8 = true,
                 headers = mapOf(
                     "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
-                )
+                ),
+                isM3u8 = true
             )
         )
         return true
