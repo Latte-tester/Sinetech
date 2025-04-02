@@ -39,7 +39,7 @@ class TvBahcesi : MainAPI() {
                     name = getCountryName(countryCode),
                     list = channels.map { channel ->
                         newLiveSearchResponse(
-                            name = "<b>${channel.title ?: ""}</b>",
+                            name = "${channel.title ?: ""}",
                             url = channel.url ?: "",
                             type = TvType.Live
                         ) {
@@ -64,10 +64,14 @@ class TvBahcesi : MainAPI() {
                 source = name,
                 name = name,
                 url = data,
-                referer = "",
+                referer = mainUrl,
                 quality = Qualities.Unknown.value,
                 isM3u8 = true,
-                headers = emptyMap()
+                headers = mapOf(
+                    "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
+                    "Origin" to mainUrl,
+                    "Referer" to mainUrl
+                )
             )
         )
         return true
