@@ -1,22 +1,5 @@
 version = 1
 
-cloudstream {
-    authors     = listOf("GitLatte", "patr0nq")
-    language    = "tr"
-    description = "TvGarden televizyon listesi"
-
-    /**
-     * Status int as the following:
-     * 0: Down
-     * 1: Ok
-     * 2: Slow
-     * 3: Beta only
-    **/
-    status  = 1 // will be 3 if unspecified
-    tvTypes = listOf("TvSeries")
-    iconUrl = "https://raw.githubusercontent.com/GitLatte/Sinetech/refs/heads/main/img/powersinema/favicon.ico"
-}
-
 rootProject.name = "CloudstreamPlugins"
 
 include("app")
@@ -62,4 +45,21 @@ android.libraryVariants.all {
         if (outputImpl.outputFileName.endsWith(".aar"))
             outputImpl.outputFileName = "${project.name}.cs3"
     }
+}
+
+cloudstream {
+    authors     = listOf("GitLatte", "patr0nq")
+    language    = "tr"
+    description = "TvGarden televizyon listesi"
+
+    /**
+     * Status int as the following:
+     * 0: Down
+     * 1: Ok
+     * 2: Slow
+     * 3: Beta only
+    **/
+    status  = 1 // will be 3 if unspecified
+    tvTypes = listOf("TvSeries")
+    iconUrl = "https://raw.githubusercontent.com/GitLatte/Sinetech/refs/heads/main/img/powersinema/favicon.ico"
 }
