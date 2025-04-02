@@ -101,13 +101,12 @@ class TvBahcesi : MainAPI() {
         }
     }
 
-    override suspend fun getMainPage(): List<HomePageList> {
+    override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         updateChannelList()
         val channels = fetchChannels()
         
-        return channels
-            .groupBy { it.country }
-            .map { (country, countryChannels) ->
+        return newHomePageResponse(
+            channels.groupBy { it.country }.map { (country, countryChannels) ->
                 HomePageList(
                     name = country.uppercase(),
                     list = countryChannels.flatMap { channel ->
@@ -120,7 +119,7 @@ class TvBahcesi : MainAPI() {
                                     channel.name
                                 }
 
-                                newLiveSearchResponse(
+                                newMovieSearchResponse(
                                     name = title,
                                     url = url,
                                     type = TvType.Live
@@ -129,15 +128,18 @@ class TvBahcesi : MainAPI() {
                                     this.quality = Qualities.Unknown.value
                                 }
                             }
-                    }
+                    },
+                    isHorizontalImages = true
                 )
-            }
+            },
+            hasNext = false
+        )
     }
 
     override suspend fun loadLinks(
         data: String,
         isCasting: Boolean,
-        subtitleCallback: (ExtractorLink) -> Unit,
+        subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ): Boolean {
         callback.invoke(
