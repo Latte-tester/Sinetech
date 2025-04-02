@@ -63,9 +63,9 @@
 ![TvBahcesi Arayüz](img/tvbahcesi/tvbahcesi-ss.png)
 
 ### 🌍 Desteklenen Kanallar
-- 📻 150+ Uluslararası TV Kanalı
-- 🌐 50+ Ülkeye özel içerik
-- 🎭 20+ Özel kategori
+- 📻 4000+ Uluslararası TV Kanalı
+- 🌐 155+ Ülkeye özel içerik
+- 🎭 Kanal alternatifleri parantez içinde rakamsal değerle gösterilmiştir.
 
 ---
 
