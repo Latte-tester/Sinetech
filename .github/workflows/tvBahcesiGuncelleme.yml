@@ -3,7 +3,7 @@ name: TV Baheçesi`ni Güncelle
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 */2 * * *'  # Her 6 saatte bir çalışır
+    - cron: '0 */2 * * *'  # Her 2 saatte bir çalışır
   push:
     paths:
       - 'TvBahcesi/src/main/kotlin/com/sinetech/latte/TvBahcesi.kt'

@@ -5,6 +5,7 @@ import com.lagradost.cloudstream3.utils.*
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.Qualities
 
+
 class TvBahcesi : MainAPI() {
     override var name = "TV Bahçesi"
     override var mainUrl = "https://raw.githubusercontent.com/GitLatte/Sinetech/builds/TvBahcesi/src/main/resources/m3u/tvbahcesi.m3u"
@@ -22,8 +23,8 @@ class TvBahcesi : MainAPI() {
                     name = country.uppercase(),
                     list = channels.map { channel ->
                         newLiveSearchResponse(
-                            name = channel.title.toString(),
-                            url = channel.url.toString(),
+                            name = channel.title ?: "",
+                            url = channel.url ?: "",
                             type = TvType.Live
                         ) {
                             this.posterUrl = defaultPosterUrl
