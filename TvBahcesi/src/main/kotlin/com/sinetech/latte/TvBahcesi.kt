@@ -55,27 +55,23 @@ class TvBahcesi : MainAPI() {
                     throw Exception("Failed to parse country list: ${e.message}")
                 }
 
-                for (file in countryFiles) {
-                    if (!file.endsWith(".json")) continue
+                countryFiles
+                    .filter { it.endsWith(".json") }
+                    .forEach { file ->
+                        val countryRequest = Request.Builder()
+                            .url("$mainUrl/$file")
+                            .build()
 
-                    val countryRequest = Request.Builder()
-                        .url("$mainUrl/$file")
-                        .build()
-
-                    client.newCall(countryRequest).execute().use { countryResponse ->
-                        if (!countryResponse.isSuccessful) {
-                            continue
-                        }
-
-                        val countryBody = countryResponse.body?.string() ?: continue
-                        try {
-                            val countryChannels = mapper.readValue<List<Channel>>(countryBody)
-                            channels.addAll(countryChannels)
-                        } catch (e: Exception) {
-                            continue
+                        client.newCall(countryRequest).execute().use { countryResponse ->
+                            countryResponse.takeIf { it.isSuccessful }?.body?.string()?.let { countryBody ->
+                                try {
+                                    channels.addAll(mapper.readValue<List<Channel>>(countryBody))
+                                } catch (e: Exception) {
+                                    // Skip this country file if parsing fails
+                                }
+                            }
                         }
                     }
-                }
             }
         } catch (e: Exception) {
             // Log the error or handle it appropriately
