@@ -1,9 +1,9 @@
 version = 1
 
 cloudstream {
-    authors     = listOf("GitLatte", "patr0nq", "keyiflerolsun")
+    authors     = listOf("GitLatte", "patr0nq")
     language    = "tr"
-    description = "powerboard`un sinema arşivi"
+    description = "TvGarden televizyon listesi"
 
     /**
      * Status int as the following:
@@ -13,7 +13,7 @@ cloudstream {
      * 3: Beta only
     **/
     status  = 1 // will be 3 if unspecified
-    tvTypes = listOf("Movie")
+    tvTypes = listOf("TvSeries")
     iconUrl = "https://raw.githubusercontent.com/GitLatte/Sinetech/refs/heads/main/img/powersinema/favicon.ico"
 }
 
