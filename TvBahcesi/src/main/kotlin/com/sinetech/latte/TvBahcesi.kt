@@ -5,13 +5,16 @@ import com.lagradost.cloudstream3.utils.*
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.Qualities
 
-
 class TvBahcesi : MainAPI() {
-    override var name = "TV Bahçesi"
-    override var mainUrl = "https://raw.githubusercontent.com/Latte-tester/Sinetech/refs/heads/main/TvBahcesi/src/main/resources/m3u/tvbahcesi.m3u"
-    override val supportedTypes = setOf(TvType.Live)
-    override val hasMainPage = true
-    private val defaultPosterUrl = "https://raw.githubusercontent.com/GitLatte/m3ueditor/refs/heads/site/images/kanal-gorselleri/referans/isimsizkanal.png"
+    override var name                 = "TV Bahçesi"
+    override var mainUrl              = "https://raw.githubusercontent.com/Latte-tester/Sinetech/refs/heads/main/TvBahcesi/src/main/resources/m3u/tvbahcesi.m3u"
+    override val hasMainPage          = true
+    override val hasQuickSearch       = true
+    override var lang                 = "tr"
+    override val hasDownloadSupport   = true
+    override val hasChromecastSupport = true
+    override val supportedTypes       = setOf(TvType.Live)
+    private val defaultPosterUrl      = "https://raw.githubusercontent.com/GitLatte/m3ueditor/refs/heads/site/images/kanal-gorselleri/referans/isimsizkanal.png"
 
     private suspend fun getCountryName(countryCode: String): String {
         val countriesJson = app::class.java.getResource("/countries.json")?.readText()
@@ -64,13 +67,11 @@ class TvBahcesi : MainAPI() {
                 source = name,
                 name = name,
                 url = data,
-                referer = mainUrl,
+                referer = "",
                 quality = Qualities.Unknown.value,
                 isM3u8 = true,
                 headers = mapOf(
-                    "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36",
-                    "Origin" to mainUrl,
-                    "Referer" to mainUrl
+                    "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
                 )
             )
         )
