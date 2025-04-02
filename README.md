@@ -5,9 +5,9 @@
 📦 **Kullanıma Hazır Eklentiler**
 | Eklenti | Versiyon | Lisans |
 |---------|----------|--------|
-| [PowerDizi](powerDizi) | ![](https://img.shields.io/badge/version-1.2.0-blue) | [MIT](LICENSE) |
-| [PowerSinema](powerSinema) | ![](https://img.shields.io/badge/version-1.1.8-green) | [MIT](LICENSE) |
-| [TvBahcesi](TvBahcesi) | ![](https://img.shields.io/badge/version-2.0.1-orange) | [MIT](LICENSE) |
+| [PowerDizi](powerDizi) | ![](https://img.shields.io/badge/version-3-blue) | [MIT](LICENSE) |
+| [PowerSinema](powerSinema) | ![](https://img.shields.io/badge/version-3-blue) | [MIT](LICENSE) |
+| [TvBahcesi](TvBahcesi) | ![](https://img.shields.io/badge/version-3-orange) | [MIT](LICENSE) |
 
 ---
 
