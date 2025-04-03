@@ -6577,8 +6577,6 @@ https://a-cdn.klowdtv.com/live3/alwaysfunny_720p/playlist.m3u8
 https://apollo.production-public.tubi.io/live/ac-afv.m3u8
 #EXTINF:-1 tvg-id="AlwaysFunnyVideos(3)" tvg-name="Always Funny Videos (3)" tvg-country="us" tvg-language="us" group-title="Amerika Birleşik Devletleri",Always Funny Videos (3)
 https://linear-12.frequency.stream/dist/glewedtv/12/hls/master/playlist.m3u8
-#EXTINF:-1 tvg-id="AMCAbsoluteReality" tvg-name="AMC Absolute Reality" tvg-country="us" tvg-language="us" group-title="Amerika Birleşik Devletleri",AMC Absolute Reality
-https://amc-absolutereality-1-us.plex.wurl.tv/playlist.m3u8
 #EXTINF:-1 tvg-id="AMCAllWeddings(1)" tvg-name="AMC All Weddings (1)" tvg-country="us" tvg-language="us" group-title="Amerika Birleşik Devletleri",AMC All Weddings (1)
 https://d85lu9l3axp7b.cloudfront.net/v1/master/3722c60a815c199d9c0ef36c5b73da68a62b09d1/cc-49b4g6287mnav/playlist.m3u8
 #EXTINF:-1 tvg-id="AMCAllWeddings(2)" tvg-name="AMC All Weddings (2)" tvg-country="us" tvg-language="us" group-title="Amerika Birleşik Devletleri",AMC All Weddings (2)
