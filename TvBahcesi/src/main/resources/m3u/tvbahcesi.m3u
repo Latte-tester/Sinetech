@@ -5363,10 +5363,6 @@ https://hls-tvsoyuz.cdnvideo.ru/tvsoyuz/soyuz/playlist.m3u8
 https://spas.mediacdn.ru/cdn/spas/playlist.m3u8
 #EXTINF:-1 tvg-id="СтранаФМ" tvg-name="Страна ФМ" tvg-country="ru" tvg-language="ru" group-title="Rusya",Страна ФМ
 https://live-stranafm.cdnvideo.ru/stranafm/smil:stranafm.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="СТС(1)" tvg-name="СТС (1)" tvg-country="ru" tvg-language="ru" group-title="Rusya",СТС (1)
-https://zabava-htlive.cdn.ngenix.net/hls/CH_STS/variant.m3u8
-#EXTINF:-1 tvg-id="СТС(2)" tvg-name="СТС (2)" tvg-country="ru" tvg-language="ru" group-title="Rusya",СТС (2)
-https://streaming.televizor-24-tochka.ru/live/296.m3u8
 #EXTINF:-1 tvg-id="СТСLove" tvg-name="СТС Love" tvg-country="ru" tvg-language="ru" group-title="Rusya",СТС Love
 https://zabava-htlive.cdn.ngenix.net/hls/CH_STSLOVE/variant.m3u8
 #EXTINF:-1 tvg-id="Суббота!" tvg-name="Суббота!" tvg-country="ru" tvg-language="ru" group-title="Rusya",Суббота!
