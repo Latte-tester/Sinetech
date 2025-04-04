@@ -8,6 +8,11 @@
 | [PowerDizi](powerDizi) | ![](https://img.shields.io/badge/version-3-blue) | [MIT](LICENSE) |
 | [PowerSinema](powerSinema) | ![](https://img.shields.io/badge/version-3-blue) | [MIT](LICENSE) |
 | [TvBahcesi](TvBahcesi) | ![](https://img.shields.io/badge/version-1-orange) | [MIT](LICENSE) |
+| [DaddyLive](DaddyLive) | ![](https://img.shields.io/badge/version-1-orange) | [MIT](LICENSE) |
+| [OhaTO](OhaTO) | ![](https://img.shields.io/badge/version-1-orange) | [MIT](LICENSE) |
+| [VavooTO](VavooTO) | ![](https://img.shields.io/badge/version-1-orange) | [MIT](LICENSE) |
+| [HuhuTO](HuhuTO) | ![](https://img.shields.io/badge/version-1-orange) | [MIT](LICENSE) |
+| [KoolTO](KoolTO) | ![](https://img.shields.io/badge/version-1-orange) | [MIT](LICENSE) |
 
 ---
 
@@ -17,6 +22,7 @@
 🔍 Gelismis arama ve filtreleme  
 📥 Çevrimdışı izleme için indirme desteği  
 🎨 Kullanıcı dostu modern arayüz  
+📺 Canlı TV ve spor yayınları  
 
 [![TMDB API Status](https://img.shields.io/badge/TMDB%20API-Çalışıyor-brightgreen)](https://www.themoviedb.org/)
 
@@ -66,6 +72,58 @@
 - 📻 4000+ Uluslararası TV Kanalı
 - 🌐 155+ Ülkeye özel içerik
 - 🎭 Kanal alternatifleri parantez içinde rakamsal değerle gösterilmiştir.
+
+### 📺 Özellikler
+| Kategori | Detaylar |
+|----------|----------|
+| **Desteklenen Tür** | Canlı TV |
+| **Arama** | Kanal adı ile hızlı arama |
+| **Gruplar** | Ülke ve kategori bazlı gruplandırma |
+| **Öneriler** | Aynı kategorideki benzer kanallar |
+
+---
+
+## 🏆 DaddyLive Mor Spor ve Events
+
+### 🎮 Spor Yayınları ve Etkinlikler
+| Kategori | Detaylar |
+|----------|----------|
+| **Desteklenen Tür** | Canlı TV ve Spor Yayınları |
+| **İçerik** | Spor müsabakaları ve özel etkinlikler |
+| **Gruplar** | Spor türlerine göre kategorize edilmiş |
+| **Arama** | Etkinlik ve kanal adı ile hızlı arama |
+
+### 🌟 Özellikler
+- 🏀 Çeşitli spor dallarında canlı yayınlar
+- 🌍 Uluslararası spor etkinlikleri
+- 🏆 Turnuvalar ve özel organizasyonlar
+- 📊 Grup bazlı düzenlenmiş içerik
+
+---
+
+## 📺 TO Serisi Eklentileri (OhaTO, VavooTO, HuhuTO, KoolTO)
+
+### 🇹🇷 Türkiye Televizyon Kanalları
+| Kategori | Detaylar |
+|----------|----------|
+| **Desteklenen Tür** | Canlı TV |
+| **İçerik** | Türkiye'ye ait ulusal ve spor kanalları |
+| **Gruplar** | Kategori bazlı düzenlenmiş |
+| **Arama** | Kanal adı ile hızlı arama |
+
+### 🌟 Ortak Özellikler
+- 📡 Türkiye'nin popüler ulusal kanalları
+- 🏆 Spor kanalları ve özel yayınlar
+- 🔄 Alternatif kaynaklar ile kesintisiz izleme
+- 🌐 VPN ile farklı ülke seçenekleri
+
+### 🔍 Eklentiler Arası Farklar
+```markdown
+Bu dört eklenti (OhaTO, VavooTO, HuhuTO, KoolTO) birbirinin aynısı yapıda olmasına rağmen:
+- Farklı referans ve user agent'lar barındırırlar
+- VPN kullanımında ülke seçimlerine göre farklı performans gösterebilirler
+- Erişim engeli durumunda alternatif olarak kullanılabilirler
+```
 
 ---
 
