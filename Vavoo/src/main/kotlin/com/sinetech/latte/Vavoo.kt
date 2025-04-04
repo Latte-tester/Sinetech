@@ -9,7 +9,7 @@ import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import java.io.InputStream
 
-class TvBahcesi : MainAPI() {
+class Vavoo : MainAPI() {
     override var mainUrl              = "https://raw.githubusercontent.com/patr0nq/link/refs/heads/main/vavoo.m3u"
     private val defaultPosterUrl      = "https://raw.githubusercontent.com/GitLatte/m3ueditor/refs/heads/site/images/kanal-gorselleri/referans/isimsizkanal.png"
     override var name                 = "Vavoo.to Türkiye🛑"
