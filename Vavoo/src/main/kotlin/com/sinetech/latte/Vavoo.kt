@@ -249,7 +249,7 @@ class IptvPlaylistParser {
     private fun String.isExtendedM3u(): Boolean = startsWith(EXT_M3U)
 
     private fun String.getTitle(): String? {
-        return split(",").lastOrNull()?.replaceQuotesAndTrim()?.let { cleanAttributeValue(it) }
+        return split(",").lastOrNull()?.replaceQuotesAndTrim()
     }
 
     private fun String.getUrl(): String? {
@@ -267,6 +267,12 @@ class IptvPlaylistParser {
     private fun String.getAttributes(): Map<String, String> {
         val extInfRegex      = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
         val attributesString = replace(extInfRegex, "").replaceQuotesAndTrim().split(",").first()
+    }
+
+    private fun String.getTagValue(key: String): String? {
+        val keyRegex = Regex("$key=(.*)", RegexOption.IGNORE_CASE)
+
+        return keyRegex.find(this)?.groups?.get(1)?.value?.replaceQuotesAndTrim()
     }
 
     companion object {
