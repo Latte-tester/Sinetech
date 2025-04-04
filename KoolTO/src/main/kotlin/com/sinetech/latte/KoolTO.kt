@@ -9,10 +9,10 @@ import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import java.io.InputStream
 
-class Vavoo : MainAPI() {
-    override var mainUrl              = "https://raw.githubusercontent.com/patr0nq/link/refs/heads/main/vavoo.m3u"
-    private val defaultPosterUrl      = "https://raw.githubusercontent.com/patr0nq/link/refs/heads/main/tv-logo/vavoo.png"
-    override var name                 = "Vavoo.to Türkiye🛑"
+class KoolTO : MainAPI() {
+    override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/link-patr0nq/refs/heads/main/kool/patr0nkool.m3u"
+    private val defaultPosterUrl      = "https://raw.githubusercontent.com/patr0nq/link/refs/heads/main/tv-logo/kool.png"
+    override var name                 = "Kool.to Türkiye🛑"
     override val hasMainPage          = true
     override var lang                 = "tr"
     override val hasQuickSearch       = true

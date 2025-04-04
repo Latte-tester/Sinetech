@@ -4,8 +4,9 @@ include(
     "powerDizi",
     "powerSinema",
     "TvBahcesi",
-    "Vavoo",
-    "Oha",
-    "Kool",
-    "Huhu"
+    "DaddyLive",
+    "VavooTO",
+    "OhaTO",
+    "KoolTO",
+    "HuhuTO"
 )
