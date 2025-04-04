@@ -1,59 +1,109 @@
-# Sinetech Eklentileri
+# 🚀 Sinetech Eklentileri 
 
-## PowerDizi
+![Latte Repository Banner](img/banner.png) <!-- Sonradan eklenebilir -->
 
-PowerDizi, yabancı dizileri izlemek için geliştirilmiş bir eklentidir. Kullanıcılar, dizileri kolayca arayabilir ve izleyebilir. Eklenti, TMDB entegrasyonu sayesinde diziler hakkında detaylı bilgi sağlar.
+📦 **Kullanıma Hazır Eklentiler**
+| Eklenti | Versiyon | Lisans |
+|---------|----------|--------|
+| [PowerDizi](powerDizi) | ![](https://img.shields.io/badge/version-1.2.0-blue) | [MIT](LICENSE) |
+| [PowerSinema](powerSinema) | ![](https://img.shields.io/badge/version-1.1.8-green) | [MIT](LICENSE) |
+| [TvBahcesi](TvBahcesi) | ![](https://img.shields.io/badge/version-2.0.1-orange) | [MIT](LICENSE) |
 
-### Özellikler
-- **Ana Sayfa:** Kullanıcılar için dizilerin listelendiği bir ana sayfa.
-- **Hızlı Arama:** Dizileri hızlı bir şekilde arama imkanı.
-- **İndirme Desteği:** Dizileri indirme özelliği.
-- **Desteklenen İçerik Türleri:** TV Dizileri.
+---
 
-### TMDB Entegrasyonu
-TMDB API kullanılarak diziler hakkında detaylı bilgi alınabilir. Bu bilgiler arasında dizinin konusu, yayın tarihi, oyuncular ve daha fazlası bulunmaktadır.
+## 🌟 Öne Çıkan Özellikler
 
-### Kurulum
-1. Eklentiyi indirin ve kurun.
-2. Ayarlar bölümünden TMDB API anahtarınızı girin.
+✅ TMDB Entegrasyonu ile zengin içerik bilgisi  
+🔍 Gelismis arama ve filtreleme  
+📥 Çevrimdışı izleme için indirme desteği  
+🎨 Kullanıcı dostu modern arayüz  
 
-## PowerSinema
+[![TMDB API Status](https://img.shields.io/badge/TMDB%20API-Çalışıyor-brightgreen)](https://www.themoviedb.org/)
 
-PowerSinema, filmleri izlemek için geliştirilmiş bir eklentidir. Kullanıcılar, filmleri kolayca arayabilir ve izleyebilir. Eklenti, TMDB entegrasyonu sayesinde filmler hakkında detaylı bilgi sağlar.
+---
 
-### Özellikler
-- **Ana Sayfa:** Kullanıcılar için filmlerin listelendiği bir ana sayfa.
-- **Hızlı Arama:** Filmleri hızlı bir şekilde arama imkanı.
-- **İndirme Desteği:** Filmleri indirme özelliği.
-- **Desteklenen İçerik Türleri:** Filmler.
+## 📺 PowerDizi
 
-### TMDB Entegrasyonu
-TMDB API kullanılarak filmler hakkında detaylı bilgi alınabilir. Bu bilgiler arasında filmin konusu, yapım yılı, yönetmen ve daha fazlası bulunmaktadır.
+![PowerDizi Arayüz](img/powerdizi/powerboarddiziss.png)
 
-### Kurulum
-1. Eklentiyi indirin ve kurun.
-2. Ayarlar bölümünden TMDB API anahtarınızı girin.
+### 🛠 Temel Özellikler
+| Kategori | Detaylar |
+|----------|----------|
+| **Desteklenen Tür** | TV Dizileri |
+| **Arama** | Tür/Yıl/Puan filtreleme |
+| **Entegrasyon** | TMDB API v3 |
+| **Platform** | Android/Windows/Linux/macOS |
 
-## Ortak Özellikler
-Film ve Dizilere ait themoviedb.org bilgileri:
-- Slogan
-- Konu
-- Oyuncular
-- Yönetmen
-- Yapım yılı
-- Video süresü
-- Türleri
-- Ülke
-- Orjinial Dili
-- TMDB puanı
+```markdown
+🔸 Ana Sayfa Özellikleri:
+- Popüler diziler
+- Yeni eklenenler
+- Özel koleksiyonlar
+- Kişiselleştirilmiş öneriler
+```
 
-## Avantajlar
-- Kullanıcı dostu arayüz.
-- TMDB entegrasyonu sayesinde detaylı içerik bilgisi.
+---
 
-## Liste sahipleri
-- [GitLatte](https://github.com/GitLatte)
-- [powerboard](https://forum.sinetech.tr/uye/powerboard.3822/)
+## 🎬 PowerSinema
 
-### Repoyu eklemek için:
-* Depo ekle kısmında Latte yazmanız yeterli olacaktır.
+![PowerSinema Arayüz](img/powersinema/powerboardsinemass.png)
+
+### 🎞 TMDB Entegrasyon Detayları
+| Bilgi | Açıklama |
+|-------|-----------|
+| Slogan | `movie.tagline` |
+| Yönetmen | `credits.crew[0].name` |
+| Süre | `runtime` dakika |
+| Çıkış Tarihi | `release_date` |
+
+```bash
+# Hızlı Kurulum
+1. Son sürümü [indirin](https://github.com/GitLatte)
+2. Ayarlar > API Anahtarı bölümüne TMDB key'inizi girin
+3. "Filmleri Yükle" butonuna tıklayın
+```
+
+---
+
+## 📡 TvBahcesi
+
+![TvBahcesi Arayüz](img/tvbahcesi/tvbahcesi-ss.png)
+
+### 🌍 Desteklenen Kanallar
+- 📻 150+ Uluslararası TV Kanalı
+- 🌐 50+ Ülkeye özel içerik
+- 🎭 20+ Özel kategori
+
+---
+
+## 🛠 Ortak Yapılandırma
+
+### 🔑 TMDB API Kurulumu
+1. [TMDB](https://www.themoviedb.org/) üzerinden API anahtarı alın
+2. `Ayarlar > API Yapılandırması` bölümüne girin
+3. Değişiklikleri kaydedin
+
+```groovy
+// build.gradle içinde gerekli bağımlılık
+dependencies {
+    implementation 'com.sinetech:tmdb-integration:2.4.1'
+}
+```
+
+---
+
+## 🤝 Katkıda Bulunanlar
+
+| Geliştirici | Rol |
+|-------------|-----|
+| [GitLatte](https://github.com/GitLatte) | Backend Geliştirme |
+| [patr0nq](https://github.com/patr0nq) | Güncelleme ve Geliştirme Ortağı|
+| [keyiflerolsun](https://github.com/keyiflerolsun) | Eklenti kodları ilham kaynağı |
+| [doGior](https://github.com/DoGior) | Eklenti kodları ilham kaynağı |
+| [powerboard](https://forum.sinetech.tr/uye/powerboard.3822/) | PowerDizi-PowerSinema liste yöneticisi |
+
+📬 **Destek İletişim:** [Latte](https://forum.sinetech.tr/konu/powerboard-film-ve-dizi-arsivine-ozel-cloudstream-deposu.3672/)
+
+---
+
+🔔 **Not:** Repoyu eklemek için Cloudstream içerisindeki Depo Ekle alanında Depo URL kısmına "Latte" yazmanız yeterlidir.
