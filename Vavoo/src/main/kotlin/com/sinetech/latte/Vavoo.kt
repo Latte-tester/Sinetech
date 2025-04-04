@@ -11,7 +11,7 @@ import java.io.InputStream
 
 class Vavoo : MainAPI() {
     override var mainUrl              = "https://raw.githubusercontent.com/patr0nq/link/refs/heads/main/vavoo.m3u"
-    private val defaultPosterUrl      = "https://raw.githubusercontent.com/GitLatte/m3ueditor/refs/heads/site/images/kanal-gorselleri/referans/isimsizkanal.png"
+    private val defaultPosterUrl      = "https://raw.githubusercontent.com/patr0nq/link/refs/heads/main/tv-logo/vavoo.png"
     override var name                 = "Vavoo.to Türkiye🛑"
     override val hasMainPage          = true
     override var lang                 = "tr"
