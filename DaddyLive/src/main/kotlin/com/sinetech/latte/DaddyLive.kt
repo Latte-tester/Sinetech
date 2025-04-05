@@ -28,7 +28,7 @@ class DaddyLive : MainAPI() {
                 val show  = group.value.map { kanal ->
                     val streamurl   = kanal.url.toString()
                     val channelname = kanal.title.toString()
-                    val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
+                    val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl ?: defaultPosterUrl ?: defaultPosterUrl
                     val chGroup     = kanal.attributes["group-title"].toString()
                     val nation      = kanal.attributes["tvg-country"].toString()
 
@@ -55,7 +55,7 @@ class DaddyLive : MainAPI() {
         return kanallar.items.filter { it.title.toString().lowercase().contains(query.lowercase()) }.map { kanal ->
             val streamurl   = kanal.url.toString()
             val channelname = kanal.title.toString()
-            val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
+            val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl ?: defaultPosterUrl
             val chGroup     = kanal.attributes["group-title"].toString()
             val nation      = kanal.attributes["tvg-country"].toString()
 
@@ -148,7 +148,7 @@ class DaddyLive : MainAPI() {
 
             val streamurl   = kanal.url.toString()
             val channelname = kanal.title.toString()
-            val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
+            val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl ?: defaultPosterUrl
             val chGroup     = kanal.attributes["group-title"].toString()
             val nation      = kanal.attributes["tvg-country"].toString()
 

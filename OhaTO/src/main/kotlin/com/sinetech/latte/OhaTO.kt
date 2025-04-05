@@ -11,7 +11,8 @@ import java.io.InputStream
 
 class OhaTO : MainAPI() {
     override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/link-patr0nq/refs/heads/main/oha/patr0noha.m3u"
-    override var name                 = "Oha.to Türkiye"
+    private val defaultPosterUrl      = "https://raw.githubusercontent.com/patr0nq/link/refs/heads/main/tv-logo/oha.png"
+    override var name                 = "Oha.to Türkiye🛑"
     override val hasMainPage          = true
     override var lang                 = "tr"
     override val hasQuickSearch       = true
@@ -27,7 +28,7 @@ class OhaTO : MainAPI() {
                 val show  = group.value.map { kanal ->
                     val streamurl   = kanal.url.toString()
                     val channelname = kanal.title.toString()
-                    val posterurl   = kanal.attributes["tvg-logo"]?.toString()
+                    val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
                     val chGroup     = kanal.attributes["group-title"].toString()
                     val nation      = kanal.attributes["tvg-country"].toString()
 
@@ -54,7 +55,7 @@ class OhaTO : MainAPI() {
         return kanallar.items.filter { it.title.toString().lowercase().contains(query.lowercase()) }.map { kanal ->
             val streamurl   = kanal.url.toString()
             val channelname = kanal.title.toString()
-            val posterurl   = kanal.attributes["tvg-logo"]?.toString()
+            val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
             val chGroup     = kanal.attributes["group-title"].toString()
             val nation      = kanal.attributes["tvg-country"].toString()
 
@@ -89,7 +90,7 @@ class OhaTO : MainAPI() {
                 val rcChannelName = kanal.title.toString()
                 if (rcChannelName == loadData.title) continue
 
-                val rcPosterUrl   = kanal.attributes["tvg-logo"]?.toString()
+                val rcPosterUrl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
                 val rcChGroup     = kanal.attributes["group-title"].toString()
                 val rcNation      = kanal.attributes["tvg-country"].toString()
 
@@ -147,7 +148,7 @@ class OhaTO : MainAPI() {
 
             val streamurl   = kanal.url.toString()
             val channelname = kanal.title.toString()
-            val posterurl   = kanal.attributes["tvg-logo"]?.toString()
+            val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
             val chGroup     = kanal.attributes["group-title"].toString()
             val nation      = kanal.attributes["tvg-country"].toString()
 
