@@ -10,7 +10,7 @@ import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import java.io.InputStream
 
 class HuhuTO : MainAPI() {
-    override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/link-patr0nq/refs/heads/main/huhu/patr0nhuhu.m3u"
+    override var mainUrl              = "https://raw.githubusercontent.com/patr0nq/link/refs/heads/main/vavoo.m3u"
     private val defaultPosterUrl      = "https://raw.githubusercontent.com/patr0nq/link/refs/heads/main/tv-logo/huhu.png"
     override var name                 = "Huhu.to Türkiye🛑"
     override val hasMainPage          = true
