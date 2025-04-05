@@ -123,15 +123,15 @@ class DaddyLive : MainAPI() {
         Log.d("IPTV", "kanal » $kanal")
 
         callback.invoke(
-            ExtractorLink(
-                source  = this.name,
-                name    = this.name,
-                url     = loadData.url,
-                headers = kanal.headers,
-                referer = kanal.headers["referrer"] ?: "",
-                quality = Qualities.Unknown.value,
-                isM3u8  = true
-            )
+            newExtractorLink {
+                this.source  = this@DaddyLive.name
+                this.name    = this@DaddyLive.name
+                this.url     = loadData.url
+                this.headers = kanal.headers
+                this.referer = kanal.headers["referrer"] ?: ""
+                this.quality = Qualities.Unknown.value
+                this.isM3u8  = true
+            }
         )
 
         return true
