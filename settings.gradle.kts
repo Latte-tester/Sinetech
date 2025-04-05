@@ -2,7 +2,7 @@ rootProject.name = "CloudstreamPlugins"
 
 include(
     "powerDizi",
-    "IPTV",
+    "IPTVProvider",
     "OhaTO",
     "powerSinema",
     "VavooTO",
