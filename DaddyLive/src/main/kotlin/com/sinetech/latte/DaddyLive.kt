@@ -11,7 +11,8 @@ import java.io.InputStream
 
 class DaddyLive : MainAPI() {
     override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/temporarylists/refs/heads/main/dl/dl-daddyliveall.m3u"
-    override var name                 = "📺 - DaddyLive Spor ve Etkinlik"
+    private val defaultPosterUrl      = "https://raw.githubusercontent.com/GitLatte/m3ueditor/refs/heads/site/images/kanal-gorselleri/referans/isimsizkanal.png"
+    override var name                 = "DaddyLive Mor Spor ve Events"
     override val hasMainPage          = true
     override var lang                 = "tr"
     override val hasQuickSearch       = true
@@ -27,7 +28,7 @@ class DaddyLive : MainAPI() {
                 val show  = group.value.map { kanal ->
                     val streamurl   = kanal.url.toString()
                     val channelname = kanal.title.toString()
-                    val posterurl   = kanal.attributes["tvg-logo"].toString()
+                    val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl ?: defaultPosterUrl ?: defaultPosterUrl
                     val chGroup     = kanal.attributes["group-title"].toString()
                     val nation      = kanal.attributes["tvg-country"].toString()
 
@@ -54,7 +55,7 @@ class DaddyLive : MainAPI() {
         return kanallar.items.filter { it.title.toString().lowercase().contains(query.lowercase()) }.map { kanal ->
             val streamurl   = kanal.url.toString()
             val channelname = kanal.title.toString()
-            val posterurl   = kanal.attributes["tvg-logo"].toString()
+            val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl ?: defaultPosterUrl
             val chGroup     = kanal.attributes["group-title"].toString()
             val nation      = kanal.attributes["tvg-country"].toString()
 
@@ -74,7 +75,7 @@ class DaddyLive : MainAPI() {
 
     override suspend fun load(url: String): LoadResponse {
         val loadData = fetchDataFromUrlOrJson(url)
-        val nation:String = if (loadData.group == "NSFW") {
+        val nation = if (listOf("adult", "erotic", "erotik", "porn", "porno").any { loadData.group.contains(it, ignoreCase = true) }) {
             "⚠️🔞🔞🔞 » ${loadData.group} | ${loadData.nation} « 🔞🔞🔞⚠️"
         } else {
             "» ${loadData.group} | ${loadData.nation} «"
@@ -89,7 +90,7 @@ class DaddyLive : MainAPI() {
                 val rcChannelName = kanal.title.toString()
                 if (rcChannelName == loadData.title) continue
 
-                val rcPosterUrl   = kanal.attributes["tvg-logo"].toString()
+                val rcPosterUrl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
                 val rcChGroup     = kanal.attributes["group-title"].toString()
                 val rcNation      = kanal.attributes["tvg-country"].toString()
 
@@ -147,7 +148,7 @@ class DaddyLive : MainAPI() {
 
             val streamurl   = kanal.url.toString()
             val channelname = kanal.title.toString()
-            val posterurl   = kanal.attributes["tvg-logo"].toString()
+            val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl ?: defaultPosterUrl
             val chGroup     = kanal.attributes["group-title"].toString()
             val nation      = kanal.attributes["tvg-country"].toString()
 
@@ -173,7 +174,6 @@ class IptvPlaylistParser {
     fun parseM3U(content: String): Playlist {
         return parseM3U(content.byteInputStream())
     }
-
 
     @Throws(PlaylistParserException::class)
     fun parseM3U(input: InputStream): Playlist {
@@ -234,7 +234,12 @@ class IptvPlaylistParser {
 
             line = reader.readLine()
         }
-        return Playlist(playlistItems)
+        // Türkiye kanallarını listenin başına al
+        val sortedItems = playlistItems.sortedWith(compareBy<PlaylistItem> { 
+            it.attributes["tvg-country"]?.lowercase() != "tr"
+        })
+        
+        return Playlist(sortedItems)
     }
 
     private fun String.replaceQuotesAndTrim(): String {
@@ -260,16 +265,22 @@ class IptvPlaylistParser {
     }
 
     private fun String.getAttributes(): Map<String, String> {
-        val extInfRegex      = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
+        val extInfRegex = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
         val attributesString = replace(extInfRegex, "").replaceQuotesAndTrim().split(",").first()
-
-        return attributesString
-            .split(Regex("\\s"))
-            .mapNotNull {
-                val pair = it.split("=")
-                if (pair.size == 2) pair.first() to pair.last().replaceQuotesAndTrim() else null
+        val attributeRegex = Regex("([\\w-]+)=\"([^\"]*)\"|([\\w-]+)=([^\\s\"]+)")
+        
+        return attributeRegex.findAll(attributesString)
+            .map { matchResult ->
+                val (key1, value1, key2, value2) = matchResult.destructured
+                val key = key1.ifEmpty { key2 }
+                val value = value1.ifEmpty { value2 }
+                key to cleanAttributeValue(value)
             }
             .toMap()
+    }
+
+    private fun cleanAttributeValue(value: String): String {
+        return value.removeSurrounding("\"").trim()
     }
 
     private fun String.getTagValue(key: String): String? {
