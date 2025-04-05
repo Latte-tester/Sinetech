@@ -12,7 +12,7 @@ import java.io.InputStream
 class HuhuTO : MainAPI() {
     override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/link-patr0nq/refs/heads/main/huhu/patr0nhuhu.m3u"
     private val defaultPosterUrl      = "https://raw.githubusercontent.com/patr0nq/link/refs/heads/main/tv-logo/huhu.png"
-    override var name                 = "Huhu.to Türkiye🛑"
+    override var name                 = "📺 - Huhu.to Spor"
     override val hasMainPage          = true
     override var lang                 = "tr"
     override val hasQuickSearch       = true

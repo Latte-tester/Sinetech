@@ -12,7 +12,7 @@ import java.io.InputStream
 class VavooTO : MainAPI() {
     override var mainUrl              = "https://raw.githubusercontent.com/patr0nq/link/refs/heads/main/kekik-vavoo/vavoo-sadecespor.m3u"
     private val defaultPosterUrl      = "https://raw.githubusercontent.com/patr0nq/link/refs/heads/main/tv-logo/vavoo.png"
-    override var name                 = "Vavoo.to Türkiye🛑"
+    override var name                 = "📺 - Vavoo.to Spor"
     override val hasMainPage          = true
     override var lang                 = "tr"
     override val hasQuickSearch       = true

@@ -12,7 +12,7 @@ import java.io.InputStream
 class OhaTO : MainAPI() {
     override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/link-patr0nq/refs/heads/main/oha/patr0noha.m3u"
     private val defaultPosterUrl      = "https://raw.githubusercontent.com/patr0nq/link/refs/heads/main/tv-logo/oha.png"
-    override var name                 = "Oha.to Türkiye🛑"
+    override var name                 = "📺 - Oha.to Spor"
     override val hasMainPage          = true
     override var lang                 = "tr"
     override val hasQuickSearch       = true
