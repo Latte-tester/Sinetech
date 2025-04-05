@@ -12,7 +12,7 @@ import java.io.InputStream
 class KoolTO : MainAPI() {
     override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/link-patr0nq/refs/heads/main/kool/patr0nkool.m3u"
     private val defaultPosterUrl      = "https://raw.githubusercontent.com/patr0nq/link/refs/heads/main/tv-logo/kool.png"
-    override var name                 = "Kool.to Türkiye🛑"
+    override var name                 = "📺 Kool.to Spor Türkiye"
     override val hasMainPage          = true
     override var lang                 = "tr"
     override val hasQuickSearch       = true
@@ -130,7 +130,7 @@ class KoolTO : MainAPI() {
                 headers = kanal.headers,
                 referer = kanal.headers["referrer"] ?: "",
                 quality = Qualities.Unknown.value,
-                isM3u8  = true
+                type    = ExtractorLinkType.M3U8
             )
         )
 

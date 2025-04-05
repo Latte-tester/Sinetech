@@ -1,13 +1,18 @@
-# 🚀 Sinetech Eklentileri 
+# 🚀 Latte - Sinetech Cloudstream Eklentisi Deposu
 
-![Latte Repository Banner](img/banner.png) <!-- Sonradan eklenebilir -->
+![Latte Repository Banner](img/banner.png)
 
 📦 **Kullanıma Hazır Eklentiler**
 | Eklenti | Versiyon | Lisans |
 |---------|----------|--------|
-| [PowerDizi](powerDizi) | ![](https://img.shields.io/badge/version-1.2.0-blue) | [MIT](LICENSE) |
-| [PowerSinema](powerSinema) | ![](https://img.shields.io/badge/version-1.1.8-green) | [MIT](LICENSE) |
-| [TvBahcesi](TvBahcesi) | ![](https://img.shields.io/badge/version-2.0.1-orange) | [MIT](LICENSE) |
+| [PowerDizi](powerDizi) | ![](https://img.shields.io/badge/version-3-blue) | [MIT](LICENSE) |
+| [PowerSinema](powerSinema) | ![](https://img.shields.io/badge/version-3-blue) | [MIT](LICENSE) |
+| [TvBahcesi](TvBahcesi) | ![](https://img.shields.io/badge/version-1-orange) | [MIT](LICENSE) |
+| [DaddyLive](DaddyLive) | ![](https://img.shields.io/badge/version-1-orange) | [MIT](LICENSE) |
+| [OhaTO](OhaTO) | ![](https://img.shields.io/badge/version-1-orange) | [MIT](LICENSE) |
+| [VavooTO](VavooTO) | ![](https://img.shields.io/badge/version-1-orange) | [MIT](LICENSE) |
+| [HuhuTO](HuhuTO) | ![](https://img.shields.io/badge/version-1-orange) | [MIT](LICENSE) |
+| [KoolTO](KoolTO) | ![](https://img.shields.io/badge/version-1-orange) | [MIT](LICENSE) |
 
 ---
 
@@ -17,6 +22,7 @@
 🔍 Gelismis arama ve filtreleme  
 📥 Çevrimdışı izleme için indirme desteği  
 🎨 Kullanıcı dostu modern arayüz  
+📺 Canlı TV ve spor yayınları  
 
 [![TMDB API Status](https://img.shields.io/badge/TMDB%20API-Çalışıyor-brightgreen)](https://www.themoviedb.org/)
 
@@ -53,15 +59,8 @@
 |-------|-----------|
 | Slogan | `movie.tagline` |
 | Yönetmen | `credits.crew[0].name` |
-| Süre | `runtime` dakika |
+| Süre | `runtime` minute |
 | Çıkış Tarihi | `release_date` |
-
-```bash
-# Hızlı Kurulum
-1. Son sürümü [indirin](https://github.com/GitLatte)
-2. Ayarlar > API Anahtarı bölümüne TMDB key'inizi girin
-3. "Filmleri Yükle" butonuna tıklayın
-```
 
 ---
 
@@ -70,9 +69,61 @@
 ![TvBahcesi Arayüz](img/tvbahcesi/tvbahcesi-ss.png)
 
 ### 🌍 Desteklenen Kanallar
-- 📻 150+ Uluslararası TV Kanalı
-- 🌐 50+ Ülkeye özel içerik
-- 🎭 20+ Özel kategori
+- 📻 4000+ Uluslararası TV Kanalı
+- 🌐 155+ Ülkeye özel içerik
+- 🎭 Kanal alternatifleri parantez içinde rakamsal değerle gösterilmiştir.
+
+### 📺 Özellikler
+| Kategori | Detaylar |
+|----------|----------|
+| **Desteklenen Tür** | Canlı TV |
+| **Arama** | Kanal adı ile hızlı arama |
+| **Gruplar** | Ülke ve kategori bazlı gruplandırma |
+| **Öneriler** | Aynı kategorideki benzer kanallar |
+
+---
+
+## 🏆 DaddyLive Mor Spor ve Events
+
+### 🎮 Spor Yayınları ve Etkinlikler
+| Kategori | Detaylar |
+|----------|----------|
+| **Desteklenen Tür** | Canlı TV ve Spor Yayınları |
+| **İçerik** | Spor müsabakaları ve özel etkinlikler |
+| **Gruplar** | Spor türlerine göre kategorize edilmiş |
+| **Arama** | Etkinlik ve kanal adı ile hızlı arama |
+
+### 🌟 Özellikler
+- 🏀 Çeşitli spor dallarında canlı yayınlar
+- 🌍 Uluslararası spor etkinlikleri
+- 🏆 Turnuvalar ve özel organizasyonlar
+- 📊 Grup bazlı düzenlenmiş içerik
+
+---
+
+## 📺 TO Serisi Eklentileri (OhaTO, VavooTO, HuhuTO, KoolTO)
+
+### 🇹🇷 Türkiye Televizyon Kanalları
+| Kategori | Detaylar |
+|----------|----------|
+| **Desteklenen Tür** | Canlı TV |
+| **İçerik** | Türkiye'ye ait ulusal ve spor kanalları |
+| **Gruplar** | Kategori bazlı düzenlenmiş |
+| **Arama** | Kanal adı ile hızlı arama |
+
+### 🌟 Ortak Özellikler
+- 📡 Türkiye'nin popüler ulusal kanalları
+- 🏆 Spor kanalları ve özel yayınlar
+- 🔄 Alternatif kaynaklar ile kesintisiz izleme
+- 🌐 VPN ile farklı ülke seçenekleri
+
+### 🔍 Eklentiler Arası Farklar
+```markdown
+Bu dört eklenti (OhaTO, VavooTO, HuhuTO, KoolTO) birbirinin aynısı yapıda olmasına rağmen:
+- Farklı referans ve user agent'lar barındırırlar
+- VPN kullanımında ülke seçimlerine göre farklı performans gösterebilirler
+- Erişim engeli durumunda alternatif olarak kullanılabilirler
+```
 
 ---
 
@@ -100,10 +151,13 @@ dependencies {
 | [patr0nq](https://github.com/patr0nq) | Güncelleme ve Geliştirme Ortağı|
 | [keyiflerolsun](https://github.com/keyiflerolsun) | Eklenti kodları ilham kaynağı |
 | [doGior](https://github.com/DoGior) | Eklenti kodları ilham kaynağı |
-| [powerboard](https://forum.sinetech.tr/uye/powerboard.3822/) | PowerDizi-PowerSinema liste yöneticisi |
+| [powerboard](https://forum.sinetech.tr/uye/powerboard.3822/) | PowerDizi-PowerSinema liste sahibi |
+| [tıngırmıngır](https://forum.sinetech.tr/uye/tingirmingir.137/) | TMDB ve Tv Bahçesi ilham kaynağı |
+| [mooncrown](https://forum.sinetech.tr/uye/mooncrown.10472/) | Sinema/Dizi eklentisi "İzlemeye Devam Et" başlatma sebebi |
+| [nedirne](https://forum.sinetech.tr/uye/nedirne.13409/) | Sinema/Dizi eklentisi TMDB olayını başlatma sebebi |
 
 📬 **Destek İletişim:** [Latte](https://forum.sinetech.tr/konu/powerboard-film-ve-dizi-arsivine-ozel-cloudstream-deposu.3672/)
 
 ---
 
-🔔 **Not:** Repoyu eklemek için Cloudstream içerisindeki Depo Ekle alanında Depo URL kısmına "Latte" yazmanız yeterlidir.
+🔔 **Not:** Repoyu eklemek için Cloudstream içerisindeki Depo Ekle alanında Depo URL kısmına **"Latte"** yazmanız yeterlidir.

@@ -298,7 +298,7 @@ class powerSinema(private val context: android.content.Context, private val shar
                     ),
                     referer = kanal.headers["referrer"] ?: "",
                     quality = Qualities.Unknown.value,
-                    isM3u8 = true
+                    type    = ExtractorLinkType.M3U8
                 )
             )
 

@@ -15,7 +15,7 @@ import java.net.URL
 import java.net.URLEncoder
 
 class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
-    override var mainUrl              = "https://www.dropbox.com/scl/fi/4kfzfvom8u2tjwlcfwkcz/power-yabanci-dizi.m3u?rlkey=wq1kqb6mo6pctvgd85nkqc8yo&st=ev5l7lya&dl=1"
+    override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/patr0n/site/lists/power-yabanci-dizi.m3u"
     override var name                 = "powerboard Dizi 🎬"
     override val hasMainPage          = true
     override var lang                 = "tr"
@@ -273,7 +273,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 headers = kanal.headers,
                 referer = kanal.headers["referrer"] ?: "",
                 quality = Qualities.Unknown.value,
-                isM3u8  = true
+                type    = ExtractorLinkType.M3U8
             )
         )
 

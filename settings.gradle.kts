@@ -2,11 +2,11 @@ rootProject.name = "CloudstreamPlugins"
 
 include(
     "powerDizi",
-    "powerSinema",
-    "TvBahcesi",
-    "DaddyLive",
-    "VavooTO",
     "OhaTO",
+    "powerSinema",
+    "VavooTO",
+    "TvBahcesi",
     "KoolTO",
+    "DaddyLive",
     "HuhuTO"
 )
