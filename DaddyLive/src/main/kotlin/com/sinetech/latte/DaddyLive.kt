@@ -114,7 +114,7 @@ class DaddyLive : MainAPI() {
         }
     }
 
-    override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
+    override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (newExtractorLink) -> Unit): Boolean {
         val loadData = fetchDataFromUrlOrJson(data)
         Log.d("IPTV", "loadData » $loadData")
 
@@ -123,7 +123,7 @@ class DaddyLive : MainAPI() {
         Log.d("IPTV", "kanal » $kanal")
 
         callback.invoke(
-            ExtractorLink(
+            newExtractorLink(
                 source  = this.name,
                 name    = this.name,
                 url     = loadData.url,
