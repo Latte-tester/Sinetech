@@ -11,7 +11,6 @@ import java.io.InputStream
 
 class KoolTO : MainAPI() {
     override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/link-patr0nq/refs/heads/main/kool/patr0nkool.m3u"
-    private val defaultPosterUrl      = "https://raw.githubusercontent.com/patr0nq/link/refs/heads/main/tv-logo/kool.png"
     override var name                 = "📺 - Kool.to Spor"
     override val hasMainPage          = true
     override var lang                 = "tr"
@@ -28,7 +27,7 @@ class KoolTO : MainAPI() {
                 val show  = group.value.map { kanal ->
                     val streamurl   = kanal.url.toString()
                     val channelname = kanal.title.toString()
-                    val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
+                    val posterurl   = kanal.attributes["tvg-logo"].toString()
                     val chGroup     = kanal.attributes["group-title"].toString()
                     val nation      = kanal.attributes["tvg-country"].toString()
 
@@ -55,7 +54,7 @@ class KoolTO : MainAPI() {
         return kanallar.items.filter { it.title.toString().lowercase().contains(query.lowercase()) }.map { kanal ->
             val streamurl   = kanal.url.toString()
             val channelname = kanal.title.toString()
-            val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
+            val posterurl   = kanal.attributes["tvg-logo"].toString()
             val chGroup     = kanal.attributes["group-title"].toString()
             val nation      = kanal.attributes["tvg-country"].toString()
 
@@ -75,7 +74,7 @@ class KoolTO : MainAPI() {
 
     override suspend fun load(url: String): LoadResponse {
         val loadData = fetchDataFromUrlOrJson(url)
-        val nation = if (listOf("adult", "erotic", "erotik", "porn", "porno").any { loadData.group.contains(it, ignoreCase = true) }) {
+        val nation:String = if (loadData.group == "NSFW") {
             "⚠️🔞🔞🔞 » ${loadData.group} | ${loadData.nation} « 🔞🔞🔞⚠️"
         } else {
             "» ${loadData.group} | ${loadData.nation} «"
@@ -90,7 +89,7 @@ class KoolTO : MainAPI() {
                 val rcChannelName = kanal.title.toString()
                 if (rcChannelName == loadData.title) continue
 
-                val rcPosterUrl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
+                val rcPosterUrl   = kanal.attributes["tvg-logo"].toString()
                 val rcChGroup     = kanal.attributes["group-title"].toString()
                 val rcNation      = kanal.attributes["tvg-country"].toString()
 
@@ -123,7 +122,7 @@ class KoolTO : MainAPI() {
         Log.d("IPTV", "kanal » $kanal")
 
         callback.invoke(
-            newExtractorLink(
+            ExtractorLink(
                 source  = this.name,
                 name    = this.name,
                 url     = loadData.url,
@@ -148,7 +147,7 @@ class KoolTO : MainAPI() {
 
             val streamurl   = kanal.url.toString()
             val channelname = kanal.title.toString()
-            val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
+            val posterurl   = kanal.attributes["tvg-logo"].toString()
             val chGroup     = kanal.attributes["group-title"].toString()
             val nation      = kanal.attributes["tvg-country"].toString()
 
@@ -174,6 +173,7 @@ class IptvPlaylistParser {
     fun parseM3U(content: String): Playlist {
         return parseM3U(content.byteInputStream())
     }
+
 
     @Throws(PlaylistParserException::class)
     fun parseM3U(input: InputStream): Playlist {
@@ -234,12 +234,7 @@ class IptvPlaylistParser {
 
             line = reader.readLine()
         }
-        // Türkiye kanallarını listenin başına al
-        val sortedItems = playlistItems.sortedWith(compareBy<PlaylistItem> { 
-            it.attributes["tvg-country"]?.lowercase() != "tr"
-        })
-        
-        return Playlist(sortedItems)
+        return Playlist(playlistItems)
     }
 
     private fun String.replaceQuotesAndTrim(): String {
@@ -265,22 +260,16 @@ class IptvPlaylistParser {
     }
 
     private fun String.getAttributes(): Map<String, String> {
-        val extInfRegex = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
+        val extInfRegex      = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
         val attributesString = replace(extInfRegex, "").replaceQuotesAndTrim().split(",").first()
-        val attributeRegex = Regex("([\\w-]+)=\"([^\"]*)\"|([\\w-]+)=([^\\s\"]+)")
-        
-        return attributeRegex.findAll(attributesString)
-            .map { matchResult ->
-                val (key1, value1, key2, value2) = matchResult.destructured
-                val key = key1.ifEmpty { key2 }
-                val value = value1.ifEmpty { value2 }
-                key to cleanAttributeValue(value)
+
+        return attributesString
+            .split(Regex("\\s"))
+            .mapNotNull {
+                val pair = it.split("=")
+                if (pair.size == 2) pair.first() to pair.last().replaceQuotesAndTrim() else null
             }
             .toMap()
-    }
-
-    private fun cleanAttributeValue(value: String): String {
-        return value.removeSurrounding("\"").trim()
     }
 
     private fun String.getTagValue(key: String): String? {
