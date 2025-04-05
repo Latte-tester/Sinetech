@@ -249,7 +249,7 @@ class IptvPlaylistParser {
     private fun String.isExtendedM3u(): Boolean = startsWith(EXT_M3U)
 
     private fun String.getTitle(): String? {
-        return trim()
+        return split(",").lastOrNull()?.replaceQuotesAndTrim()
     }
 
     private fun String.getUrl(): String? {
