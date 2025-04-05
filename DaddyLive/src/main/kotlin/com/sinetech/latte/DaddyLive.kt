@@ -274,13 +274,9 @@ class IptvPlaylistParser {
                 val (key1, value1, key2, value2) = matchResult.destructured
                 val key = key1.ifEmpty { key2 }
                 val value = value1.ifEmpty { value2 }
-                key to cleanAttributeValue(value)
+                key to value.replaceQuotesAndTrim()
             }
             .toMap()
-    }
-
-    private fun cleanAttributeValue(value: String): String {
-        return value.removeSurrounding("\"").trim()
     }
 
     private fun String.getTagValue(key: String): String? {
