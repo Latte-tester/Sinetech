@@ -123,7 +123,7 @@ class KoolTO : MainAPI() {
         Log.d("IPTV", "kanal » $kanal")
 
         callback.invoke(
-            ExtractorLink(
+            newExtractorLink(
                 source  = this.name,
                 name    = this.name,
                 url     = loadData.url,
