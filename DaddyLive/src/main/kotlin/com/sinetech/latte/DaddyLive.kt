@@ -266,7 +266,7 @@ class IptvPlaylistParser {
 
     private fun String.getAttributes(): Map<String, String> {
         val extInfRegex = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
-        val attributesString = replace(extInfRegex, "").replaceQuotesAndTrim().split(",").first()
+        val attributesString = replace(extInfRegex, "").replaceQuotesAndTrim()
         val attributeRegex = Regex("([\\w-]+)=\"([^\"]*)\"|([\\w-]+)=([^\\s\"]+)")
         
         return attributeRegex.findAll(attributesString)
