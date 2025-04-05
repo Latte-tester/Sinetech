@@ -12,7 +12,7 @@ import java.io.InputStream
 class DaddyLive : MainAPI() {
     override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/temporarylists/refs/heads/main/dl/dl-daddyliveall.m3u"
     private val defaultPosterUrl      = "https://raw.githubusercontent.com/GitLatte/m3ueditor/refs/heads/site/images/kanal-gorselleri/referans/isimsizkanal.png"
-    override var name                 = "DaddyLive Mor Spor ve Events"
+    override var name                 = "📺 DaddyLive Mor Spor ve Events"
     override val hasMainPage          = true
     override var lang                 = "tr"
     override val hasQuickSearch       = true
