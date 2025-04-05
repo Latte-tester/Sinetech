@@ -9,7 +9,7 @@ import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import java.io.InputStream
 
-class DaddyLive : MainAPI() {
+class DaddyLiveCanli : MainAPI() {
     override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/temporarylists/refs/heads/main/dl/dl-daddyliveall.m3u"
     private val defaultPosterUrl      = "https://raw.githubusercontent.com/GitLatte/m3ueditor/refs/heads/site/images/kanal-gorselleri/referans/isimsizkanal.png"
     override var name                 = "DaddyLive Mor Spor ve Events"
@@ -28,7 +28,7 @@ class DaddyLive : MainAPI() {
                 val show  = group.value.map { kanal ->
                     val streamurl   = kanal.url.toString()
                     val channelname = kanal.title.toString()
-                    val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl ?: defaultPosterUrl ?: defaultPosterUrl
+                    val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
                     val chGroup     = kanal.attributes["group-title"].toString()
                     val nation      = kanal.attributes["tvg-country"].toString()
 
@@ -55,7 +55,7 @@ class DaddyLive : MainAPI() {
         return kanallar.items.filter { it.title.toString().lowercase().contains(query.lowercase()) }.map { kanal ->
             val streamurl   = kanal.url.toString()
             val channelname = kanal.title.toString()
-            val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl ?: defaultPosterUrl
+            val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
             val chGroup     = kanal.attributes["group-title"].toString()
             val nation      = kanal.attributes["tvg-country"].toString()
 
@@ -123,7 +123,7 @@ class DaddyLive : MainAPI() {
         Log.d("IPTV", "kanal » $kanal")
 
         callback.invoke(
-            newExtractorLink(
+            ExtractorLink(
                 source  = this.name,
                 name    = this.name,
                 url     = loadData.url,
@@ -148,7 +148,7 @@ class DaddyLive : MainAPI() {
 
             val streamurl   = kanal.url.toString()
             val channelname = kanal.title.toString()
-            val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl ?: defaultPosterUrl
+            val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
             val chGroup     = kanal.attributes["group-title"].toString()
             val nation      = kanal.attributes["tvg-country"].toString()
 
