@@ -117,23 +117,30 @@ class DaddyLive : MainAPI() {
     override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
         val loadData = fetchDataFromUrlOrJson(data)
         Log.d("IPTV", "loadData » $loadData")
-
+    
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
         val kanal    = kanallar.items.first { it.url == loadData.url }
         Log.d("IPTV", "kanal » $kanal")
-
-        callback.invoke(
-            ExtractorLink(
-                source  = this.name,
-                name    = this.name,
-                url     = loadData.url,
-                headers = kanal.headers,
-                referer = kanal.headers["referrer"] ?: "",
-                quality = Qualities.Unknown.value,
-                isM3u8  = true
-            )
+    
+        // 1. Varsayılan bir ExtractorLink nesnesi oluştur
+        val defaultLink = ExtractorLink(
+            source  = this.name,
+            name    = this.name,
+            url     = loadData.url,
+            headers = emptyMap(), // Varsayılan bir değer
+            referer = "", // Varsayılan bir değer
+            quality = Qualities.Unknown.value,
+            isM3u8  = true
         )
-
+    
+        // 2. copy() metodu ile değerleri değiştir
+        val link = defaultLink.copy(
+            headers = kanal.headers,
+            referer = kanal.headers["referrer"] ?: ""
+        )
+    
+        callback.invoke(link)
+    
         return true
     }
 
