@@ -271,9 +271,7 @@ class IptvPlaylistParser {
         
         return attributeRegex.findAll(attributesString)
             .map { matchResult ->
-                val (_, qValue, nKey, nValue) = matchResult.destructured
-                val key = nKey ?: key1
-                val value = qValue ?: nValue
+                val (key1, value1, key2, value2) = matchResult.destructured
                 val key = key1.ifEmpty { key2 }
                 val value = value1.ifEmpty { value2 }
                 key to cleanAttributeValue(value)
