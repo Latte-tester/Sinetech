@@ -120,21 +120,21 @@ class KoolTO : MainAPI() {
 
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
         val kanal    = kanallar.items.first { it.url == loadData.url }
-          Log.d("IPTV", "kanal » $kanal")
+        Log.d("IPTV", "kanal » $kanal")
 
-          callback.invoke(
-              ExtractorLink(
-                  source = this.name,
-                  name = this.name,
-                  url = loadData.url,
-                  headers = kanal.headers,
-                  referer = kanal.headers["referrer"] ?: "",
-                  quality = Qualities.Unknown.value,
-                  isM3u8 = true
-              )
-          )
+        callback.invoke(
+            ExtractorLink(
+                source  = this.name,
+                name    = this.name,
+                url     = loadData.url,
+                headers = kanal.headers,
+                referer = kanal.headers["referrer"] ?: "",
+                quality = Qualities.Unknown.value,
+                isM3u8  = true
+            )
+        )
 
-          return true
+        return true
     }
 
     data class LoadData(val url: String, val title: String, val poster: String, val group: String, val nation: String)

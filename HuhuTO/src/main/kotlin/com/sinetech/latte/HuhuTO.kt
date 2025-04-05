@@ -124,13 +124,13 @@ class HuhuTO : MainAPI() {
 
         callback.invoke(
             ExtractorLink(
-                source = this.name,
-                name = this.name,
-                url = loadData.url,
+                source  = this.name,
+                name    = this.name,
+                url     = loadData.url,
                 headers = kanal.headers,
                 referer = kanal.headers["referrer"] ?: "",
                 quality = Qualities.Unknown.value,
-                isM3u8 = true
+                isM3u8  = true
             )
         )
 

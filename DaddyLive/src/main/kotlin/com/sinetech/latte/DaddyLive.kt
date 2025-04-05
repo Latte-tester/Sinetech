@@ -28,7 +28,7 @@ class DaddyLive : MainAPI() {
                 val show  = group.value.map { kanal ->
                     val streamurl   = kanal.url.toString()
                     val channelname = kanal.title.toString()
-                    val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl ?: defaultPosterUrl ?: defaultPosterUrl
+                    val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
                     val chGroup     = kanal.attributes["group-title"].toString()
                     val nation      = kanal.attributes["tvg-country"].toString()
 
@@ -55,7 +55,7 @@ class DaddyLive : MainAPI() {
         return kanallar.items.filter { it.title.toString().lowercase().contains(query.lowercase()) }.map { kanal ->
             val streamurl   = kanal.url.toString()
             val channelname = kanal.title.toString()
-            val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl ?: defaultPosterUrl
+            val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
             val chGroup     = kanal.attributes["group-title"].toString()
             val nation      = kanal.attributes["tvg-country"].toString()
 
@@ -120,21 +120,21 @@ class DaddyLive : MainAPI() {
 
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
         val kanal    = kanallar.items.first { it.url == loadData.url }
-          Log.d("IPTV", "kanal » $kanal")
-      
-          callback.invoke(
-              ExtractorLink(
-                  source = this.name,
-                  name = this.name,
-                  url = loadData.url,
-                  headers = kanal.headers,
-                  referer = kanal.headers["referrer"] ?: "",
-                  quality = Qualities.Unknown.value,
-                  isM3u8 = true
-              )
-          )
-      
-          return true
+        Log.d("IPTV", "kanal » $kanal")
+
+        callback.invoke(
+            ExtractorLink(
+                source  = this.name,
+                name    = this.name,
+                url     = loadData.url,
+                headers = kanal.headers,
+                referer = kanal.headers["referrer"] ?: "",
+                quality = Qualities.Unknown.value,
+                isM3u8  = true
+            )
+        )
+
+        return true
     }
 
     data class LoadData(val url: String, val title: String, val poster: String, val group: String, val nation: String)
@@ -148,7 +148,7 @@ class DaddyLive : MainAPI() {
 
             val streamurl   = kanal.url.toString()
             val channelname = kanal.title.toString()
-            val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl ?: defaultPosterUrl
+            val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
             val chGroup     = kanal.attributes["group-title"].toString()
             val nation      = kanal.attributes["tvg-country"].toString()
 
