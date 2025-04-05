@@ -5,8 +5,8 @@ import com.lagradost.cloudstream3.plugins.Plugin
 import android.content.Context
 
 @CloudstreamPlugin
-class DaddyLiveCanliPlugin : Plugin() {
+class DaddyLivePlugin : Plugin() {
     override fun load(context: Context) {
-        registerMainAPI(DaddyLiveCanli())
+        registerMainAPI(DaddyLive())
     }
 }
