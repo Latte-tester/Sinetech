@@ -249,7 +249,7 @@ class IptvPlaylistParser {
     private fun String.isExtendedM3u(): Boolean = startsWith(EXT_M3U)
 
     private fun String.getTitle(): String? {
-        return split(",").lastOrNull()?.replaceQuotesAndTrim()
+        return trim()
     }
 
     private fun String.getUrl(): String? {
@@ -267,11 +267,13 @@ class IptvPlaylistParser {
     private fun String.getAttributes(): Map<String, String> {
         val extInfRegex = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
         val attributesString = replace(extInfRegex, "").replaceQuotesAndTrim()
-        val attributeRegex = Regex("([\\w-]+)=\"([^\"]*)\"|([\\w-]+)=([^\\s\"]+)")
+        val attributeRegex = Regex("([a-zA-Z-]+)=\"([^\"]*)\"|([a-zA-Z-]+)=([^,]+)")
         
         return attributeRegex.findAll(attributesString)
             .map { matchResult ->
-                val (key1, value1, key2, value2) = matchResult.destructured
+                val (_, qValue, nKey, nValue) = matchResult.destructured
+                val key = nKey ?: key1
+                val value = qValue ?: nValue
                 val key = key1.ifEmpty { key2 }
                 val value = value1.ifEmpty { value2 }
                 key to cleanAttributeValue(value)
