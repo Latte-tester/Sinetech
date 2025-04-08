@@ -259,7 +259,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
     }
 
   enum class ExtractorLinkType {
-        M3U8, MKV, MP4, AVI, VIDEO, DASH, TORRENT, MAGNET }
+        M3U8, MKV, MP4, AVI, VIDEO}
   
 override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
         val loadData = fetchDataFromUrlOrJson(data)
@@ -273,6 +273,7 @@ override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallbac
     loadData.url.endsWith(".m3u8") -> ExtractorLinkType.M3U8
     loadData.url.endsWith(".mkv") -> ExtractorLinkType.MKV
     loadData.url.endsWith(".mp4") -> ExtractorLinkType.MP4
+    loadData.url.endsWith(".avi") -> ExtractorLinkType.AVI     
     else -> ExtractorLinkType.VIDEO
         }
         
