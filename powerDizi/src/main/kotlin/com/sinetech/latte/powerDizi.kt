@@ -218,25 +218,20 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
         val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
         val groupEpisodes = kanallar.items
-          .filter { it.attributes["group-title"]?.toString() ?: "" == loadData.group }
-          .mapNotNull { kanal ->
+            .filter { it.attributes["group-title"]?.toString() ?: "" == loadData.group }
+            .mapNotNull { kanal ->
         val title = kanal.title.toString()
         val match = episodeRegex.find(title)
         if (match != null) {
             val (_, season, episode) = match.destructured
-            val runTime: Int = kanal.attributes["run-time"]?.toString()?.toIntOrNull() ?: 0
+            val runTime: Int = kanal.attributes["run-time"]?.toString()?.toIntOrNull() ?: 0 // Default runTime
             newEpisode(
-                episode = episode.toInt(),
+                url = kanal.url.toString(), // Provide URL correctly
+                title = title,
                 season = season.toInt(),
-                data = LoadData(
-                    kanal.url.toString(),
-                    title,
-                    kanal.attributes["tvg-logo"].toString(),
-                    kanal.attributes["group-title"].toString(),
-                    kanal.attributes["tvg-country"]?.toString() ?: "TR",
-                    season.toInt()
-                ),
-                runTime = runTime
+                episode = episode.toInt(),
+                runTime = runTime,
+                posterUrl = kanal.attributes["tvg-logo"]?.toString()
             )
         } else {
             null
