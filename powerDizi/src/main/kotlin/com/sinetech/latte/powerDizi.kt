@@ -26,6 +26,26 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
+    
+    Log.d("powerDizi", "getMainPage başladı. M3U okunuyor: $mainUrl")
+    val m3uText = app.get(mainUrl).text
+    val kanallar = try {
+        IptvPlaylistParser().parseM3U(m3uText)
+    } catch (e: Exception) {
+        Log.e("powerDizi", "M3U PARSE HATASI!", e)
+        return newHomePageResponse(emptyList(), false) // Hata varsa boş liste dön
+    }
+
+    Log.d("powerDizi", "Toplam parse edilen öğe: ${kanallar.items.size}")
+    // İlk 20 öğeyi ve özellikle MKV içerip içermediğini kontrol et
+    kanallar.items.take(20).forEachIndexed { index, item ->
+        Log.d("powerDizi", "Parsed Item $index: Title='${item.title}', URL='${item.url}', Group='${item.attributes["group-title"]}', Logo='${item.attributes["tvg-logo"]}'")
+    }
+    val mkvCount = kanallar.items.count { it.url?.endsWith(".mkv", ignoreCase = true) == true }
+    Log.d("powerDizi", "Parse edilen MKV sayısı: $mkvCount")
+    if (mkvCount == 0 && m3uText.contains(".mkv", ignoreCase = true)) {
+         Log.w("powerDizi", "M3U içinde MKV var ama parser bulamadı! M3U formatını kontrol et!")
+    }
 
         // Parse episode information from titles
         val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
@@ -270,37 +290,61 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         else -> ExtractorLinkType.VIDEO
       }
   }
-override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
-    val loadData = fetchDataFromUrlOrJson(data)
-    Log.d("IPTV", "loadData » $loadData")
-
-    val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-    val kanal = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
-    Log.d("IPTV", "kanal » $kanal")
-
-    val localFileType = when {
-        loadData.url.endsWith(".m3u8") -> LocalExtractorLinkType.M3U8
-        loadData.url.endsWith(".mkv") -> LocalExtractorLinkType.MKV
-        loadData.url.endsWith(".mp4") -> LocalExtractorLinkType.MP4
-        loadData.url.endsWith(".avi") -> LocalExtractorLinkType.AVI
-        else -> LocalExtractorLinkType.VIDEO
+override suspend fun loadLinks(
+    data: String, // Bu, Episode.data içindeki JSON string`i
+    isCasting: Boolean,
+    subtitleCallback: (SubtitleFile) -> Unit,
+    callback: (ExtractorLink) -> Boolean // Linki buraya göndereceğiz
+): Boolean {
+    val loadData = try {
+        // JSON verisini LoadData nesnesine çeviriyoruz
+        fetchDataFromUrlOrJson(data) // Bu fonksiyon zaten JSON`u parse ediyor
+    } catch (e: Exception) {
+        Log.e("powerDizi", "loadLinks JSON parse hatası: $data", e)
+        return false // Hata varsa link yüklenemedi
     }
-    
-    val fileType = mapToExternalType(localFileType)
-    
-    callback.invoke(
-        ExtractorLink(
-            source = this.name,
-            name = "${loadData.title} (S${loadData.season}:E${loadData.episode})",
-            url = loadData.url,
-            headers = kanal.headers,
-            referer = kanal.headers["referrer"] ?: "",
-            quality = Qualities.Unknown.value,
-            type = fileType
-        )
-    )
 
-    return true
+    Log.d("powerDizi", "loadLinks için LoadData: $loadData")
+    val url = loadData.url
+
+    // --- M3U dosyasını burada tekrar okumaya GEREK YOK! ---
+    // val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
+    // val kanal = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
+    // Gerekli olabilecek header bilgisi varsa, onu LoadData içinde taşımalısın.
+    // Şimdilik header olmadığını varsayıyorum. Gerekirse LoadData'ya ekleriz.
+    // val headers = kanal.headers // <- Bu bilgiye ihtiyacın varsa LoadData'ya ekle
+
+    // Link tipini belirle ve doğru parametrelerle ExtractorLink oluştur
+    val isM3u8 = url.endsWith(".m3u8", ignoreCase = true)
+    val isMkv = url.endsWith(".mkv", ignoreCase = true)
+    val isMp4 = url.endsWith(".mp4", ignoreCase = true)
+    val isAvi = url.endsWith(".avi", ignoreCase = true)
+
+    if (isM3u8 || isMkv || isMp4 || isAvi) {
+        callback(
+            ExtractorLink(
+                source = this.name, // Eklenti adı
+                name = "${this.name} - ${
+                    // Daha açıklayıcı bir isim oluşturalım
+                    if (loadData.season > 0 && loadData.episode > 0) {
+                        "S${loadData.season.toString().padStart(2, '0')}E${loadData.episode.toString().padStart(2, '0')}"
+                    } else {
+                        loadData.title // Sezon/bölüm yoksa başlığı kullan
+                    }
+                }",
+                url = url,
+                referer = "", // Referer bilgisi M3U`an geliyorsa LoadData`ya eklenmeli
+                quality = Qualities.Unknown.value, // Kaliteyi belirleyebiliyorsan ayarla
+                isM3u8 = isM3u8 // M3U8 ise true, diğerleri (MKV, MP4, AVI) için false olacak
+                // type parametresi genellikle isM3u8 yeterliyse gereksizdir
+                // headers = headers // Header gerekiyorsa buraya ekle (LoadData'dan alarak)
+            )
+        )
+        return true // Link başarıyla gönderildi
+    } else {
+        Log.w("powerDizi", "Desteklenmeyen link formatı: $url")
+        return false // Geçerli link bulunamadı
+    }
 }
  
     data class LoadData(
