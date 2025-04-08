@@ -257,16 +257,16 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         }
     }
 
-  override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
+  enum class ExtractorLinkType {
+        M3U8, MKV, MP4, AVI, VIDEO, DASH, TORRENT, MAGNET }
+  
+override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
         val loadData = fetchDataFromUrlOrJson(data)
         Log.d("IPTV", "loadData » $loadData")
 
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
         val kanal    = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
         Log.d("IPTV", "kanal » $kanal")
-
-        enum class ExtractorLinkType {
-        M3U8, MKV, MP4, AVI, VIDEO, DASH, TORRENT, MAGNET }
 
         val fileType = when {
     loadData.url.endsWith(".m3u8") -> ExtractorLinkType.M3U8
