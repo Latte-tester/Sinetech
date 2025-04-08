@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
+import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import java.io.InputStream
@@ -223,19 +224,11 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 val match = episodeRegex.find(title)
                 if (match != null) {
                     val (_, season, episode) = match.destructured
-                    Episode(
-                        episode = episode.toInt(),
-                        season = season.toInt(),
-                        data = LoadData(
-                            kanal.url.toString(),
-                            title,
-                            kanal.attributes["tvg-logo"].toString(),
-                            kanal.attributes["group-title"].toString(),
-                            kanal.attributes["tvg-country"]?.toString() ?: "TR",
-                            season.toInt(),
-                            episode.toInt()
-                        ).toJson()
-                    )
+                    groupEpisodes.add(newEpisode(kanal.url.toString()) {
+                    this.name = title
+                    this.season = season.toInt()
+                    this.episode = episode.toInt()
+                     })
                 } else null
             }
 
@@ -257,29 +250,51 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         }
     }
 
-    override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
-        val loadData = fetchDataFromUrlOrJson(data)
-        Log.d("IPTV", "loadData » $loadData")
+  enum class LocalExtractorLinkType {
+    M3U8, MKV, MP4, AVI, VIDEO }
 
-        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-        val kanal    = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
-        Log.d("IPTV", "kanal » $kanal")
+  fun mapToExternalType(localType: LocalExtractorLinkType): ExtractorLinkType {
+     return when (localType) {
+        LocalExtractorLinkType.M3U8 -> ExtractorLinkType.M3U8
+        LocalExtractorLinkType.MKV -> ExtractorLinkType.VIDEO
+        LocalExtractorLinkType.MP4 -> ExtractorLinkType.VIDEO
+         LocalExtractorLinkType.AVI -> ExtractorLinkType.VIDEO
+        else -> ExtractorLinkType.VIDEO
+      }
+  }
+override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
+    val loadData = fetchDataFromUrlOrJson(data)
+    Log.d("IPTV", "loadData » $loadData")
 
-        callback.invoke(
-            ExtractorLink(
-                source  = this.name,
-                name    = "${loadData.title} (S${loadData.season}:E${loadData.episode})",
-                url     = loadData.url,
-                headers = kanal.headers,
-                referer = kanal.headers["referrer"] ?: "",
-                quality = Qualities.Unknown.value,
-                type    = ExtractorLinkType.M3U8
-            )
-        )
+    val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
+    val kanal = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
+    Log.d("IPTV", "kanal » $kanal")
 
-        return true
+    val localFileType = when {
+        loadData.url.endsWith(".m3u8") -> LocalExtractorLinkType.M3U8
+        loadData.url.endsWith(".mkv") -> LocalExtractorLinkType.MKV
+        loadData.url.endsWith(".mp4") -> LocalExtractorLinkType.MP4
+        loadData.url.endsWith(".avi") -> LocalExtractorLinkType.AVI
+        else -> LocalExtractorLinkType.VIDEO
     }
+    
+    val fileType = mapToExternalType(localFileType)
+    
+    callback.invoke(
+        ExtractorLink(
+            source = this.name,
+            name = "${loadData.title} (S${loadData.season}:E${loadData.episode})",
+            url = loadData.url,
+            headers = kanal.headers,
+            referer = kanal.headers["referrer"] ?: "",
+            quality = Qualities.Unknown.value,
+            type = fileType
+        )
+    )
 
+    return true
+}
+ 
     data class LoadData(
     val url: String,
     val title: String,
