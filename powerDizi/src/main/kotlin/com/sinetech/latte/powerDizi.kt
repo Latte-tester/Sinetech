@@ -337,7 +337,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
              }
         }
     }
-            override suspend fun loadLinks(
+                override suspend fun loadLinks(
         data: String, // JSON data from Episode.data
         isCasting: Boolean,
         subtitleCallback: (SubtitleFile) -> Unit,
@@ -353,15 +353,15 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val isMp4 = url.endsWith(".mp4", ignoreCase = true)
         val isAvi = url.endsWith(".avi", ignoreCase = true)
 
-        // Link tipini belirle (VIDEO veya M3U8)
+        // API'ye uygun link tipini belirle
         val linkType = when {
             isM3u8 -> ExtractorLinkType.M3U8
-            isMkv || isMp4 || isAvi -> ExtractorLinkType.VIDEO // MKV, MP4, AVI için VIDEO tipi
+            isMkv || isMp4 || isAvi -> ExtractorLinkType.VIDEO
             else -> null // Desteklenmeyen format
         }
 
         if (linkType != null) {
-            // Tekrar newExtractorLink kullanıyoruz
+            // newExtractorLink'i API'deki parametrelerle kullan
             callback(
                 newExtractorLink( // newExtractorLink
                     source = this.name, // Eklenti adı
@@ -371,12 +371,15 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                         } else { loadData.title }
                     }",
                     url = url,
-                    referer = "", // Referer boş string olarak gönderilebilir
-                    type = linkType // Belirlenen tipi kullan (M3U8 veya VIDEO)
-                    // quality ve isM3u8 parametreleri newExtractorLink'in bu versiyonunda olmayabilir,
-                    // type yeterli olmalı.
-                    // headers = loadData.headers // Gerekirse header eklenebilir
+                    referer = "", // Referer parametresi burada var, boş gönderiyoruz
+                    type = linkType, // Belirlenen tipi (M3U8 veya VIDEO) kullan
+                    headers = emptyMap() // Headers gerekiyorsa buraya ekle
+                    // extractorData = null // Gerekmiyorsa belirtmeye gerek yok
                 )
+                // .apply {
+                //     // Eğer kaliteyi bir şekilde biliyorsak (örn: başlıkta varsa)
+                //     // this.quality = Qualities.P720.value // şeklinde ayarlayabiliriz
+                // }
             )
             return true
         } else {
