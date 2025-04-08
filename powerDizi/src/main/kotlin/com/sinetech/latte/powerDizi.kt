@@ -269,22 +269,20 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
   }
 override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
     val loadData = fetchDataFromUrlOrJson(data)
-    Log.d("IPTV", "loadData » $loadData")
+    Log.d("powerDizi", "loadData » $loadData")
 
     val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
     val kanal = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
-    Log.d("IPTV", "kanal » $kanal")
+    Log.d("powerDizi", "Kanal bulundu: ${kanal.title}")
 
-    val localFileType = when {
-        loadData.url.endsWith(".m3u8") -> LocalExtractorLinkType.M3U8
-        loadData.url.endsWith(".mkv") -> LocalExtractorLinkType.MKV
-        loadData.url.endsWith(".mp4") -> LocalExtractorLinkType.MP4
-        loadData.url.endsWith(".avi") -> LocalExtractorLinkType.AVI
-        else -> LocalExtractorLinkType.VIDEO
+    // URL uzantısına göre tip belirleme
+    val linkType = when {
+        loadData.url.contains(".m3u8", ignoreCase = true) -> ExtractorLinkType.M3U8
+        else -> ExtractorLinkType.VIDEO
     }
-    
-    val fileType = mapToExternalType(localFileType)
-    
+
+    Log.d("powerDizi", "Kullanılacak link tipi: $linkType")
+
     callback.invoke(
         ExtractorLink(
             source = this.name,
@@ -293,10 +291,9 @@ override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallbac
             headers = kanal.headers,
             referer = kanal.headers["referrer"] ?: "",
             quality = Qualities.Unknown.value,
-            type = fileType
+            type = linkType
         )
     )
-
     return true
 }
  
