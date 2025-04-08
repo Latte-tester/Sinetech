@@ -257,25 +257,28 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         }
     }
 
-    override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
-    val loadData = fetchDataFromUrlOrJson(data)
-    val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-    val kanal = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
+ override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
+        val loadData = fetchDataFromUrlOrJson(data)
+        Log.d("IPTV", "loadData » $loadData")
 
-    callback.invoke(
-        ExtractorLink(
-            source = this.name,
-            name = "${loadData.title} (S${loadData.season}:E${loadData.episode})",
-            url = loadData.url,
-            headers = kanal.headers,
-            referer = kanal.headers["referrer"] ?: "",
-            quality = Qualities.Unknown.value,
-            type = ExtractorLinkType.DIRECT
+        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
+        val kanal    = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
+        Log.d("IPTV", "kanal » $kanal")
+
+        callback.invoke(
+            ExtractorLink(
+                source  = this.name,
+                name    = "${loadData.title} (S${loadData.season}:E${loadData.episode})",
+                url     = loadData.url,
+                headers = kanal.headers,
+                referer = kanal.headers["referrer"] ?: "",
+                quality = Qualities.Unknown.value,
+                type    = ExtractorLinkType.M3U8
+            )
         )
-    )
 
-    return true
-}
+        return true
+    }
 
     data class LoadData(
     val url: String,
