@@ -4,7 +4,6 @@ import android.content.SharedPreferences
 import android.util.Log
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
-import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import java.io.InputStream
@@ -218,24 +217,27 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
         val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
         val groupEpisodes = kanallar.items
-    .filter { it.attributes["group-title"]?.toString() ?: "" == loadData.group }
-    .mapNotNull { kanal ->
-        val title = kanal.title.toString()
-        val match = episodeRegex.find(title)
-        if (match != null) {
-            val (_, season, episode) = match.destructured
-            newEpisode(
-         url = kanal.url.toString(),
-         title = title,
-         season = season.toInt(),
-         episode = episode.toInt(),
-         posterUrl = kanal.attributes["tvg-logo"]?.toString()
-         ) {
-         this.plot = "Episode description or plot."
-         this.isWatched = false // Varsayılan
-           }
-        } else null
-      }
+            .filter { it.attributes["group-title"]?.toString() ?: "" == loadData.group }
+            .mapNotNull { kanal ->
+                val title = kanal.title.toString()
+                val match = episodeRegex.find(title)
+                if (match != null) {
+                    val (_, season, episode) = match.destructured
+                    Episode(
+                        episode = episode.toInt(),
+                        season = season.toInt(),
+                        data = LoadData(
+                            kanal.url.toString(),
+                            title,
+                            kanal.attributes["tvg-logo"].toString(),
+                            kanal.attributes["group-title"].toString(),
+                            kanal.attributes["tvg-country"]?.toString() ?: "TR",
+                            season.toInt(),
+                            episode.toInt()
+                        ).toJson()
+                    )
+                } else null
+            }
 
         return newTvSeriesLoadResponse(
             loadData.title,
@@ -255,48 +257,29 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         }
     }
 
-  enum class LocalExtractorLinkType {
-    M3U8, MKV, MP4, AVI, VIDEO }
+    override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
+        val loadData = fetchDataFromUrlOrJson(data)
+        Log.d("IPTV", "loadData » $loadData")
 
-  fun mapToExternalType(localType: LocalExtractorLinkType): ExtractorLinkType {
-     return when (localType) {
-        LocalExtractorLinkType.M3U8 -> ExtractorLinkType.M3U8
-        LocalExtractorLinkType.MKV -> ExtractorLinkType.VIDEO
-        LocalExtractorLinkType.MP4 -> ExtractorLinkType.VIDEO
-         LocalExtractorLinkType.AVI -> ExtractorLinkType.VIDEO
-        else -> ExtractorLinkType.VIDEO
-      }
-  }
-override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
-    val loadData = fetchDataFromUrlOrJson(data)
-    Log.d("powerDizi", "loadData » $loadData")
+        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
+        val kanal    = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
+        Log.d("IPTV", "kanal » $kanal")
 
-    val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-    val kanal = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
-    Log.d("powerDizi", "Kanal bulundu: ${kanal.title}")
+        callback.invoke(
+            ExtractorLink(
+                source  = this.name,
+                name    = "${loadData.title} (S${loadData.season}:E${loadData.episode})",
+                url     = loadData.url,
+                headers = kanal.headers,
+                referer = kanal.headers["referrer"] ?: "",
+                quality = Qualities.Unknown.value,
+                type    = ExtractorLinkType.M3U8
+            )
+        )
 
-    // URL uzantısına göre tip belirleme
-    val linkType = when {
-        loadData.url.contains(".m3u8", ignoreCase = true) -> ExtractorLinkType.M3U8
-        else -> ExtractorLinkType.VIDEO
+        return true
     }
 
-    Log.d("powerDizi", "Kullanılacak link tipi: $linkType")
-
-    callback.invoke(
-        ExtractorLink(
-            source = this.name,
-            name = "${loadData.title} (S${loadData.season}:E${loadData.episode})",
-            url = loadData.url,
-            headers = kanal.headers,
-            referer = kanal.headers["referrer"] ?: "",
-            quality = Qualities.Unknown.value,
-            type = linkType
-        )
-    )
-    return true
-}
- 
     data class LoadData(
     val url: String,
     val title: String,
