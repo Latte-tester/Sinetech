@@ -1,11 +1,10 @@
 package com.sinetech.latte
 
-// Orijinal importlar kalıyor, yenilerini eklemiyoruz şimdilik
 import android.content.SharedPreferences
 import android.util.Log
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
-// import com.lagradost.cloudstream3.utils.ExtractorLinkType // Buna artık gerek yok
+import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import java.io.InputStream
@@ -15,8 +14,6 @@ import kotlinx.coroutines.withContext
 import org.json.JSONObject
 import java.net.URL
 import java.net.URLEncoder
-// import kotlin.math.minOf // Şimdilik eklemiyoruz
-// import com.lagradost.cloudstream3.mvvm.DecimalRating // Şimdilik eklemiyoruz
 
 class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
     override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/patr0n/site/lists/power-yabanci-dizi.m3u"
@@ -27,82 +24,57 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
     override val hasDownloadSupport   = true
     override val supportedTypes       = setOf(TvType.TvSeries)
 
-    // Playlist önbellekleme eklemiyoruz, orijinaldeki gibi kalıyor
-    // private val getPlaylist... fonksiyonu YOK
-
-    private val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*") // Bunu sınıf seviyesine aldım
-
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        // M3U her seferinde okunuyor (orijinaldeki gibi)
-        val kanallar = try { // Hata durumunu yakalayalım
-            IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-        } catch (e: Exception) {
-            Log.e("powerDizi", "getMainPage - M3U okuma/parse hatası!", e)
-            return newHomePageResponse(emptyList(), false) // Hata olursa boş dön
-        }
+        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
 
-        // Parse episode information from titles (Orijinaldeki gibi)
+        // Parse episode information from titles
+        val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
         val processedItems = kanallar.items.map { item ->
             val title = item.title.toString()
             val match = episodeRegex.find(title)
             if (match != null) {
-                 try { // Sayı parse hatası olabilir
-                     val (_, seasonStr, episodeStr) = match.destructured
-                     item.copy(
-                         season = seasonStr.toInt(),
-                         episode = episodeStr.toInt(),
-                         attributes = item.attributes.toMutableMap().apply {
-                             putIfAbsent("tvg-country", "TR/Altyazılı")
-                             putIfAbsent("tvg-language", "TR;EN")
-                         }
-                     )
-                 } catch (e: NumberFormatException) { item } // Hata olursa orijinal item
+                val (showName, season, episode) = match.destructured
+                item.copy(
+                    season = season.toInt(),
+                    episode = episode.toInt(),
+                    attributes = item.attributes.toMutableMap().apply {
+                        if (!containsKey("tvg-country")) { put("tvg-country", "TR/Altyazılı") }
+                        if (!containsKey("tvg-language")) { put("tvg-language", "TR;EN") }
+                    }
+                )
             } else {
                 item.copy(
                     attributes = item.attributes.toMutableMap().apply {
-                        putIfAbsent("tvg-country", "TR")
-                        putIfAbsent("tvg-language", "TR;EN")
+                        if (!containsKey("tvg-country")) { put("tvg-country", "TR") }
+                        if (!containsKey("tvg-language")) { put("tvg-language", "TR;EN") }
                     }
                 )
             }
         }
 
-        // Gruplama (Orijinaldeki gibi)
-        val groupedShows = processedItems.groupBy { it.attributes["group-title"]?.toString()?.trim()?.takeIf { it.isNotEmpty() } ?: "Diğer" }
+        val groupedShows = processedItems.groupBy { it.attributes["group-title"]?.toString()?.trim() ?: "Diğer" }
 
         val homePageLists = mutableListOf<HomePageList>()
 
         groupedShows.forEach { (group, shows) ->
-            // Sadece newLiveSearchResponse yerine newTvSeriesSearchResponse kullandık
-            val searchResponses = shows.mapNotNull { kanal -> // mapNotNull daha güvenli
-                val streamurl = kanal.url // Null kontrolü
-                if (streamurl.isNullOrBlank()) return@mapNotNull null
-                val channelname = kanal.title ?: "İsimsiz Bölüm"
-                // Hata vermemesi için toString yerine null check ve fallback
-                val posterurl = kanal.attributes["tvg-logo"]?.takeIf { it.isNotBlank() } ?: ""
-                val nation = kanal.attributes["tvg-country"] ?: "TR"
+            val searchResponses = shows.map { kanal ->
+                val streamurl = kanal.url.toString()
+                val channelname = kanal.title.toString()
+                val posterurl = kanal.attributes["tvg-logo"].toString()
+                val nation = kanal.attributes["tvg-country"].toString()
 
-                // LoadData JSON oluşturma
-                 val loadDataJson = try {
-                     LoadData(streamurl, channelname, posterurl, group, nation, kanal.season, kanal.episode).toJson()
-                 } catch (e: Exception) { null }
-
-                 if (loadDataJson != null) {
-                     // newLive yerine newTvSeries
-                     newTvSeriesSearchResponse(
-                         channelname,
-                         loadDataJson,
-                         TvType.TvSeries
-                     ) {
-                         this.posterUrl = posterurl
-                         // this.lang = nation // SearchResponse'da lang yok
-                     }
-                 } else { null }
+                newLiveSearchResponse(
+                    channelname,
+                    LoadData(streamurl, channelname, posterurl, group, nation, kanal.season, kanal.episode).toJson(),
+                    type = TvType.TvSeries
+                ) {
+                    this.posterUrl = posterurl
+                    this.lang = nation
+                }
             }
-
+            
             if (searchResponses.isNotEmpty()) {
-                // Tekrarları engellemek iyi bir pratik
-                homePageLists.add(HomePageList(group, searchResponses.distinctBy { it.url }, isHorizontalImages = true))
+                homePageLists.add(HomePageList(group, searchResponses, isHorizontalImages = true))
             }
         }
 
@@ -111,379 +83,480 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             hasNext = false
         )
     }
-        override suspend fun search(query: String): List<SearchResponse> {
-        // Orijinaldeki gibi M3U okunuyor
-        val kanallar = try { IptvPlaylistParser().parseM3U(app.get(mainUrl).text) } catch (e: Exception) { Playlist() }
-        // val episodeRegex = ... // Zaten sınıf seviyesinde tanımlı
 
-        return kanallar.items.filter {
-            (it.title ?: "").contains(query, ignoreCase = true) ||
-            (it.attributes["group-title"] ?: "").contains(query, ignoreCase = true) // Grup adına göre de ara
-        }.mapNotNull { kanal -> // mapNotNull
-            val streamurl = kanal.url
-            if (streamurl.isNullOrBlank()) return@mapNotNull null
-            val channelname = kanal.title ?: "İsimsiz Bölüm"
-            val posterurl = kanal.attributes["tvg-logo"]?.takeIf { it.isNotBlank() } ?: ""
-            // Hata vermesin diye null kontrolü ve fallback
-            val chGroup = kanal.attributes["group-title"]?.toString()?.trim()?.takeIf { it.isNotEmpty() } ?: "Diğer"
-            val nation = kanal.attributes["tvg-country"] ?: "TR"
+    override suspend fun search(query: String): List<SearchResponse> {
+        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
+        val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
 
-            var seasonNum = 0 // Default 0
-            var episodeNum = 0
-            episodeRegex.find(channelname)?.let { match ->
-                try {
-                    seasonNum = match.destructured.component2().toInt()
-                    episodeNum = match.destructured.component3().toInt()
-                } catch (e: NumberFormatException) {}
+        return kanallar.items.filter { it.title.toString().lowercase().contains(query.lowercase()) }.map { kanal ->
+            val streamurl   = kanal.url.toString()
+            val channelname = kanal.title.toString()
+            val posterurl   = kanal.attributes["tvg-logo"].toString()
+            val chGroup     = kanal.attributes["group-title"].toString()
+            val nation      = kanal.attributes["tvg-country"].toString()
+
+            newLiveSearchResponse(
+                channelname,
+                LoadData(streamurl, channelname, posterurl, chGroup, nation, 
+                    episodeRegex.find(channelname)?.let { match ->
+                        val (_, season, episode) = match.destructured
+                        season.toInt() to episode.toInt()
+                    }?.first ?: 1,
+                    episodeRegex.find(channelname)?.let { match ->
+                        val (_, season, episode) = match.destructured
+                        season.toInt() to episode.toInt()
+                    }?.second ?: 0
+                ).toJson(),
+                type = TvType.TvSeries
+            ) {
+                this.posterUrl = posterurl
+                this.lang = nation
             }
 
-            val loadDataJson = try {
-                 LoadData(streamurl, channelname, posterurl, chGroup, nation, seasonNum, episodeNum).toJson()
-            } catch (e: Exception) { null }
-
-             if (loadDataJson != null) {
-                // newLive yerine newTvSeries
-                newTvSeriesSearchResponse(
-                    channelname,
-                    loadDataJson,
-                    TvType.TvSeries
-                ) {
-                    this.posterUrl = posterurl
-                }
-             } else { null }
-        }.distinctBy { it.url } // Tekrarları kaldır
+        }
     }
 
     override suspend fun quickSearch(query: String): List<SearchResponse> = search(query)
 
-    // fetchTMDBData - Orijinal haliyle bırakıyoruz, DecimalRating/minOf eklemiyoruz
-     private suspend fun fetchTMDBData(title: String): JSONObject? {
-         return withContext(Dispatchers.IO) {
-             try {
-                 val apiKey = try { BuildConfig.TMDB_SECRET_API.trim('"') } catch (e: Exception) { "" }
-                 if (apiKey.isEmpty()) { Log.e("TMDB", "API key is empty"); return@withContext null }
-                 val cleanedTitle = title.replace(Regex("\\([^)]*\\)"), "").trim()
-                 if (cleanedTitle.isEmpty()) return@withContext null
-                 val encodedTitle = URLEncoder.encode(cleanedTitle, "UTF-8")
-                 val searchUrl = "https://api.themoviedb.org/3/search/tv?api_key=$apiKey&query=$encodedTitle&language=tr-TR"
-                 val response = URL(searchUrl).readText()
-                 val jsonResponse = JSONObject(response)
-                 val results = jsonResponse.optJSONArray("results") // optJSONArray kullanmak daha güvenli
-                 if (results != null && results.length() > 0) {
-                     val tvId = results.getJSONObject(0).optInt("id", -1) // optInt kullanmak daha güvenli
-                     if (tvId == -1) return@withContext null
-                     val detailsUrl = "https://api.themoviedb.org/3/tv/$tvId?api_key=$apiKey&append_to_response=credits&language=tr-TR"
-                     val detailsResponse = URL(detailsUrl).readText()
-                     return@withContext JSONObject(detailsResponse)
-                 }
-                 null
-             } catch (e: Exception) { Log.e("TMDB", "Error fetching TMDB data: $title", e); null }
-         }
-     }
+    private suspend fun fetchTMDBData(title: String): JSONObject? {
+        return withContext(Dispatchers.IO) {
+            try {
+                val apiKey = BuildConfig.TMDB_SECRET_API.trim('"')
+                if (apiKey.isEmpty()) {
+                    Log.e("TMDB", "API key is empty")
+                    return@withContext null
+                }
+
+                val encodedTitle = URLEncoder.encode(title.replace(Regex("\\([^)]*\\)"), "").trim(), "UTF-8")
+                val searchUrl = "https://api.themoviedb.org/3/search/tv?api_key=$apiKey&query=$encodedTitle&language=tr-TR"
+                
+                val response = withContext(Dispatchers.IO) {
+                    URL(searchUrl).readText()
+                }
+                val jsonResponse = JSONObject(response)
+                val results = jsonResponse.getJSONArray("results")
+                
+                if (results.length() > 0) {
+                    val tvId = results.getJSONObject(0).getInt("id")
+                    val detailsUrl = "https://api.themoviedb.org/3/tv/$tvId?api_key=$apiKey&append_to_response=credits&language=tr-TR"
+                    val detailsResponse = withContext(Dispatchers.IO) {
+                        URL(detailsUrl).readText()
+                    }
+                    return@withContext JSONObject(detailsResponse)
+                }
+                null
+            } catch (e: Exception) {
+                Log.e("TMDB", "Error fetching TMDB data: ${e.message}")
+                null
+            }
+        }
+    }
 
     override suspend fun load(url: String): LoadResponse {
-        // İzleme takibi orijinaldeki gibi kalıyor
         val watchKey = "watch_${url.hashCode()}"
         val progressKey = "progress_${url.hashCode()}"
         val isWatched = sharedPref?.getBoolean(watchKey, false) ?: false
         val watchProgress = sharedPref?.getLong(progressKey, 0L) ?: 0L
-
-        val loadData = try { fetchDataFromUrlOrJson(url) } catch (e: Exception) {
-             return newTvSeriesLoadResponse("Hata", url, TvType.TvSeries, emptyList()) {}
-        }
-
-        val seriesTitleForTMDB = loadData.title.replace(episodeRegex, "$1").trim()
-        val tmdbData = if (seriesTitleForTMDB.isNotEmpty()) fetchTMDBData(seriesTitleForTMDB) else null
-
+        val loadData = fetchDataFromUrlOrJson(url)
+        
+        val tmdbData = fetchTMDBData(loadData.title.replace(Regex("-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*"), ""))
+        
         val plot = buildString {
-            // Orijinaldeki TMDB plot oluşturma mantığı kalıyor
-            // DecimalRating veya minOf kullanmıyoruz
-             if (tmdbData != null) {
-                 val overview = tmdbData.optString("overview", "")
-                 val firstAirDate = tmdbData.optString("first_air_date", "").split("-").firstOrNull() ?: ""
-                 val ratingValue = tmdbData.optDouble("vote_average", -1.0)
-                 val rating = if (ratingValue >= 0) String.format("%.1f", ratingValue) else null // Sadece String formatı
-                 val tagline = tmdbData.optString("tagline", "")
-                 val originalName = tmdbData.optString("original_name", "")
-                 val originalLanguage = tmdbData.optString("original_language", "")
-                 val numberOfSeasons = tmdbData.optInt("number_of_seasons", 1) // Orijinalde 1'di
-                 val genresArray = tmdbData.optJSONArray("genres"); val genreList = mutableListOf<String>()
-                 if (genresArray != null) for (i in 0 until genresArray.length()) genreList.add(genresArray.optJSONObject(i)?.optString("name") ?: "")
-                 val creditsObject = tmdbData.optJSONObject("credits"); val castList = mutableListOf<String>()
-                 if (creditsObject != null) {
-                     val castArray = creditsObject.optJSONArray("cast")
-                     // minOf yerine basit bir sınır koyalım (orijinaldeki gibi)
-                     if (castArray != null) for (i in 0 until castArray.length().coerceAtMost(10)) castList.add(castArray.optJSONObject(i)?.optString("name") ?: "")
-                 }
-                 if (tagline.isNotEmpty()) append("💭 <b>Slogan:</b><br>${tagline}<br><br>")
-                 if (overview.isNotEmpty()) append("📝 <b>Konu:</b><br>${overview}<br><br>")
-                 if (firstAirDate.isNotEmpty()) append("📅 <b>İlk Yayın Tarihi:</b> $firstAirDate<br>")
-                 if (rating != null) append("⭐ <b>TMDB Puanı:</b> $rating / 10<br>") // String rating kullanılıyor
-                 if (originalName.isNotEmpty()) append("📜 <b>Orijinal Ad:</b> $originalName<br>")
-                 if (originalLanguage.isNotEmpty()) { val langCode=originalLanguage.lowercase(); val turkishName=languageMap[langCode]?:originalLanguage; append("🌐 <b>Orijinal Dil:</b> $turkishName<br>") }
-                 if (numberOfSeasons > 1) append("📅 <b>Toplam Sezon:</b> $numberOfSeasons<br>")
-                 if (genreList.isNotEmpty()) append("🎭 <b>Dizi Türü:</b> ${genreList.filter{it.isNotEmpty()}.joinToString(", ")}<br>")
-                 if (castList.isNotEmpty()) append("👥 <b>Oyuncular:</b> ${castList.filter{it.isNotEmpty()}.joinToString(", ")}<br>")
-                 append("<br>")
-             } else { append("TMDB bilgisi bulunamadı.<br><br>") } // Hata mesajı eklendi
-             val nationText = if (listOf("adult", "erotic", "erotik", "porn", "porno").any { loadData.group.contains(it, ignoreCase = true) }) { "⚠️🔞🔞🔞 » ${loadData.group} | ${loadData.nation} « 🔞🔞🔞⚠️" } else { "» ${loadData.group} | ${loadData.nation} «" }
-             append(nationText)
+            if (tmdbData != null) {
+                val overview = tmdbData.optString("overview", "")
+                val firstAirDate = tmdbData.optString("first_air_date", "").split("-").firstOrNull() ?: ""
+                val ratingValue = tmdbData.optDouble("vote_average", -1.0)
+                val rating = if (ratingValue >= 0) String.format("%.1f", ratingValue) else null
+                val tagline = tmdbData.optString("tagline", "")
+                val originalName = tmdbData.optString("original_name", "")
+                val originalLanguage = tmdbData.optString("original_language", "")
+                val numberOfSeasons = tmdbData.optInt("number_of_seasons", 1)
+
+                val genresArray = tmdbData.optJSONArray("genres")
+                val genreList = mutableListOf<String>()
+                if (genresArray != null) {
+                    for (i in 0 until genresArray.length()) {
+                        genreList.add(genresArray.optJSONObject(i)?.optString("name") ?: "")
+                    }
+                }
+                
+                val creditsObject = tmdbData.optJSONObject("credits")
+                val castList = mutableListOf<String>()
+                if (creditsObject != null) {
+                    val castArray = creditsObject.optJSONArray("cast")
+                    if (castArray != null) {
+                        for (i in 0 until minOf(castArray.length(), 10)) {
+                            castList.add(castArray.optJSONObject(i)?.optString("name") ?: "")
+                        }
+                    }
+                }
+                
+                if (tagline.isNotEmpty()) append("💭 <b>Slogan:</b><br>${tagline}<br><br>")
+                if (overview.isNotEmpty()) append("📝 <b>Konu:</b><br>${overview}<br><br>")
+                if (firstAirDate.isNotEmpty()) append("📅 <b>İlk Yayın Tarihi:</b> $firstAirDate<br>")
+                if (rating != null) append("⭐ <b>TMDB Puanı:</b> $rating / 10<br>")
+                if (originalName.isNotEmpty()) append("📜 <b>Orijinal Ad:</b> $originalName<br>")
+                if (originalLanguage.isNotEmpty()) {
+                    val langCode = originalLanguage.lowercase()
+                    val turkishName = languageMap[langCode] ?: originalLanguage
+                    append("🌐 <b>Orijinal Dil:</b> $turkishName<br>")
+                }
+                if (numberOfSeasons > 1) append("📅 <b>Toplam Sezon:</b> $numberOfSeasons<br>")
+                if (genreList.isNotEmpty()) append("🎭 <b>Dizi Türü:</b> ${genreList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
+                if (castList.isNotEmpty()) append("👥 <b>Oyuncular:</b> ${castList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
+                append("<br>")
+            }
+            
+            val nation = if (listOf("adult", "erotic", "erotik", "porn", "porno").any { loadData.group.contains(it, ignoreCase = true) }) {
+                "⚠️🔞🔞🔞 » ${loadData.group} | ${loadData.nation} « 🔞🔞🔞⚠️"
+            } else {
+                "» ${loadData.group} | ${loadData.nation} «"
+            }
+            append(nation)
         }
 
-        // M3U tekrar okunuyor (orijinaldeki gibi)
-        val kanallar = try { IptvPlaylistParser().parseM3U(app.get(mainUrl).text) } catch (e: Exception) { Playlist() }
-        // val episodeRegex = ... // Zaten sınıf seviyesinde tanımlı
-
-        // Bölüm listesi oluşturma (newEpisode kullanarak)
+        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
+        val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
         val groupEpisodes = kanallar.items
-            .filter { it.attributes["group-title"]?.toString()?.trim() == loadData.group } // Boş gruba düşmemesi için trim
+            .filter { it.attributes["group-title"]?.toString() ?: "" == loadData.group }
             .mapNotNull { kanal ->
-                val title = kanal.title ?: return@mapNotNull null // Null kontrolü
+                val title = kanal.title.toString()
                 val match = episodeRegex.find(title)
                 if (match != null) {
-                    try {
-                        val (_, seasonStr, episodeStr) = match.destructured
-                        val season = seasonStr.toInt()
-                        val episode = episodeStr.toInt()
-                        val epUrl = kanal.url ?: return@mapNotNull null // Null kontrolü
-                        // toString() yerine null check ve fallback
-                        val epPoster = kanal.attributes["tvg-logo"]?.takeIf{it.isNotBlank()} ?: loadData.poster // Fallback dizi posteri
-                        val epGroup = kanal.attributes["group-title"]?.toString()?.trim() ?: loadData.group // Fallback
-                        val epNation = kanal.attributes["tvg-country"] ?: "TR" // Fallback
-
-                        val episodeDataJson = try {
-                            LoadData(epUrl, title, epPoster, epGroup, epNation, season, episode).toJson()
-                        } catch (e: Exception) { return@mapNotNull null } // JSON hatası varsa atla
-
-                        // Episode(...) yerine newEpisode(...) kullan
-                        newEpisode(episodeDataJson) { // data'yı constructor'a ver
-                            this.name = title
-                            this.season = season
-                            this.episode = episode
-                            this.posterUrl = epPoster
-                        }
-                    } catch (e: Exception) { null } // Parse hatası varsa atla
-                } else { null } // Regex eşleşmezse atla
-            }.sortedWith(compareBy({ it.season }, { it.episode })) // Sırala
-
-        // Orijinal izlenme durumu map işlemi kalıyor
-         val episodesWithWatchStatus = groupEpisodes.map { episode ->
-              val epData = try { parseJson<LoadData>(episode.data) } catch (e: Exception) { null }
-              // epData null ise izlenme durumu eklenemez, orijinal bölümü döndür
-              if (epData == null) return@map episode
-
-              // URL hash'i yerine data hash'i kullanılıyordu, öyle kalsın
-              val epWatchKey = "watch_${episode.data.hashCode()}"
-              val epProgressKey = "progress_${episode.data.hashCode()}"
-              val epIsWatched = sharedPref?.getBoolean(epWatchKey, false) ?: false
-              val epWatchProgress = sharedPref?.getLong(epProgressKey, 0L) ?: 0L
-
-              // İzlenme durumunu Episode nesnesine eklemek için uygun bir yol yok.
-              // CloudStream bunu kendi halleder. Bu map işlemini kaldırabiliriz
-              // veya sadece loglama için kullanabiliriz. Şimdilik orijinal bölümü döndürelim.
-              episode // Bu map işlemi aslında bir şey değiştirmiyor olabilir.
-          }
-
+                    val (_, season, episode) = match.destructured
+                    Episode(
+                        episode = episode.toInt(),
+                        season = season.toInt(),
+                        data = LoadData(
+                            kanal.url.toString(),
+                            title,
+                            kanal.attributes["tvg-logo"].toString(),
+                            kanal.attributes["group-title"].toString(),
+                            kanal.attributes["tvg-country"]?.toString() ?: "TR",
+                            season.toInt(),
+                            episode.toInt()
+                        ).toJson()
+                    )
+                } else null
+            }
 
         return newTvSeriesLoadResponse(
-            loadData.title.replace(episodeRegex, "$1").trim(), // Dizi adını temizle
-            url, // Orijinal JSON data
+            loadData.title,
+            url,
             TvType.TvSeries,
-            episodesWithWatchStatus // İzlenme durumu eklenmiş (veya eklenmemiş) liste
+            groupEpisodes.map { episode ->
+                val epWatchKey = "watch_${episode.data.hashCode()}"
+                val epProgressKey = "progress_${episode.data.hashCode()}"
+                val epIsWatched = sharedPref?.getBoolean(epWatchKey, false) ?: false
+                val epWatchProgress = sharedPref?.getLong(epProgressKey, 0L) ?: 0L
+                episode
+            }
         ) {
             this.posterUrl = loadData.poster
             this.plot = plot
-            this.tags = listOfNotNull(loadData.group.takeIf { it != "Diğer" }, loadData.nation).distinct() // Null kontrolü ve distinct
-            // this.year, this.rating, this.actors eklemiyoruz şimdilik
+            this.tags = listOf(loadData.group, loadData.nation)
         }
     }
-        // --- loadLinks DÜZELTİLDİ ---
-    // enum LocalExtractorLinkType ve mapToExternalType fonksiyonları kaldırıldı.
-    /*
-    enum class LocalExtractorLinkType { M3U8, MKV, MP4, AVI, VIDEO }
-    fun mapToExternalType(localType: LocalExtractorLinkType): ExtractorLinkType { ... }
-    */
 
-    override suspend fun loadLinks(
-        data: String, // JSON data
-        isCasting: Boolean,
-        subtitleCallback: (SubtitleFile) -> Unit,
-        callback: (ExtractorLink) -> Unit
-    ): Boolean {
-        val loadData = try { fetchDataFromUrlOrJson(data) } catch (e: Exception) { return false }
-        val url = loadData.url
-        if (url.isBlank()) { return false }
+  enum class LocalExtractorLinkType {
+    M3U8, MKV, MP4, AVI, VIDEO }
 
-        // Header'ları al (hata durumunda boş map)
-        val headers = try {
+  fun mapToExternalType(localType: LocalExtractorLinkType): ExtractorLinkType {
+     return when (localType) {
+        LocalExtractorLinkType.M3U8 -> ExtractorLinkType.M3U8
+        LocalExtractorLinkType.MKV -> ExtractorLinkType.VIDEO
+        LocalExtractorLinkType.MP4 -> ExtractorLinkType.VIDEO
+         LocalExtractorLinkType.AVI -> ExtractorLinkType.VIDEO
+        else -> ExtractorLinkType.VIDEO
+      }
+  }
+override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
+    val loadData = fetchDataFromUrlOrJson(data)
+    Log.d("IPTV", "loadData » $loadData")
+
+    val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
+    val kanal = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
+    Log.d("IPTV", "kanal » $kanal")
+
+    val localFileType = when {
+        loadData.url.endsWith(".m3u8") -> LocalExtractorLinkType.M3U8
+        loadData.url.endsWith(".mkv") -> LocalExtractorLinkType.MKV
+        loadData.url.endsWith(".mp4") -> LocalExtractorLinkType.MP4
+        loadData.url.endsWith(".avi") -> LocalExtractorLinkType.AVI
+        else -> LocalExtractorLinkType.VIDEO
+    }
+    
+    val fileType = mapToExternalType(localFileType)
+    
+    callback.invoke(
+        ExtractorLink(
+            source = this.name,
+            name = "${loadData.title} (S${loadData.season}:E${loadData.episode})",
+            url = loadData.url,
+            headers = kanal.headers,
+            referer = kanal.headers["referrer"] ?: "",
+            quality = Qualities.Unknown.value,
+            type = fileType
+        )
+    )
+
+    return true
+}
+ 
+    data class LoadData(
+    val url: String,
+    val title: String,
+    val poster: String,
+    val group: String,
+    val nation: String,
+    val season: Int = 1,
+    val episode: Int = 0,
+    val isWatched: Boolean = false,
+    val watchProgress: Long = 0
+)
+
+    private suspend fun fetchDataFromUrlOrJson(data: String): LoadData {
+        if (data.startsWith("{")) {
+            return parseJson<LoadData>(data)
+        } else {
             val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-            kanallar.items.firstOrNull { it.url == loadData.url }?.headers ?: emptyMap()
-        } catch (e: Exception) {
-            Log.w("powerDizi", "loadLinks - Header almak için M3U okunamadı veya parse edilemedi.", e)
-            emptyMap()
-        }
-        val referer = headers["Referer"] ?: headers["referer"] ?: ""
+            val kanal    = kanallar.items.first { it.url == data }
 
-        // Link tipini belirle
-        val linkType = when {
-            url.endsWith(".m3u8", ignoreCase = true) -> ExtractorLinkType.M3U8
-            url.endsWith(".mkv", ignoreCase = true) ||
-            url.endsWith(".mp4", ignoreCase = true) ||
-            url.endsWith(".avi", ignoreCase = true) -> ExtractorLinkType.VIDEO
-            else -> {
-                Log.w("powerDizi", "loadLinks - Bilinmeyen link tipi, VIDEO olarak deneniyor: $url")
-                ExtractorLinkType.VIDEO // Bilinmeyenleri de video olarak dene
+            val streamurl   = kanal.url.toString()
+            val channelname = kanal.title.toString()
+            val posterurl   = kanal.attributes["tvg-logo"].toString()
+            val chGroup     = kanal.attributes["group-title"].toString()
+            val nation      = kanal.attributes["tvg-country"].toString()
+
+            return LoadData(streamurl, channelname, posterurl, chGroup, nation)
+        }
+    }
+}
+
+data class Playlist(
+    val items: List<PlaylistItem> = emptyList()
+)
+
+data class PlaylistItem(
+    val title: String?                  = null,
+    val attributes: Map<String, String> = emptyMap(),
+    val headers: Map<String, String>    = emptyMap(),
+    val url: String?                    = null,
+    val userAgent: String?              = null,
+    val season: Int                     = 1,
+    val episode: Int                    = 0
+) {
+    companion object {
+        const val EXT_M3U = "#EXTM3U"
+        const val EXT_INF = "#EXTINF"
+        const val EXT_VLC_OPT = "#EXTVLCOPT"
+    }
+}
+
+class IptvPlaylistParser {
+
+    /**
+     * Parse M3U8 string into [Playlist]
+     *
+     * @param content M3U8 content string.
+     * @throws PlaylistParserException if an error occurs.
+     */
+    fun parseM3U(content: String): Playlist {
+        return parseM3U(content.byteInputStream())
+    }
+
+    /**
+     * Parse M3U8 content [InputStream] into [Playlist]
+     *
+     * @param input Stream of input data.
+     * @throws PlaylistParserException if an error occurs.
+     */
+    @Throws(PlaylistParserException::class)
+    fun parseM3U(input: InputStream): Playlist {
+        val reader = input.bufferedReader()
+
+        if (!reader.readLine().isExtendedM3u()) {
+            throw PlaylistParserException.InvalidHeader()
+        }
+
+        val EXT_M3U = PlaylistItem.EXT_M3U
+        val EXT_INF = PlaylistItem.EXT_INF
+        val EXT_VLC_OPT = PlaylistItem.EXT_VLC_OPT
+
+        val playlistItems: MutableList<PlaylistItem> = mutableListOf()
+        var currentIndex = 0
+
+        var line: String? = reader.readLine()
+
+        while (line != null) {
+            if (line.isNotEmpty()) {
+                if (line.startsWith(EXT_INF)) {
+                    val title      = line.getTitle()
+                    val attributes = line.getAttributes()
+
+                    playlistItems.add(PlaylistItem(title, attributes))
+                } else if (line.startsWith(EXT_VLC_OPT)) {
+                    val item      = playlistItems[currentIndex]
+                    val userAgent = item.userAgent ?: line.getTagValue("http-user-agent")?.toString()
+                    val referrer  = line.getTagValue("http-referrer")?.toString()
+
+                    val headers = mutableMapOf<String, String>()
+
+                    if (userAgent != null) {
+                        headers["user-agent"] = userAgent
+                    }
+
+                    if (referrer != null) {
+                        headers["referrer"] = referrer
+                    }
+
+                    playlistItems[currentIndex] = item.copy(
+                        userAgent = userAgent,
+                        headers   = headers
+                    )
+                } else {
+                    if (!line.startsWith("#")) {
+                        val item       = playlistItems[currentIndex]
+                        val url        = line.getUrl()
+                        val userAgent  = line.getUrlParameter("user-agent")
+                        val referrer   = line.getUrlParameter("referer")
+                        val urlHeaders = if (referrer != null) {item.headers + mapOf("referrer" to referrer)} else item.headers
+
+                        playlistItems[currentIndex] = item.copy(
+                            url       = url,
+                            headers   = item.headers + urlHeaders,
+                            userAgent = userAgent ?: item.userAgent
+                        )
+                        currentIndex++
+                    }
+                }
+            }
+
+            line = reader.readLine()
+        }
+        return Playlist(playlistItems)
+    }
+
+    private fun String.replaceQuotesAndTrim(): String {
+        return replace("\"", "").trim()
+    }
+
+    private fun String.isExtendedM3u(): Boolean = startsWith(PlaylistItem.EXT_M3U)
+
+    private fun String.getTitle(): String? {
+        return split(",").lastOrNull()?.replaceQuotesAndTrim()
+    }
+
+    private fun String.getUrl(): String? {
+        return split("|").firstOrNull()?.replaceQuotesAndTrim()
+    }
+
+    private fun String.getUrlParameter(key: String): String? {
+        val urlRegex     = Regex("^(.*)\\|", RegexOption.IGNORE_CASE)
+        val keyRegex     = Regex("$key=(\\w[^&]*)", RegexOption.IGNORE_CASE)
+        val paramsString = replace(urlRegex, "").replaceQuotesAndTrim()
+
+        return keyRegex.find(paramsString)?.groups?.get(1)?.value
+    }
+
+    private fun String.getTagValue(key: String): String? {
+        val keyRegex = Regex("$key=(.*)", RegexOption.IGNORE_CASE)
+        return keyRegex.find(this)?.groups?.get(1)?.value?.replaceQuotesAndTrim()
+    }
+
+    private fun String.getAttributes(): Map<String, String> {
+        val extInfRegex = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
+        val attributesString = replace(extInfRegex, "").replaceQuotesAndTrim()
+        val titleAndAttributes = attributesString.split(",", limit = 2)
+        
+        val attributes = mutableMapOf<String, String>()
+        if (titleAndAttributes.size > 1) {
+            val attrRegex = Regex("([\\w-]+)=\"([^\"]*)\"|([\\w-]+)=([^\"]+)")
+            
+            attrRegex.findAll(titleAndAttributes[0]).forEach { matchResult ->
+                val (quotedKey, quotedValue, unquotedKey, unquotedValue) = matchResult.destructured
+                val key = quotedKey.takeIf { it.isNotEmpty() } ?: unquotedKey
+                val value = quotedValue.takeIf { it.isNotEmpty() } ?: unquotedValue
+                attributes[key] = value.replaceQuotesAndTrim()
             }
         }
 
-        // callback.invoke yerine callback.newExtractorLink kullan
-        callback.newExtractorLink( // newExtractorLink
-            source = this.name,
-            name = "${this.name} - ${
-                if (loadData.season > 0 && loadData.episode > 0) {
-                    "S${loadData.season.toString().padStart(2, '0')}E${loadData.episode.toString().padStart(2, '0')}"
-                } else { loadData.title }
-            }",
-            url = url,
-            referer = referer, // referer parametresi var
-            type = linkType, // type parametresi var
-            headers = headers // headers parametresi var
-        )
-        // .apply { this.quality = ... } // Kalite ayarlanabilir
-
-        return true // Link gönderildi varsayıyoruz
-    } else {
-            Log.w("powerDizi", "Desteklenmeyen veya bilinmeyen link formatı (loadLinks): $url")
-            // Bilinmeyen formatları da video olarak göndermeyi deneyebiliriz?
-            // callback(ExtractorLink(..., isM3u8 = false))
-            // Şimdilik sadece bilinenleri gönderelim.
-            return false
+        if (!attributes.containsKey("tvg-country")) {
+            attributes["tvg-country"] = "TR/Altyazılı"
         }
+        if (!attributes.containsKey("tvg-language")) {
+            attributes["tvg-language"] = "TR/Altyazılı"
+        }
+        if (!attributes.containsKey("group-title")) {
+            val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
+            val match = episodeRegex.find(titleAndAttributes.last())
+            if (match != null) {
+                val (showName, _, _) = match.destructured
+                attributes["group-title"] = showName.trim()
+            } else {
+                attributes["group-title"] = "Diğer"
+            }
+        }
+
+        return attributes
     }
-    // --- loadLinks Düzeltmesi Sonu ---
+}
 
-    // LoadData - Orijinal haliyle bırakıyoruz (izleme durumu ile)
-     data class LoadData(
-         val url: String,
-         val title: String,
-         val poster: String,
-         val group: String,
-         val nation: String,
-         val season: Int = 0, // Default 0 yaptım
-         val episode: Int = 0, // Default 0 yaptım
-         val isWatched: Boolean = false, // Orijinalde vardı, kaldı
-         val watchProgress: Long = 0 // Orijinalde vardı, kaldı
-     )
+sealed class PlaylistParserException(message: String) : Exception(message) {
 
+    class InvalidHeader : PlaylistParserException("Invalid file header. Header doesn't start with #EXTM3U")
+}
 
-    // fetchDataFromUrlOrJson - Orijinal haliyle bırakıyoruz
-     private suspend fun fetchDataFromUrlOrJson(data: String): LoadData {
-         if (data.startsWith("{")) {
-             return parseJson<LoadData>(data)
-         } else {
-             // Bu path normalde kullanılmamalı ama orijinalde vardı
-             Log.w("powerDizi", "fetchDataFromUrlOrJson: URL geldi, M3U okunuyor - $data")
-             val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-             // first yerine firstOrNull daha güvenli
-             val kanal = kanallar.items.firstOrNull { it.url == data }
-                 ?: throw RuntimeException("fetchDataFromUrlOrJson: M3U içinde URL bulunamadı - $data") // Hata fırlat
+val languageMap = mapOf(
+    // Temel Diller
+    "en" to "İngilizce",
+    "tr" to "Türkçe",
+    "ja" to "Japonca", // jp yerine ja daha standart ISO 639-1 kodudur
+    "de" to "Almanca",
+    "fr" to "Fransızca",
+    "es" to "İspanyolca",
+    "it" to "İtalyanca",
+    "ru" to "Rusça",
+    "pt" to "Portekizce",
+    "ko" to "Korece",
+    "zh" to "Çince", // Genellikle Mandarin için kullanılır
+    "hi" to "Hintçe",
+    "ar" to "Arapça",
 
-             val streamurl = kanal.url ?: "" // URL null olamaz (yukarıda kontrol edildi)
-             val channelname = kanal.title ?: "Bilinmeyen"
-             val posterurl = kanal.attributes["tvg-logo"] ?: ""
-             val chGroup = kanal.attributes["group-title"] ?: "Diğer"
-             val nation = kanal.attributes["tvg-country"] ?: "TR"
-             // Sezon/bölüm bilgisi burada eksik kalıyor, dikkat!
-             return LoadData(streamurl, channelname, posterurl, chGroup, nation)
-         }
-     }
+    // Avrupa Dilleri
+    "nl" to "Felemenkçe", // veya "Hollandaca"
+    "sv" to "İsveççe",
+    "no" to "Norveççe",
+    "da" to "Danca",
+    "fi" to "Fince",
+    "pl" to "Lehçe", // veya "Polonyaca"
+    "cs" to "Çekçe",
+    "hu" to "Macarca",
+    "ro" to "Rumence",
+    "el" to "Yunanca", // Greek
+    "uk" to "Ukraynaca",
+    "bg" to "Bulgarca",
+    "sr" to "Sırpça",
+    "hr" to "Hırvatça",
+    "sk" to "Slovakça",
+    "sl" to "Slovence",
 
+    // Asya Dilleri
+    "th" to "Tayca",
+    "vi" to "Vietnamca",
+    "id" to "Endonezce",
+    "ms" to "Malayca",
+    "tl" to "Tagalogca", // Filipince
+    "fa" to "Farsça", // İran
+    "he" to "İbranice", // veya "iw"
 
-    // --- Playlist ve Parser Sınıfları ---
-    // Orijinal halleriyle bırakıyoruz, sadece sabitlere erişimi düzelteceğiz
-    data class Playlist( val items: List<PlaylistItem> = emptyList() )
-    data class PlaylistItem(
-        val title: String?, val attributes: Map<String, String> = emptyMap(),
-        val headers: Map<String, String> = emptyMap(), val url: String?,
-        val userAgent: String? = null,
-        var season: Int = 0, // var yapalım, sonradan atanacak
-        var episode: Int = 0 // var yapalım, sonradan atanacak
-    ) {
-        // Companion object'teki sabitler burada kalıyor
-         companion object {
-             const val EXT_M3U = "#EXTM3U"
-             const val EXT_INF = "#EXTINF"
-             const val EXT_VLC_OPT = "#EXTVLCOPT"
-         }
-    }
-        class IptvPlaylistParser {
-         @Throws(PlaylistParserException::class)
-         fun parseM3U(input: InputStream): Playlist {
-             val reader = input.bufferedReader()
-             if (reader.readLine()?.startsWith(PlaylistItem.EXT_M3U) != true) {
-                 throw PlaylistParserException.InvalidHeader()
-             }
-             val playlistItems: MutableList<PlaylistItem> = mutableListOf()
-             var currentItemDraft: PlaylistItem? = null // İsmi değiştirdim, sadece taslak
+    // Diğer
+    "la" to "Latince",
+    "xx" to "Belirsiz",
+    "mul" to "Çok Dilli" 
 
-             var line: String? = reader.readLine()
-             while (line != null) {
-                 val trimmedLine = line.trim()
-                 if (trimmedLine.isNotEmpty()) {
-                     if (trimmedLine.startsWith(PlaylistItem.EXT_INF)) {
-                         val (attributes, title) = parseExtInf(trimmedLine)
-                         // Taslağı oluştur ama henüz URL yok
-                         currentItemDraft = PlaylistItem(title = title, attributes = attributes)
-                     } else if (trimmedLine.startsWith(PlaylistItem.EXT_VLC_OPT) && currentItemDraft != null) {
-                         val (key, value) = parseVlcOpt(trimmedLine)
-                         val currentHeaders = currentItemDraft.headers.toMutableMap()
-                         var currentAgent = currentItemDraft.userAgent
-                         if (key.equals("http-user-agent", ignoreCase = true)) { currentAgent = value; currentHeaders["User-Agent"] = value }
-                         else if (key.equals("http-referrer", ignoreCase = true)) { currentHeaders["Referer"] = value }
-                         currentItemDraft = currentItemDraft.copy(headers = currentHeaders, userAgent = currentAgent)
-                     } else if (!trimmedLine.startsWith("#")) {
-                         // Bu URL satırı olmalı. Mevcut bir taslak var mı?
-                         if (currentItemDraft != null) {
-                             val url = trimmedLine.getUrl() // URL'yi al
-                             if (!url.isNullOrBlank()) { // URL geçerliyse
-                                 val userAgentFromUrl = trimmedLine.getUrlParameter("user-agent")
-                                 val referrerFromUrl = trimmedLine.getUrlParameter("referer")
-                                 val finalHeaders = currentItemDraft.headers.toMutableMap()
-                                 if (referrerFromUrl != null) finalHeaders["Referer"] = referrerFromUrl
-                                 val finalUserAgent = currentItemDraft.userAgent ?: userAgentFromUrl
-                                 if (finalUserAgent != null) finalHeaders["User-Agent"] = finalUserAgent
+)
 
-                                 // Tamamlanmış öğeyi listeye ekle
-                                 playlistItems.add(currentItemDraft.copy(
-                                     url = url, // URL'yi BURADA ekliyoruz
-                                     headers = finalHeaders,
-                                     userAgent = finalUserAgent
-                                 ))
-                             } else {
-                                 Log.w("IptvPlaylistParser", "Geçersiz URL satırı atlandı: $trimmedLine")
-                             }
-                             currentItemDraft = null // Taslağı temizle (URL işlendi)
-                         } else {
-                              Log.w("IptvPlaylistParser", "URL satırı bulundu ama öncesinde EXTINF yoktu: $trimmedLine")
-                         }
-                     }
-                 }
-                 line = reader.readLine()
-             }
-             input.close()
-             return Playlist(playlistItems)
-         }
-        // Diğer parser fonksiyonları aynı...
-         fun parseM3U(content: String): Playlist { /* ... */ }
-         private fun String?.isExtendedM3u(): Boolean = this?.startsWith(PlaylistItem.EXT_M3U) ?: false
-         private fun String.getTitle(): String? { /* ... */ }
-         private fun String.getUrl(): String? { /* ... */ }
-         private fun String.getUrlParameter(key: String): String? { /* ... */ return null}
-         private fun String.getTagValue(key: String): String? { /* ... */ return null}
-         private fun String.replaceQuotesAndTrim(): String { /* ... */ return ""}
-         private fun parseExtInf(line: String): Pair<Map<String, String>, String?> { /* ... PlaylistItem.EXT_INF ... */ return Pair(emptyMap(), null)}
-         private fun parseVlcOpt(line: String): Pair<String, String> { /* ... PlaylistItem.EXT_VLC_OPT ... */ return Pair("","")}
-    }
-    sealed class PlaylistParserException(message: String): Exception(message){ class InvalidHeader(message: String = "Geçersiz M3U başlığı."): PlaylistParserException(message) }
-    val languageMap = mapOf( "en" to "İngilizce", /*...*/ "mul" to "Çok Dilli" )
-} // class powerDizi sonu
+fun getTurkishLanguageName(code: String?): String? {
+    return languageMap[code?.lowercase()]
+}
