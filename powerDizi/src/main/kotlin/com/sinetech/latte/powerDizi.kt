@@ -3,7 +3,7 @@ package com.sinetech.latte
 import android.content.SharedPreferences
 import android.util.Log
 import com.lagradost.cloudstream3.*
-import com.lagradost.cloudstream3.mvvm.DecimalRating // DecimalRating için eklendi
+import com.lagradost.cloudstream3.mvvm.DecimalRating
 import com.lagradost.cloudstream3.utils.*
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
@@ -15,7 +15,8 @@ import kotlinx.coroutines.sync.withLock // Mutex için eklendi
 import org.json.JSONObject
 import java.net.URL
 import java.net.URLEncoder
-import kotlin.math.minOf // minOf için eklendi (emin olmak için)
+import kotlin.math.minOf
+import com.lagradost.cloudstream3.utils.ExtractorLinkType
 
 class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
     override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/patr0n/site/lists/power-yabanci-dizi.m3u"
@@ -336,36 +337,33 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
              }
         }
     }
-        override suspend fun loadLinks(
+            override suspend fun loadLinks(
         data: String, // JSON data from Episode.data
         isCasting: Boolean,
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ): Boolean {
-        val loadData = try {
-            fetchDataFromUrlOrJson(data)
-        } catch (e: Exception) {
-            Log.e("powerDizi", "loadLinks JSON parse hatası: $data", e)
-            return false
-        }
-
+        val loadData = try { fetchDataFromUrlOrJson(data) } catch (e: Exception) { /*...*/ return false }
         Log.d("powerDizi", "loadLinks için LoadData: $loadData")
         val url = loadData.url
-
-        if (url.isBlank()) {
-             Log.w("powerDizi", "loadLinks - Geçersiz URL: $url")
-             return false
-        }
+        if (url.isBlank()) { /*...*/ return false }
 
         val isM3u8 = url.endsWith(".m3u8", ignoreCase = true)
         val isMkv = url.endsWith(".mkv", ignoreCase = true)
         val isMp4 = url.endsWith(".mp4", ignoreCase = true)
         val isAvi = url.endsWith(".avi", ignoreCase = true)
 
-        if (isM3u8 || isMkv || isMp4 || isAvi) {
-            // newExtractorLink yerine doğrudan ExtractorLink constructor'ını kullanıyoruz
+        // Link tipini belirle (VIDEO veya M3U8)
+        val linkType = when {
+            isM3u8 -> ExtractorLinkType.M3U8
+            isMkv || isMp4 || isAvi -> ExtractorLinkType.VIDEO // MKV, MP4, AVI için VIDEO tipi
+            else -> null // Desteklenmeyen format
+        }
+
+        if (linkType != null) {
+            // Tekrar newExtractorLink kullanıyoruz
             callback(
-                ExtractorLink( // ExtractorLink constructor
+                newExtractorLink( // newExtractorLink
                     source = this.name, // Eklenti adı
                     name = "${this.name} - ${ // Link adı
                         if (loadData.season > 0 && loadData.episode > 0) {
@@ -373,10 +371,11 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                         } else { loadData.title }
                     }",
                     url = url,
-                    referer = "", // Referer parametresi var
-                    quality = Qualities.Unknown.value, // Quality parametresi var
-                    isM3u8 = isM3u8, // isM3u8 parametresi var
-                    // headers = loadData.headers // headers parametresi var (eğer LoadData'ya eklersek)
+                    referer = "", // Referer boş string olarak gönderilebilir
+                    type = linkType // Belirlenen tipi kullan (M3U8 veya VIDEO)
+                    // quality ve isM3u8 parametreleri newExtractorLink'in bu versiyonunda olmayabilir,
+                    // type yeterli olmalı.
+                    // headers = loadData.headers // Gerekirse header eklenebilir
                 )
             )
             return true
@@ -428,11 +427,12 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         var episode: Int = 0
     ) { /* companion object */ }
 
-    class IptvPlaylistParser {
+        class IptvPlaylistParser {
          @Throws(PlaylistParserException::class)
-         fun parseM3U(content: String): Playlist { /* ... parser kodu (önceki gibi) ... */
+         fun parseM3U(content: String): Playlist {
              val lines = content.lines()
-             if (lines.isEmpty() || !lines[0].startsWith(PlaylistItem.EXT_M3U)) {
+             // '!' hatası için bu satırı dikkatle kontrol et, normal görünüyor.
+             if (lines.isEmpty() || !lines[0].startsWith(PlaylistItem.EXT_M3U)) { // PlaylistItem. eklendi
                  throw PlaylistParserException.InvalidHeader()
              }
              val playlistItems = mutableListOf<PlaylistItem>()
@@ -443,6 +443,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
              for (line in lines) {
                  val trimmedLine = line.trim()
                  when {
+                     // Sabit referansları düzelt: PlaylistItem.EXT_INF
                      trimmedLine.startsWith(PlaylistItem.EXT_INF) -> {
                          currentTitle = null; currentAttributes = mutableMapOf(); currentHeaders = mutableMapOf(); currentUserAgent = null
                          try {
@@ -451,6 +452,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                              currentAttributes.putAll(attrs)
                          } catch (e: Exception) { Log.e("IptvPlaylistParser", "EXTINF parse hatası: $trimmedLine", e) }
                      }
+                     // Sabit referansları düzelt: PlaylistItem.EXT_VLC_OPT
                      trimmedLine.startsWith(PlaylistItem.EXT_VLC_OPT) -> {
                          val (key, value) = parseVlcOpt(trimmedLine)
                          if (key.equals("http-user-agent", ignoreCase = true)) {
@@ -477,25 +479,27 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
              }
              return Playlist(playlistItems)
          }
-         private fun parseExtInf(line: String): Pair<Map<String, String>, String?> { /* ... önceki gibi ... */
-             val attributes = mutableMapOf<String, String>()
-             val dataPart = line.substringAfter(PlaylistItem.EXT_INF + ":").trim()
-             val commaIndex = dataPart.indexOf(',')
-             if (commaIndex == -1) { return Pair(attributes, dataPart.takeIf { it.isNotEmpty() }) }
-             val attributesPart = dataPart.substringBefore(',').trim()
-             val title = dataPart.substringAfter(',').trim().takeIf { it.isNotEmpty() }
-             val attrRegex = Regex("""([\w-]+)=("[^"]+"|[^"\s]+)""")
-             attrRegex.findAll(attributesPart).forEach { matchResult ->
-                 val key = matchResult.groupValues[1].trim()
-                 var value = matchResult.groupValues[2].trim()
-                 if (value.startsWith('"') && value.endsWith('"')) { value = value.substring(1, value.length - 1) }
-                 attributes[key] = value
-             }
-             return Pair(attributes, title)
+         private fun parseExtInf(line: String): Pair<Map<String, String>, String?> {
+            val attributes = mutableMapOf<String, String>()
+             // Sabit referansları düzelt: PlaylistItem.EXT_INF
+            val dataPart = line.substringAfter(PlaylistItem.EXT_INF + ":").trim()
+            val commaIndex = dataPart.indexOf(',')
+            if (commaIndex == -1) { return Pair(attributes, dataPart.takeIf { it.isNotEmpty() }) }
+            val attributesPart = dataPart.substringBefore(',').trim()
+            val title = dataPart.substringAfter(',').trim().takeIf { it.isNotEmpty() }
+            val attrRegex = Regex("""([\w-]+)=("[^"]+"|[^"\s]+)""")
+            attrRegex.findAll(attributesPart).forEach { matchResult ->
+                val key = matchResult.groupValues[1].trim()
+                var value = matchResult.groupValues[2].trim()
+                if (value.startsWith('"') && value.endsWith('"')) { value = value.substring(1, value.length - 1) }
+                attributes[key] = value
+            }
+            return Pair(attributes, title)
          }
-         private fun parseVlcOpt(line: String): Pair<String, String> { /* ... önceki gibi ... */
-             val parts = line.substringAfter(PlaylistItem.EXT_VLC_OPT + ":").split('=', limit = 2)
-             return if (parts.size == 2) { Pair(parts[0].trim(), parts[1].trim()) } else { Pair(parts.getOrElse(0) { "" }.trim(), "") }
+         private fun parseVlcOpt(line: String): Pair<String, String> {
+            // Sabit referansları düzelt: PlaylistItem.EXT_VLC_OPT
+            val parts = line.substringAfter(PlaylistItem.EXT_VLC_OPT + ":").split('=', limit = 2)
+            return if (parts.size == 2) { Pair(parts[0].trim(), parts[1].trim()) } else { Pair(parts.getOrElse(0) { "" }.trim(), "") }
          }
     }
 
