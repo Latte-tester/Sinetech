@@ -258,28 +258,36 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
     }
 
  override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
-        val loadData = fetchDataFromUrlOrJson(data)
-        Log.d("IPTV", "loadData » $loadData")
+    val loadData = fetchDataFromUrlOrJson(data)
+    Log.d("IPTV", "loadData » $loadData")
 
-        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-        val kanal    = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
-        Log.d("IPTV", "kanal » $kanal")
+    val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
+    val kanal = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
+    Log.d("IPTV", "kanal » $kanal")
 
-        callback.invoke(
-            ExtractorLink(
-                source  = this.name,
-                name    = "${loadData.title} (S${loadData.season}:E${loadData.episode})",
-                url     = loadData.url,
-                headers = kanal.headers,
-                referer = kanal.headers["referrer"] ?: "",
-                quality = Qualities.Unknown.value,
-                type    = ExtractorLinkType.M3U8
-            )
-        )
-
-        return true
+    
+    val linkType = when {
+        loadData.url.contains(".m3u8") -> ExtractorLinkType.M3U8
+        loadData.url.contains(".mp4") -> ExtractorLinkType.VIDEO
+        loadData.url.contains(".mkv") -> ExtractorLinkType.VIDEO
+        loadData.url.contains(".avi") -> ExtractorLinkType.VIDEO
+        else -> ExtractorLinkType.OTHER 
     }
 
+    callback.invoke(
+        ExtractorLink(
+            source = this.name,
+            name = "${loadData.title} (S${loadData.season}:E${loadData.episode})",
+            url = loadData.url,
+            headers = kanal.headers,
+            referer = kanal.headers["referrer"] ?: "",
+            quality = Qualities.Unknown.value,
+            type = linkType 
+        )
+    )
+
+    return true
+}
     data class LoadData(
     val url: String,
     val title: String,
