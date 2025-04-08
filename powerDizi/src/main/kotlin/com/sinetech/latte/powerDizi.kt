@@ -218,28 +218,30 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
         val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
         val groupEpisodes = kanallar.items
-            .filter { it.attributes["group-title"]?.toString() ?: "" == loadData.group }
-            .mapNotNull { kanal ->
-                val title = kanal.title.toString()
-                val match = episodeRegex.find(title)
-                if (match != null) {
-                    val (_, season, episode) = match.destructured
-                    newEpisode(
-                        episode = episode.toInt(),
-                        season = season.toInt(),
-                        data = LoadData(
-                            kanal.url.toString(),
-                            title,
-                            kanal.attributes["tvg-logo"].toString(),
-                            kanal.attributes["group-title"].toString(),
-                            kanal.attributes["tvg-country"]?.toString() ?: "TR",
-                            season.toInt(),
-                            episode.toInt()
-                        ).toJson()
-                    )
-                } else null
-            }
-
+          .filter { it.attributes["group-title"]?.toString() ?: "" == loadData.group }
+          .mapNotNull { kanal ->
+        val title = kanal.title.toString()
+        val match = episodeRegex.find(title)
+        if (match != null) {
+            val (_, season, episode) = match.destructured
+            val runTime: Int = kanal.attributes["run-time"]?.toString()?.toIntOrNull() ?: 0
+            newEpisode(
+                episode = episode.toInt(),
+                season = season.toInt(),
+                data = LoadData(
+                    kanal.url.toString(),
+                    title,
+                    kanal.attributes["tvg-logo"].toString(),
+                    kanal.attributes["group-title"].toString(),
+                    kanal.attributes["tvg-country"]?.toString() ?: "TR",
+                    season.toInt()
+                ),
+                runTime = runTime
+            )
+        } else {
+            null
+        }
+    }
         return newTvSeriesLoadResponse(
             loadData.title,
             url,
