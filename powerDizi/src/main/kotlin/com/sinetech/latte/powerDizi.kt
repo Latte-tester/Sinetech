@@ -260,7 +260,16 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
 
   enum class LocalExtractorLinkType {
     M3U8, MKV, MP4, AVI, VIDEO }
-  
+
+  fun mapToExternalType(localType: LocalExtractorLinkType): ExtractorLinkType {
+     return when (localType) {
+        LocalExtractorLinkType.M3U8 -> ExtractorLinkType.M3U8
+        LocalExtractorLinkType.MKV -> ExtractorLinkType.VIDEO
+        LocalExtractorLinkType.MP4 -> ExtractorLinkType.VIDEO
+         LocalExtractorLinkType.AVI -> ExtractorLinkType.VIDEO
+        else -> ExtractorLinkType.VIDEO
+      }
+  }
 override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
         val loadData = fetchDataFromUrlOrJson(data)
         Log.d("IPTV", "loadData » $loadData")
@@ -276,14 +285,7 @@ override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallbac
     loadData.url.endsWith(".avi") -> ExtractorLinkType.AVI     
     else -> ExtractorLinkType.VIDEO
         }
-     fun mapToExternalType(localType: LocalExtractorLinkType): ExtractorLinkType {
-     return when (localType) {
-        LocalExtractorLinkType.M3U8 -> ExtractorLinkType.M3U8
-        LocalExtractorLinkType.MKV -> ExtractorLinkType.VIDEO // Assuming MKV maps to VIDEO
-        LocalExtractorLinkType.MP4 -> ExtractorLinkType.VIDEO // Adjust as needed
-        else -> ExtractorLinkType.VIDEO
-      }
-    }    
+         
         callback.invoke(
     ExtractorLink(
         source  = this.name,
