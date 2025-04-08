@@ -224,11 +224,19 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 val match = episodeRegex.find(title)
                 if (match != null) {
                     val (_, season, episode) = match.destructured
-                    groupEpisodes.add(newEpisode(kanal.url.toString()) {
-                    this.name = title
-                    this.season = season.toInt()
-                    this.episode = episode.toInt()
-                     })
+                    Episode(
+                        episode = episode.toInt(),
+                        season = season.toInt(),
+                        data = LoadData(
+                            kanal.url.toString(),
+                            title,
+                            kanal.attributes["tvg-logo"].toString(),
+                            kanal.attributes["group-title"].toString(),
+                            kanal.attributes["tvg-country"]?.toString() ?: "TR",
+                            season.toInt(),
+                            episode.toInt()
+                        ).toJson()
+                    )
                 } else null
             }
 
