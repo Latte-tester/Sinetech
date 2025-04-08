@@ -271,34 +271,37 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
       }
   }
 override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
-        val loadData = fetchDataFromUrlOrJson(data)
-        Log.d("IPTV", "loadData » $loadData")
+    val loadData = fetchDataFromUrlOrJson(data)
+    Log.d("IPTV", "loadData » $loadData")
 
-        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-        val kanal    = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
-        Log.d("IPTV", "kanal » $kanal")
+    val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
+    val kanal = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
+    Log.d("IPTV", "kanal » $kanal")
 
-        val fileType = when {
-    loadData.url.endsWith(".m3u8") -> ExtractorLinkType.M3U8
-    loadData.url.endsWith(".mkv") -> ExtractorLinkType.MKV
-    loadData.url.endsWith(".mp4") -> ExtractorLinkType.MP4
-    loadData.url.endsWith(".avi") -> ExtractorLinkType.AVI     
-    else -> ExtractorLinkType.VIDEO
-        }
-         
-        callback.invoke(
-    ExtractorLink(
-        source  = this.name,
-        name    = "${loadData.title} (S${loadData.season}:E${loadData.episode})",
-        url     = loadData.url,
-        headers = kanal.headers,
-        referer = kanal.headers["referrer"] ?: "",
-        quality = Qualities.Unknown.value,
-        type    = fileType
-        )
-     )
-        return true
+    val localFileType = when {
+        loadData.url.endsWith(".m3u8") -> LocalExtractorLinkType.M3U8
+        loadData.url.endsWith(".mkv") -> LocalExtractorLinkType.MKV
+        loadData.url.endsWith(".mp4") -> LocalExtractorLinkType.MP4
+        loadData.url.endsWith(".avi") -> LocalExtractorLinkType.AVI
+        else -> LocalExtractorLinkType.VIDEO
     }
+    
+    val fileType = mapToExternalType(localFileType)
+    
+    callback.invoke(
+        ExtractorLink(
+            source = this.name,
+            name = "${loadData.title} (S${loadData.season}:E${loadData.episode})",
+            url = loadData.url,
+            headers = kanal.headers,
+            referer = kanal.headers["referrer"] ?: "",
+            quality = Qualities.Unknown.value,
+            type = fileType
+        )
+    )
+
+    return true
+}
  
     data class LoadData(
     val url: String,
