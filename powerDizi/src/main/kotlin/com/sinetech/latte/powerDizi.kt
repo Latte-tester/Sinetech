@@ -271,7 +271,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             url.endsWith(".mkv") -> ExtractorLinkType.VIDEO
             url.endsWith(".mp4") -> ExtractorLinkType.VIDEO
             url.endsWith(".m3u8") -> ExtractorLinkType.M3U8
-            else -> ExtractorLinkType.M3U8
+            else -> ExtractorLinkType.VIDEO
         }
 
         callback.invoke(
