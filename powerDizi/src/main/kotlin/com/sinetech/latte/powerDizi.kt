@@ -27,7 +27,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
 
         // Parse episode information from titles
-        val episodeRegex = Regex("(.*?)(?:-|\\s+)(?:(?:(\\d+)\\.?\\s*(?:Sezon|Season)\\s*(\\d+)\\.?\\s*(?:Bölüm|Episode|Bolum))|(?:[Ss](\\d+)\\s*[Ee](\\d+))|(?:[Ss](\\d+)\\s+[Ee](\\d+))|(?:(?:Season|Sezon)\\s*(\\d+)\\s*(?:Episode|Bölüm|Bolum)\\s*(\\d+))).*")
+        val episodeRegex = Regex("(.*?)(?:-|\\s+)?(?:(?:(\\d+)\\.?\\s*(?:Sezon|Season)\\s*(\\d+)\\.?\\s*(?:Bölüm|Episode|Bolum))|(?:[Ss](\\d+)\\s*[Ee](\\d+))|(?:[Ss](\\d+)\\s+[Ee](\\d+))|(?:(?:Season|Sezon)\\s*(\\d+)\\s*(?:Episode|Bölüm|Bolum)\\s*(\\d+))|(?:[Ss](\\d+)[Ee](\\d+))).*")
         val processedItems = kanallar.items.map { item ->
             val title = item.title.toString()
             val match = episodeRegex.find(title)
@@ -54,7 +54,16 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             }
         }
 
-        val groupedShows = processedItems.groupBy { it.attributes["group-title"]?.toString()?.trim() ?: "Diğer" }
+        val groupedShows = processedItems.groupBy { item ->
+            val title = item.title.toString()
+            val match = episodeRegex.find(title)
+            if (match != null) {
+                val showName = match.groups[1]?.value?.trim() ?: ""
+                showName.ifEmpty { item.attributes["group-title"]?.toString()?.trim() ?: "Diğer" }
+            } else {
+                item.attributes["group-title"]?.toString()?.trim() ?: "Diğer"
+            }
+        }
 
         val homePageLists = mutableListOf<HomePageList>()
 
@@ -88,7 +97,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
 
     override suspend fun search(query: String): List<SearchResponse> {
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-        val episodeRegex = Regex("(.*?)(?:-|\\s+)(?:(?:(\\d+)\\.?\\s*(?:Sezon|Season)\\s*(\\d+)\\.?\\s*(?:Bölüm|Episode|Bolum))|(?:[Ss](\\d+)\\s*[Ee](\\d+))|(?:[Ss](\\d+)\\s+[Ee](\\d+))|(?:(?:Season|Sezon)\\s*(\\d+)\\s*(?:Episode|Bölüm|Bolum)\\s*(\\d+))).*")
+        val episodeRegex = Regex("(.*?)(?:-|\\s+)?(?:(?:(\\d+)\\.?\\s*(?:Sezon|Season)\\s*(\\d+)\\.?\\s*(?:Bölüm|Episode|Bolum))|(?:[Ss](\\d+)\\s*[Ee](\\d+))|(?:[Ss](\\d+)\\s+[Ee](\\d+))|(?:(?:Season|Sezon)\\s*(\\d+)\\s*(?:Episode|Bölüm|Bolum)\\s*(\\d+))|(?:[Ss](\\d+)[Ee](\\d+))).*")
 
         return kanallar.items.filter { it.title.toString().lowercase().contains(query.lowercase()) }.map { kanal ->
             val streamurl   = kanal.url.toString()
@@ -218,7 +227,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         }
 
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-        val episodeRegex = Regex("(.*?)(?:-|\\s+)(?:(?:(\\d+)\\.?\\s*(?:Sezon|Season)\\s*(\\d+)\\.?\\s*(?:Bölüm|Episode|Bolum))|(?:[Ss](\\d+)\\s*[Ee](\\d+))|(?:[Ss](\\d+)\\s+[Ee](\\d+))|(?:(?:Season|Sezon)\\s*(\\d+)\\s*(?:Episode|Bölüm|Bolum)\\s*(\\d+))).*")
+        val episodeRegex = Regex("(.*?)(?:-|\\s+)?(?:(?:(\\d+)\\.?\\s*(?:Sezon|Season)\\s*(\\d+)\\.?\\s*(?:Bölüm|Episode|Bolum))|(?:[Ss](\\d+)\\s*[Ee](\\d+))|(?:[Ss](\\d+)\\s+[Ee](\\d+))|(?:(?:Season|Sezon)\\s*(\\d+)\\s*(?:Episode|Bölüm|Bolum)\\s*(\\d+))|(?:[Ss](\\d+)[Ee](\\d+))).*")
         val groupEpisodes = kanallar.items
             .filter { it.attributes["group-title"]?.toString() ?: "" == loadData.group }
             .mapNotNull { kanal ->
@@ -468,7 +477,7 @@ class IptvPlaylistParser {
             attributes["tvg-language"] = "TR/Altyazılı"
         }
         if (!attributes.containsKey("group-title")) {
-            val episodeRegex = Regex("(.*?)(?:-|\\s+)(?:(?:(\\d+)\\.?\\s*(?:Sezon|Season)\\s*(\\d+)\\.?\\s*(?:Bölüm|Episode|Bolum))|(?:[Ss](\\d+)\\s*[Ee](\\d+))|(?:[Ss](\\d+)\\s+[Ee](\\d+))|(?:(?:Season|Sezon)\\s*(\\d+)\\s*(?:Episode|Bölüm|Bolum)\\s*(\\d+))).*")
+            val episodeRegex = Regex("(.*?)(?:-|\\s+)?(?:(?:(\\d+)\\.?\\s*(?:Sezon|Season)\\s*(\\d+)\\.?\\s*(?:Bölüm|Episode|Bolum))|(?:[Ss](\\d+)\\s*[Ee](\\d+))|(?:[Ss](\\d+)\\s+[Ee](\\d+))|(?:(?:Season|Sezon)\\s*(\\d+)\\s*(?:Episode|Bölüm|Bolum)\\s*(\\d+))|(?:[Ss](\\d+)[Ee](\\d+))).*")
             val match = episodeRegex.find(titleAndAttributes.last())
             if (match != null) {
                 val (showName, _, _) = match.destructured
