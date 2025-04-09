@@ -268,8 +268,8 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
 
         val url = loadData.url.lowercase()
         val type = when {
-            url.endsWith(".mkv") -> ExtractorLinkType.VIDEO
-            url.endsWith(".mp4") -> ExtractorLinkType.VIDEO
+            url.endsWith(".mkv") -> ExtractorLinkType.M3U8
+            url.endsWith(".mp4") -> ExtractorLinkType.M3U8
             url.endsWith(".m3u8") -> ExtractorLinkType.M3U8
             else -> ExtractorLinkType.M3U8
         }
