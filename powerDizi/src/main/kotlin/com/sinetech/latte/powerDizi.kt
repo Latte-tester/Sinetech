@@ -51,7 +51,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             }
         }
 
-        val groupedShows = processedItems.groupBy { it.attributes["group-title"]?.toString()?.trim().ifEmpty { "Diğer" } ?: "Diğer" }
+        val groupedShows = processedItems.groupBy { it.attributes["group-title"]?.toString()?.trim() ?: "Diğer" }
 
         val homePageLists = mutableListOf<HomePageList>()
 
@@ -59,8 +59,8 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             val searchResponses = shows.map { kanal ->
                 val streamurl = kanal.url.toString()
                 val channelname = kanal.title.toString()
-                val posterurl = kanal.attributes["tvg-logo"]?.toString() ?: "defaultPosterUrl"
-                val nation = kanal.attributes["tvg-country"]?.toString() ?: "TR"
+                val posterurl = kanal.attributes["tvg-logo"].toString()
+                val nation = kanal.attributes["tvg-country"].toString()
 
                 newLiveSearchResponse(
                     channelname,
