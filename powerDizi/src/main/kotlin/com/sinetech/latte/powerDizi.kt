@@ -4,7 +4,6 @@ import android.content.SharedPreferences
 import android.util.Log
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
-import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import java.io.InputStream
@@ -266,14 +265,6 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val kanal    = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
         Log.d("IPTV", "kanal » $kanal")
 
-        val url = loadData.url.lowercase()
-        val type = when {
-            url.endsWith(".mkv") -> ExtractorLinkType.VIDEO
-            url.endsWith(".mp4") -> ExtractorLinkType.VIDEO
-            url.endsWith(".m3u8") -> ExtractorLinkType.M3U8
-            else -> ExtractorLinkType.VIDEO
-        }
-
         callback.invoke(
             ExtractorLink(
                 source  = this.name,
@@ -282,7 +273,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 headers = kanal.headers,
                 referer = kanal.headers["referrer"] ?: "",
                 quality = Qualities.Unknown.value,
-                type    = type
+                type    = ExtractorLinkType.M3U8
             )
         )
 
@@ -536,7 +527,7 @@ val languageMap = mapOf(
     "fa" to "Farsça", // İran
     "he" to "İbranice", // veya "iw"
 
-    // Diğerleri
+    // Diğer
     "la" to "Latince",
     "xx" to "Belirsiz",
     "mul" to "Çok Dilli" 
