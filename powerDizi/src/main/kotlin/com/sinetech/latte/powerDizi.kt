@@ -453,6 +453,7 @@ class IptvPlaylistParser {
         if (titleAndAttributes.size > 1) {
             val attrRegex = Regex("([\\w-]+)=\"([^\"]*)\"|([\\w-]+)=([^\"]+)")
             
+            // Önce tüm özellikleri işle
             attrRegex.findAll(titleAndAttributes[0]).forEach { matchResult ->
                 val (quotedKey, quotedValue, unquotedKey, unquotedValue) = matchResult.destructured
                 val key = quotedKey.takeIf { it.isNotEmpty() } ?: unquotedKey
@@ -460,14 +461,18 @@ class IptvPlaylistParser {
                 attributes[key] = value.replaceQuotesAndTrim()
             }
             
-            // Eğer group-title özelliği yoksa ve başlık bir dizi formatındaysa, dizi adını group-title olarak ekle
-            if (!attributes.containsKey("group-title")) {
-                val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
-                val title = titleAndAttributes.last()
-                val match = episodeRegex.find(title)
-                if (match != null) {
-                    val (showName, _, _) = match.destructured
-                    attributes["group-title"] = showName.trim()
+            // Başlıktan dizi adını çıkar ve group-title olarak ayarla
+            val episodeRegex = Regex("(.*?)(?:-|\\s+)(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
+            val title = titleAndAttributes.last()
+            val match = episodeRegex.find(title)
+            
+            if (match != null) {
+                val (showName, _, _) = match.destructured
+                val cleanShowName = showName.trim()
+                // Eğer group-title zaten varsa ve "Diğer" değilse, onu koru
+                if (!attributes.containsKey("group-title") || attributes["group-title"] == "Diğer") {
+                    attributes["group-title"] = cleanShowName
+                }
                 } else {
                     attributes["group-title"] = "Diğer"
                 }
