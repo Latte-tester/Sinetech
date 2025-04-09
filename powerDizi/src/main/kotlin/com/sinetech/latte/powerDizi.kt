@@ -274,7 +274,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             "mkv" -> ExtractorLinkType.VIDEO
             "avi" -> ExtractorLinkType.VIDEO
             "webm" -> ExtractorLinkType.VIDEO
-            else -> ExtractorLinkType.INFER_TYPE
+            else -> ExtractorLinkType.M3U8
         }
 
         callback.invoke(
