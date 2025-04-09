@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
+import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import java.io.InputStream
@@ -257,45 +258,51 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         }
     }
 
-    override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
-        val loadData = fetchDataFromUrlOrJson(data)
-        Log.d("IPTV", "loadData » $loadData")
+  enum class LocalExtractorLinkType {
+    M3U8, MKV, MP4, AVI, VIDEO }
 
-        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-        val kanal    = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
-        Log.d("IPTV", "kanal » $kanal")
+  fun mapToExternalType(localType: LocalExtractorLinkType): ExtractorLinkType {
+     return when (localType) {
+        LocalExtractorLinkType.M3U8 -> ExtractorLinkType.M3U8
+        LocalExtractorLinkType.MKV -> ExtractorLinkType.VIDEO
+        LocalExtractorLinkType.MP4 -> ExtractorLinkType.VIDEO
+         LocalExtractorLinkType.AVI -> ExtractorLinkType.VIDEO
+        else -> ExtractorLinkType.VIDEO
+      }
+  }
+override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
+    val loadData = fetchDataFromUrlOrJson(data)
+    Log.d("IPTV", "loadData » $loadData")
 
-        val url = loadData.url.lowercase()
-        val type = when {
-            url.endsWith(".mkv") -> ExtractorLinkType.VIDEO
-            url.endsWith(".mp4") -> ExtractorLinkType.VIDEO
-            url.endsWith(".m3u8") -> ExtractorLinkType.M3U8
-            else -> ExtractorLinkType.M3U8
-        }
+    val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
+    val kanal = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
+    Log.d("IPTV", "kanal » $kanal")
 
-        val quality = when {
-            url.contains("1080p") -> Qualities.P1080.value
-            url.contains("720p") -> Qualities.P720.value
-            url.contains("480p") -> Qualities.P480.value
-            url.contains("360p") -> Qualities.P360.value
-            else -> Qualities.Unknown.value
-        }
-
-        callback.invoke(
-            ExtractorLink(
-                source  = this.name,
-                name    = "${loadData.title} (S${loadData.season}:E${loadData.episode})",
-                url     = loadData.url,
-                headers = kanal.headers,
-                referer = kanal.headers["referrer"] ?: "",
-                quality = Qualities.Unknown.value,
-                type    = ExtractorLinkType.M3U8
-            )
-        )
-
-        return true
+    val localFileType = when {
+        loadData.url.endsWith(".m3u8") -> LocalExtractorLinkType.M3U8
+        loadData.url.endsWith(".mkv") -> LocalExtractorLinkType.MKV
+        loadData.url.endsWith(".mp4") -> LocalExtractorLinkType.MP4
+        loadData.url.endsWith(".avi") -> LocalExtractorLinkType.AVI
+        else -> LocalExtractorLinkType.VIDEO
     }
+    
+    val fileType = mapToExternalType(localFileType)
+    
+    callback.invoke(
+        ExtractorLink(
+            source = this.name,
+            name = "${loadData.title} (S${loadData.season}:E${loadData.episode})",
+            url = loadData.url,
+            headers = kanal.headers,
+            referer = kanal.headers["referrer"] ?: "",
+            quality = Qualities.Unknown.value,
+            type = fileType
+        )
+    )
 
+    return true
+}
+ 
     data class LoadData(
     val url: String,
     val title: String,
@@ -480,7 +487,7 @@ class IptvPlaylistParser {
         if (!attributes.containsKey("tvg-language")) {
             attributes["tvg-language"] = "TR/Altyazılı"
         }
-        if (!attributes.containsKey("group-title") || attributes["group-title"]?.isBlank() == true) {
+        if (!attributes.containsKey("group-title")) {
             val episodeRegex = Regex("(.*?)[^\\w\\d]+(\\d+)\\.?\\s*Sezon\\s*(\\d+)\\.?\\s*Bölüm.*")
             val match = episodeRegex.find(titleAndAttributes.last())
             if (match != null) {
