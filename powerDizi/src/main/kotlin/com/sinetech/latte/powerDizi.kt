@@ -33,12 +33,14 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             val match = episodeRegex.find(title)
             if (match != null) {
                 val (showName, season, episode) = match.destructured
+                val cleanShowName = showName.trim()
                 item.copy(
                     season = season.toInt(),
                     episode = episode.toInt(),
                     attributes = item.attributes.toMutableMap().apply {
                         if (!containsKey("tvg-country")) { put("tvg-country", "TR/Altyazılı") }
                         if (!containsKey("tvg-language")) { put("tvg-language", "TR;EN") }
+                        put("group-title", cleanShowName)
                     }
                 )
             } else {
@@ -46,6 +48,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     attributes = item.attributes.toMutableMap().apply {
                         if (!containsKey("tvg-country")) { put("tvg-country", "TR") }
                         if (!containsKey("tvg-language")) { put("tvg-language", "TR;EN") }
+                        if (!containsKey("group-title")) { put("group-title", "Diğer") }
                     }
                 )
             }
