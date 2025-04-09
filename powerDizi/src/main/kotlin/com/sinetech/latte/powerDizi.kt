@@ -480,8 +480,15 @@ class IptvPlaylistParser {
         if (!attributes.containsKey("tvg-language")) {
             attributes["tvg-language"] = "TR/Altyazılı"
         }
-        if (!attributes.containsKey("group-title")) {
-            attributes["group-title"] = "Diğer"
+        if (!attributes.containsKey("group-title") || attributes["group-title"]?.isBlank() == true) {
+            val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
+            val match = episodeRegex.find(titleAndAttributes.last())
+            if (match != null) {
+                val (showName, _, _) = match.destructured
+                attributes["group-title"] = showName.trim()
+            } else {
+                attributes["group-title"] = "Diğer"
+            }
         }
 
         return attributes
