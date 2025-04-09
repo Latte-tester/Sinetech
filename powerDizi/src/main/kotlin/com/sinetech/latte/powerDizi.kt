@@ -55,14 +55,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         }
 
         val groupedShows = processedItems.groupBy { item ->
-            val title = item.title.toString()
-            val match = episodeRegex.find(title)
-            if (match != null) {
-                val showName = match.groups[1]?.value?.trim() ?: ""
-                showName.ifEmpty { item.attributes["group-title"]?.toString()?.trim() ?: "Diğer" }
-            } else {
-                item.attributes["group-title"]?.toString()?.trim() ?: "Diğer"
-            }
+            item.attributes["group-title"]?.toString()?.trim() ?: "Diğer"
         }
 
         val homePageLists = mutableListOf<HomePageList>()
