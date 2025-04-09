@@ -51,7 +51,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             }
         }
 
-        val groupedShows = processedItems.groupBy { it.attributes["group-title"]?.toString()?.trim() ?: "Diğer" }
+        val groupedShows = processedItems.groupBy { it.attributes["group-title"]?.toString()?.trim().ifEmpty { "Diğer" } ?: "Diğer" }
 
         val homePageLists = mutableListOf<HomePageList>()
 
@@ -265,6 +265,12 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val kanal    = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
         Log.d("IPTV", "kanal » $kanal")
 
+        val fileType = when {
+            loadData.url.endsWith(".mkv") -> ExtractorLinkType.MKV
+            loadData.url.endsWith(".mp4") -> ExtractorLinkType.MP4
+            else -> ExtractorLinkType.M3U8
+        }
+
         callback.invoke(
             ExtractorLink(
                 source  = this.name,
@@ -272,7 +278,8 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 url     = loadData.url,
                 headers = kanal.headers,
                 referer = kanal.headers["referrer"] ?: "",
-                quality = Qualities.Unknown.value
+                quality = Qualities.Unknown.value,
+                type    = fileType
             )
         )
 
