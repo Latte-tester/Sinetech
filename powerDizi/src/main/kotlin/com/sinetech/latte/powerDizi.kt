@@ -268,18 +268,10 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
 
         val url = loadData.url.lowercase()
         val type = when {
-            url.endsWith(".mkv") -> ExtractorLinkType.M3U8
-            url.endsWith(".mp4") -> ExtractorLinkType.M3U8
+            url.endsWith(".mkv") -> ExtractorLinkType.VIDEO
+            url.endsWith(".mp4") -> ExtractorLinkType.VIDEO
             url.endsWith(".m3u8") -> ExtractorLinkType.M3U8
             else -> ExtractorLinkType.M3U8
-        }
-
-        val quality = when {
-            url.contains("1080p") -> Qualities.P1080.value
-            url.contains("720p") -> Qualities.P720.value
-            url.contains("480p") -> Qualities.P480.value
-            url.contains("360p") -> Qualities.P360.value
-            else -> Qualities.Unknown.value
         }
 
         callback.invoke(
@@ -290,7 +282,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 headers = kanal.headers,
                 referer = kanal.headers["referrer"] ?: "",
                 quality = Qualities.Unknown.value,
-                type    = ExtractorLinkType.M3U8
+                type    = type
             )
         )
 
