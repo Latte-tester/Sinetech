@@ -33,14 +33,12 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             val match = episodeRegex.find(title)
             if (match != null) {
                 val (showName, season, episode) = match.destructured
-                val cleanShowName = showName.trim()
                 item.copy(
                     season = season.toInt(),
                     episode = episode.toInt(),
                     attributes = item.attributes.toMutableMap().apply {
                         if (!containsKey("tvg-country")) { put("tvg-country", "TR/Altyazılı") }
                         if (!containsKey("tvg-language")) { put("tvg-language", "TR;EN") }
-                        put("group-title", cleanShowName)
                     }
                 )
             } else {
@@ -48,7 +46,6 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     attributes = item.attributes.toMutableMap().apply {
                         if (!containsKey("tvg-country")) { put("tvg-country", "TR") }
                         if (!containsKey("tvg-language")) { put("tvg-language", "TR;EN") }
-                        if (!containsKey("group-title")) { put("group-title", "Diğer") }
                     }
                 )
             }
@@ -453,29 +450,11 @@ class IptvPlaylistParser {
         if (titleAndAttributes.size > 1) {
             val attrRegex = Regex("([\\w-]+)=\"([^\"]*)\"|([\\w-]+)=([^\"]+)")
             
-            // Önce tüm özellikleri işle
             attrRegex.findAll(titleAndAttributes[0]).forEach { matchResult ->
                 val (quotedKey, quotedValue, unquotedKey, unquotedValue) = matchResult.destructured
                 val key = quotedKey.takeIf { it.isNotEmpty() } ?: unquotedKey
                 val value = quotedValue.takeIf { it.isNotEmpty() } ?: unquotedValue
                 attributes[key] = value.replaceQuotesAndTrim()
-            }
-            
-            // Başlıktan dizi adını çıkar ve group-title olarak ayarla
-            val episodeRegex = Regex("(.*?)(?:-|\\s+)(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
-            val title = titleAndAttributes.last()
-            val match = episodeRegex.find(title)
-            
-            if (match != null) {
-                val (showName, _, _) = match.destructured
-                val cleanShowName = showName.trim()
-                // Eğer group-title zaten varsa ve "Diğer" değilse, onu koru
-                if (!attributes.containsKey("group-title") || attributes["group-title"] == "Diğer") {
-                    attributes["group-title"] = cleanShowName
-                }
-                } else {
-                    attributes["group-title"] = "Diğer"
-                }
             }
         }
 
