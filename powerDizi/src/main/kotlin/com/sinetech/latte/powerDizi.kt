@@ -459,6 +459,19 @@ class IptvPlaylistParser {
                 val value = quotedValue.takeIf { it.isNotEmpty() } ?: unquotedValue
                 attributes[key] = value.replaceQuotesAndTrim()
             }
+            
+            // Eğer group-title özelliği yoksa ve başlık bir dizi formatındaysa, dizi adını group-title olarak ekle
+            if (!attributes.containsKey("group-title")) {
+                val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
+                val title = titleAndAttributes.last()
+                val match = episodeRegex.find(title)
+                if (match != null) {
+                    val (showName, _, _) = match.destructured
+                    attributes["group-title"] = showName.trim()
+                } else {
+                    attributes["group-title"] = "Diğer"
+                }
+            }
         }
 
         if (!attributes.containsKey("tvg-country")) {
