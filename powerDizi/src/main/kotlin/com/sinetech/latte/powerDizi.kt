@@ -265,15 +265,27 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val kanal    = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
         Log.d("IPTV", "kanal » $kanal")
 
+        val url = loadData.url
+        val fileExtension = url.substringAfterLast(".", "").lowercase()
+        
+        val linkType = when (fileExtension) {
+            "m3u8" -> ExtractorLinkType.M3U8
+            "mp4" -> ExtractorLinkType.VIDEO
+            "mkv" -> ExtractorLinkType.VIDEO
+            "avi" -> ExtractorLinkType.VIDEO
+            "webm" -> ExtractorLinkType.VIDEO
+            else -> ExtractorLinkType.INFER_TYPE
+        }
+
         callback.invoke(
             ExtractorLink(
                 source  = this.name,
                 name    = "${loadData.title} (S${loadData.season}:E${loadData.episode})",
-                url     = loadData.url,
+                url     = url,
                 headers = kanal.headers,
                 referer = kanal.headers["referrer"] ?: "",
                 quality = Qualities.Unknown.value,
-                type    = ExtractorLinkType.M3U8
+                type    = linkType
             )
         )
 
