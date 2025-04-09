@@ -27,7 +27,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
 
         // Parse episode information from titles
-        val episodeRegex = Regex("(.*?)[^\\w\\d]+(\d+)(?:\.\s*(?:Sezon|Season)\s*|x)(\d+)(?:\.\s*(?:Bölüm|Episode).*|$)", RegexOption.IGNORE_CASE)
+        val episodeRegex = Regex("(.*?)(?:[^\w\d]+|\s+)(?:S|Season|Sezon|)(\d+)(?:[^\w\d]+|\s+|x|E|Episode|Bölüm|)(\d+)(?:[^\w\d]+.*|$)", RegexOption.IGNORE_CASE)
         val processedItems = kanallar.items.map { item ->
             val title = item.title.toString()
             val match = episodeRegex.find(title)
@@ -85,7 +85,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
 
     override suspend fun search(query: String): List<SearchResponse> {
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-        val episodeRegex = Regex("(.*?)[^\\w\\d]+(\\d+)(?:\\.\\s*(?:Sezon|Season)\\s*|x)(\\d+)(?:\\.\\s*(?:Bölüm|Episode).*|$)", RegexOption.IGNORE_CASE)
+        val episodeRegex = Regex("(.*?)(?:[^\\w\\d]+|\\s+)(?:S|Season|Sezon|)(\\d+)(?:[^\\w\\d]+|\\s+|x|E|Episode|Bölüm|)(\\d+)(?:[^\\w\\d]+.*|$)", RegexOption.IGNORE_CASE)
 
         return kanallar.items.filter { it.title.toString().lowercase().contains(query.lowercase()) }.map { kanal ->
             val streamurl   = kanal.url.toString()
@@ -215,7 +215,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         }
 
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-        val episodeRegex = Regex("(.*?)[^\\w\\d]+(\\d+)(?:\\.\\s*(?:Sezon|Season)\\s*|x)(\\d+)(?:\\.\\s*(?:Bölüm|Episode).*|$)", RegexOption.IGNORE_CASE)
+        val episodeRegex = Regex("(.*?)(?:[^\\w\\d]+|\\s+)(?:S|Season|Sezon|)(\\d+)(?:[^\\w\\d]+|\\s+|x|E|Episode|Bölüm|)(\\d+)(?:[^\\w\\d]+.*|$)", RegexOption.IGNORE_CASE)
         val groupEpisodes = kanallar.items
             .filter { it.attributes["group-title"]?.toString() ?: "" == loadData.group }
             .mapNotNull { kanal ->
@@ -481,7 +481,7 @@ class IptvPlaylistParser {
             attributes["tvg-language"] = "TR/Altyazılı"
         }
         if (!attributes.containsKey("group-title")) {
-            val episodeRegex = Regex("(.*?)[^\\w\\d]+(\\d+)(?:\\.\\s*(?:Sezon|Season)\\s*|x)(\\d+)(?:\\.\\s*(?:Bölüm|Episode).*|$)", RegexOption.IGNORE_CASE)
+            val episodeRegex = Regex("(.*?)(?:[^\\w\\d]+|\\s+)(?:S|Season|Sezon|)(\\d+)(?:[^\\w\\d]+|\\s+|x|E|Episode|Bölüm|)(\\d+)(?:[^\\w\\d]+.*|$)", RegexOption.IGNORE_CASE)
             val match = episodeRegex.find(titleAndAttributes.last())
             if (match != null) {
                 val (showName, _, _) = match.destructured
