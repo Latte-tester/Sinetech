@@ -265,6 +265,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val kanal    = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
         Log.d("IPTV", "kanal » $kanal")
 
+        // Her türlü stream URL'yi M3U8 olarak işle
         callback.invoke(
             ExtractorLink(
                 source  = this.name,
@@ -273,7 +274,8 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 headers = kanal.headers,
                 referer = kanal.headers["referrer"] ?: "",
                 quality = Qualities.Unknown.value,
-                type    = ExtractorLinkType.M3U8
+                type    = ExtractorLinkType.M3U8,
+                isM3u8  = true // Tüm stream URL'leri M3U8 olarak işaretliyoruz
             )
         )
 
