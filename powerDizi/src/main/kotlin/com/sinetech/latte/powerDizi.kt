@@ -543,7 +543,7 @@ val languageMap = mapOf(
     "fa" to "Farsça", // İran
     "he" to "İbranice", // veya "iw"
 
-    // Diğer
+    // Diğerleri
     "la" to "Latince",
     "xx" to "Belirsiz",
     "mul" to "Çok Dilli" 
