@@ -477,13 +477,12 @@ class IptvPlaylistParser {
             val episodeRegex = Regex("""(.*?)[^\w\d]+(\d+)\.\s*Sezon\s*(\d+)\.\s*Bölüm.*""")
             val match = episodeRegex.find(titleAndAttributes.last())
             if (match != null) {
-                val showName = match.groups[1]?.value // Regex'in birinci grubu (ana dizi adı)
-                attributes["group-title"] = showName?.trim() ?: "Diğer"
+                val (showName, _, _) = match.destructured
+                attributes["group-title"] = showName.trim()
             } else {
                 attributes["group-title"] = "Diğer"
             }
         }
-        
 
         return attributes
     }
