@@ -456,30 +456,14 @@ class IptvPlaylistParser {
         val titleAndAttributes = attributesString.split(",", limit = 2)
         
         val attributes = mutableMapOf<String, String>()
-        val attrRegex = Regex("([\\w-]+)=\"([^\"]*)\"|([\\w-]+)=([^\"]+)")
-        
-        // Tüm satırı tarayarak özellikleri bul
-        attrRegex.findAll(attributesString).forEach { matchResult ->
-            val (quotedKey, quotedValue, unquotedKey, unquotedValue) = matchResult.destructured
-            val key = quotedKey.takeIf { it.isNotEmpty() } ?: unquotedKey
-            val value = quotedValue.takeIf { it.isNotEmpty() } ?: unquotedValue
-            attributes[key] = value.replaceQuotesAndTrim()
-        }
-
-        // Eğer group-title değeri varsa ve boş değilse, onu koru
-        val groupTitle = attributes["group-title"]
-        if (groupTitle.isNullOrBlank()) {
-            // Eğer title içinde group-title bilgisi varsa onu kullan
-            val titleParts = titleAndAttributes.getOrNull(1)?.split(" group-title=")
-            if (titleParts?.size == 2) {
-                val extractedGroupTitle = titleParts[1].split(" ")[0].trim()
-                if (extractedGroupTitle.isNotBlank()) {
-                    attributes["group-title"] = extractedGroupTitle
-                } else {
-                    attributes["group-title"] = "Diğer"
-                }
-            } else {
-                attributes["group-title"] = "Diğer"
+        if (titleAndAttributes.size > 1) {
+            val attrRegex = Regex("([\\w-]+)=\"([^\"]*)\"|([\\w-]+)=([^\"]+)")
+            
+            attrRegex.findAll(titleAndAttributes[0]).forEach { matchResult ->
+                val (quotedKey, quotedValue, unquotedKey, unquotedValue) = matchResult.destructured
+                val key = quotedKey.takeIf { it.isNotEmpty() } ?: unquotedKey
+                val value = quotedValue.takeIf { it.isNotEmpty() } ?: unquotedValue
+                attributes[key] = value.replaceQuotesAndTrim()
             }
         }
 
@@ -488,6 +472,16 @@ class IptvPlaylistParser {
         }
         if (!attributes.containsKey("tvg-language")) {
             attributes["tvg-language"] = "TR/Altyazılı"
+        }
+        if (!attributes.containsKey("group-title")) {
+            val episodeRegex = Regex("""(.*?)[^\w\d]+(\d+)\.\s*Sezon\s*(\d+)\.\s*Bölüm.*""")
+            val match = episodeRegex.find(titleAndAttributes.last())
+            if (match != null) {
+                val (showName, _, _) = match.destructured
+                attributes["group-title"] = showName.trim()
+            } else {
+                attributes["group-title"] = "Diğer"
+            }
         }
 
         return attributes
