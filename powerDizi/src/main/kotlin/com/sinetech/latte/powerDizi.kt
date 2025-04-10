@@ -453,19 +453,8 @@ class IptvPlaylistParser {
     private fun String.getAttributes(): Map<String, String> {
         val extInfRegex = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
         val attributesString = replace(extInfRegex, "").replaceQuotesAndTrim()
-        val titleAndAttributes = attributesString.split(",", limit = 2)
         
         val attributes = mutableMapOf<String, String>()
-        if (titleAndAttributes.size > 1) {
-            val attrRegex = Regex("([\\w-]+)=\"([^\"]*)\"|([\\w-]+)=([^\"]+)")
-            
-            attrRegex.findAll(titleAndAttributes[0]).forEach { matchResult ->
-                val (quotedKey, quotedValue, unquotedKey, unquotedValue) = matchResult.destructured
-                val key = quotedKey.takeIf { it.isNotEmpty() } ?: unquotedKey
-                val value = quotedValue.takeIf { it.isNotEmpty() } ?: unquotedValue
-                attributes[key] = value.replaceQuotesAndTrim()
-            }
-        }
 
         if (!attributes.containsKey("tvg-country")) {
             attributes["tvg-country"] = "TR/Altyazılı"
