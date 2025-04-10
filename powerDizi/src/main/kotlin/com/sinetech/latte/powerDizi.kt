@@ -6,10 +6,6 @@ import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
-import com.lagradost.cloudstream3.utils.ExtractorLink
-import com.lagradost.cloudstream3.utils.ExtractorLinkType
-import com.lagradost.cloudstream3.utils.newExtractorLink
-import com.lagradost.cloudstream3.utils.Qualities
 import java.io.InputStream
 import com.sinetech.latte.BuildConfig
 import kotlinx.coroutines.Dispatchers
@@ -268,8 +264,6 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
         val kanal    = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
         Log.d("IPTV", "kanal » $kanal")
-
-        val url = loadData.url.lowercase()
 
         callback.invoke(
             newExtractorLink(
@@ -534,7 +528,7 @@ val languageMap = mapOf(
     "fa" to "Farsça", // İran
     "he" to "İbranice", // veya "iw"
 
-    // Diğerleri
+    // Diğer
     "la" to "Latince",
     "xx" to "Belirsiz",
     "mul" to "Çok Dilli" 
