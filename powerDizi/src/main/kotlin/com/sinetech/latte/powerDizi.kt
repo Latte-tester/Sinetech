@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import android.util.Log
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
+import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import java.io.InputStream
@@ -27,7 +28,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
 
         // Parse episode information from titles
-        val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
+        val episodeRegex = Regex("(.*?)[^\\w\\d]+(\\d+)\.\\s*Sezon\\s*(\\d+)\.\\s*Bölüm.*")
         val processedItems = kanallar.items.map { item ->
             val title = item.title.toString()
             val match = episodeRegex.find(title)
@@ -85,7 +86,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
 
     override suspend fun search(query: String): List<SearchResponse> {
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-        val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
+        val episodeRegex = Regex("(.*?)[^\\w\\d]+(\\d+)\.\\s*Sezon\\s*(\\d+)\.\\s*Bölüm.*")
 
         return kanallar.items.filter { it.title.toString().lowercase().contains(query.lowercase()) }.map { kanal ->
             val streamurl   = kanal.url.toString()
@@ -215,7 +216,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         }
 
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-        val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
+        val episodeRegex = Regex("(.*?)[^\\w\\d]+(\\d+)\.\\s*Sezon\\s*(\\d+)\.\\s*Bölüm.*")
         val groupEpisodes = kanallar.items
             .filter { it.attributes["group-title"]?.toString() ?: "" == loadData.group }
             .mapNotNull { kanal ->
@@ -264,6 +265,22 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
         val kanal    = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
         Log.d("IPTV", "kanal » $kanal")
+
+        val url = loadData.url.lowercase()
+        val type = when {
+            url.endsWith(".mkv") -> ExtractorLinkType.VIDEO
+            url.endsWith(".mp4") -> ExtractorLinkType.VIDEO
+            url.endsWith(".m3u8") -> ExtractorLinkType.M3U8
+            else -> ExtractorLinkType.M3U8
+        }
+
+        val quality = when {
+            url.contains("1080p") -> Qualities.P1080.value
+            url.contains("720p") -> Qualities.P720.value
+            url.contains("480p") -> Qualities.P480.value
+            url.contains("360p") -> Qualities.P360.value
+            else -> Qualities.Unknown.value
+        }
 
         callback.invoke(
             ExtractorLink(
@@ -465,7 +482,7 @@ class IptvPlaylistParser {
             attributes["tvg-language"] = "TR/Altyazılı"
         }
         if (!attributes.containsKey("group-title")) {
-            val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
+            val episodeRegex = Regex("(.*?)[^\\w\\d]+(\\d+)\.\\s*Sezon\\s*(\\d+)\.\\s*Bölüm.*")
             val match = episodeRegex.find(titleAndAttributes.last())
             if (match != null) {
                 val (showName, _, _) = match.destructured
@@ -527,7 +544,7 @@ val languageMap = mapOf(
     "fa" to "Farsça", // İran
     "he" to "İbranice", // veya "iw"
 
-    // Diğer
+    // Diğerleri
     "la" to "Latince",
     "xx" to "Belirsiz",
     "mul" to "Çok Dilli" 
