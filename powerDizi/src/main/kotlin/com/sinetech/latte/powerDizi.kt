@@ -158,7 +158,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val watchProgress = sharedPref?.getLong(progressKey, 0L) ?: 0L
         val loadData = fetchDataFromUrlOrJson(url)
         
-        val tmdbData = fetchTMDBData(loadData.title.replace(Regex("-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*"), ""))
+        val tmdbData = fetchTMDBData(loadData.group) // Dizi adını group-title'dan al
         
         val plot = buildString {
             if (tmdbData != null) {
