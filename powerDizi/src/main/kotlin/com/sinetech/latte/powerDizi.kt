@@ -293,7 +293,6 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 type = ExtractorLinkType.VIDEO
                     ) {
                 headers = kanal.headers
-                referer = kanal.headers["referrer"] ?: ""
                 quality = Qualities.Unknown.value
                     }
         )
