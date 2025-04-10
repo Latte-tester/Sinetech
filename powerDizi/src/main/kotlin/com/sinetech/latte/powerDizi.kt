@@ -51,7 +51,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             }
         }
 
-        val groupedShows = processedItems.groupBy { it.attributes["group-title"]?.toString()?.trim() ?: "Diğer" }
+        val groupedShows = processedItems.groupBy { it.attributes["group-title"]?.toString()?.trim() }
 
         val homePageLists = mutableListOf<HomePageList>()
 
