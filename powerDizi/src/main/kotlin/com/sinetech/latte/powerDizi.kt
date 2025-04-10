@@ -31,8 +31,9 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val processedItems = kanallar.items.map { item ->
             val title = item.title.toString()
             val match = episodeRegex.find(title)
+            val groupTitle = item.attributes["group-title"]?.toString()?.trim() ?: "Diğer"
             if (match != null) {
-                val (showName, season, episode) = match.destructured
+                val (_, season, episode) = match.destructured
                 item.copy(
                     season = season.toInt(),
                     episode = episode.toInt(),
@@ -58,13 +59,13 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         groupedShows.forEach { (group, shows) ->
             val searchResponses = shows.map { kanal ->
                 val streamurl = kanal.url.toString()
-                val channelname = kanal.title.toString()
+                val groupTitle = kanal.attributes["group-title"]?.toString()?.trim() ?: "Diğer"
                 val posterurl = kanal.attributes["tvg-logo"].toString()
                 val nation = kanal.attributes["tvg-country"].toString()
 
                 newLiveSearchResponse(
-                    channelname,
-                    LoadData(streamurl, channelname, posterurl, group, nation, kanal.season, kanal.episode).toJson(),
+                    groupTitle,
+                    LoadData(streamurl, groupTitle, posterurl, group, nation, kanal.season, kanal.episode).toJson(),
                     type = TvType.TvSeries
                 ) {
                     this.posterUrl = posterurl
@@ -87,9 +88,9 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
         val episodeRegex = Regex("""(.*?)[^\w\d]+(\d+)\.\s*Sezon\s*(\d+)\.\s*Bölüm.*""")
 
-        return kanallar.items.filter { it.title.toString().lowercase().contains(query.lowercase()) }.map { kanal ->
+        return kanallar.items.filter { it.attributes["group-title"]?.toString()?.lowercase()?.contains(query.lowercase()) == true }.map { kanal ->
             val streamurl   = kanal.url.toString()
-            val channelname = kanal.title.toString()
+            val groupTitle  = kanal.attributes["group-title"]?.toString()?.trim() ?: "Diğer"
             val posterurl   = kanal.attributes["tvg-logo"].toString()
             val chGroup     = kanal.attributes["group-title"].toString()
             val nation      = kanal.attributes["tvg-country"].toString()
@@ -158,7 +159,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val watchProgress = sharedPref?.getLong(progressKey, 0L) ?: 0L
         val loadData = fetchDataFromUrlOrJson(url)
         
-        val tmdbData = fetchTMDBData(loadData.group) // Dizi adını group-title'dan al
+        val tmdbData = fetchTMDBData(loadData.group)
         
         val plot = buildString {
             if (tmdbData != null) {
