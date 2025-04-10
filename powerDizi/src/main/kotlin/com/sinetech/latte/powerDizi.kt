@@ -258,51 +258,45 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         }
     }
 
-  enum class LocalExtractorLinkType {
-    M3U8, MKV, MP4, AVI, VIDEO }
+    override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
+        val loadData = fetchDataFromUrlOrJson(data)
+        Log.d("IPTV", "loadData » $loadData")
 
-  fun mapToExternalType(localType: LocalExtractorLinkType): ExtractorLinkType {
-     return when (localType) {
-        LocalExtractorLinkType.M3U8 -> ExtractorLinkType.M3U8
-        LocalExtractorLinkType.MKV -> ExtractorLinkType.VIDEO
-        LocalExtractorLinkType.MP4 -> ExtractorLinkType.VIDEO
-         LocalExtractorLinkType.AVI -> ExtractorLinkType.VIDEO
-        else -> ExtractorLinkType.VIDEO
-      }
-  }
-override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
-    val loadData = fetchDataFromUrlOrJson(data)
-    Log.d("IPTV", "loadData » $loadData")
+        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
+        val kanal    = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
+        Log.d("IPTV", "kanal » $kanal")
 
-    val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-    val kanal = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
-    Log.d("IPTV", "kanal » $kanal")
+        val url = loadData.url.lowercase()
+        val type = when {
+            url.endsWith(".mkv") -> ExtractorLinkType.VIDEO
+            url.endsWith(".mp4") -> ExtractorLinkType.VIDEO
+            url.endsWith(".m3u8") -> ExtractorLinkType.M3U8
+            else -> ExtractorLinkType.M3U8
+        }
 
-    val localFileType = when {
-        loadData.url.endsWith(".m3u8") -> LocalExtractorLinkType.M3U8
-        loadData.url.endsWith(".mkv") -> LocalExtractorLinkType.MKV
-        loadData.url.endsWith(".mp4") -> LocalExtractorLinkType.MP4
-        loadData.url.endsWith(".avi") -> LocalExtractorLinkType.AVI
-        else -> LocalExtractorLinkType.VIDEO
-    }
-    
-    val fileType = mapToExternalType(localFileType)
-    
-    callback.invoke(
-        ExtractorLink(
-            source = this.name,
-            name = "${loadData.title} (S${loadData.season}:E${loadData.episode})",
-            url = loadData.url,
-            headers = kanal.headers,
-            referer = kanal.headers["referrer"] ?: "",
-            quality = Qualities.Unknown.value,
-            type = fileType
+        val quality = when {
+            url.contains("1080p") -> Qualities.P1080.value
+            url.contains("720p") -> Qualities.P720.value
+            url.contains("480p") -> Qualities.P480.value
+            url.contains("360p") -> Qualities.P360.value
+            else -> Qualities.Unknown.value
+        }
+
+        callback.invoke(
+            ExtractorLink(
+                source  = this.name,
+                name    = "${loadData.title} (S${loadData.season}:E${loadData.episode})",
+                url     = loadData.url,
+                headers = kanal.headers,
+                referer = kanal.headers["referrer"] ?: "",
+                quality = Qualities.Unknown.value,
+                type    = ExtractorLinkType.M3U8
+            )
         )
-    )
 
-    return true
-}
- 
+        return true
+    }
+
     data class LoadData(
     val url: String,
     val title: String,
@@ -550,7 +544,7 @@ val languageMap = mapOf(
     "fa" to "Farsça", // İran
     "he" to "İbranice", // veya "iw"
 
-    // Diğer
+    // Diğerleri
     "la" to "Latince",
     "xx" to "Belirsiz",
     "mul" to "Çok Dilli" 
