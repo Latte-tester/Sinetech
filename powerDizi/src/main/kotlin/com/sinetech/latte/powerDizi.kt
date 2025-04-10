@@ -466,14 +466,28 @@ class IptvPlaylistParser {
             attributes[key] = value.replaceQuotesAndTrim()
         }
 
+        // Eğer group-title değeri varsa ve boş değilse, onu koru
+        val groupTitle = attributes["group-title"]
+        if (groupTitle.isNullOrBlank()) {
+            // Eğer title içinde group-title bilgisi varsa onu kullan
+            val titleParts = titleAndAttributes.getOrNull(1)?.split(" group-title=")
+            if (titleParts?.size == 2) {
+                val extractedGroupTitle = titleParts[1].split(" ")[0].trim()
+                if (extractedGroupTitle.isNotBlank()) {
+                    attributes["group-title"] = extractedGroupTitle
+                } else {
+                    attributes["group-title"] = "Diğer"
+                }
+            } else {
+                attributes["group-title"] = "Diğer"
+            }
+        }
+
         if (!attributes.containsKey("tvg-country")) {
             attributes["tvg-country"] = "TR/Altyazılı"
         }
         if (!attributes.containsKey("tvg-language")) {
             attributes["tvg-language"] = "TR/Altyazılı"
-        }
-        if (!attributes.containsKey("group-title")) {
-            attributes["group-title"] = "Diğer"
         }
 
         return attributes
