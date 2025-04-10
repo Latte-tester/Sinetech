@@ -4,9 +4,12 @@ import android.content.SharedPreferences
 import android.util.Log
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
-import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.toJson
+import com.lagradost.cloudstream3.utils.ExtractorLink
+import com.lagradost.cloudstream3.utils.ExtractorLinkType
+import com.lagradost.cloudstream3.utils.newExtractorLink
+import com.lagradost.cloudstream3.utils.Qualities
 import java.io.InputStream
 import com.sinetech.latte.BuildConfig
 import kotlinx.coroutines.Dispatchers
@@ -283,15 +286,16 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         }
 
         callback.invoke(
-            ExtractorLink(
+            newExtractorLink(
                 source  = this.name,
                 name    = "${loadData.title} (S${loadData.season}:E${loadData.episode})",
                 url     = loadData.url,
+                type = ExtractorLinkType.VIDEO
+                    ) {
                 headers = kanal.headers,
                 referer = kanal.headers["referrer"] ?: "",
                 quality = Qualities.Unknown.value,
-                type    = ExtractorLinkType.M3U8
-            )
+                    }
         )
 
         return true
