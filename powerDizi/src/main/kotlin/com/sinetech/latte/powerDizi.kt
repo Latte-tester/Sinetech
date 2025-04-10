@@ -126,7 +126,11 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     return@withContext null
                 }
 
-                val encodedTitle = URLEncoder.encode(title.replace(Regex("\\([^)]*\\)"), "").trim(), "UTF-8")
+                val cleanTitle = title
+                    .replace(Regex("\\s*-?\\s*\\d+\.\\s*Sezon\\s*\\d+\.\\s*Bölüm.*"), "")
+                    .replace(Regex("\\([^)]*\\)"), "")
+                    .trim()
+                val encodedTitle = URLEncoder.encode(cleanTitle, "UTF-8")
                 val searchUrl = "https://api.themoviedb.org/3/search/tv?api_key=$apiKey&query=$encodedTitle&language=tr-TR"
                 
                 val response = withContext(Dispatchers.IO) {
