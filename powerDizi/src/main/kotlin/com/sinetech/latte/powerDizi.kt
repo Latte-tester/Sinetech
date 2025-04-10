@@ -456,15 +456,14 @@ class IptvPlaylistParser {
         val titleAndAttributes = attributesString.split(",", limit = 2)
         
         val attributes = mutableMapOf<String, String>()
-        if (titleAndAttributes.size > 1) {
-            val attrRegex = Regex("([\\w-]+)=\"([^\"]*)\"|([\\w-]+)=([^\"]+)")
-            
-            attrRegex.findAll(titleAndAttributes[0]).forEach { matchResult ->
-                val (quotedKey, quotedValue, unquotedKey, unquotedValue) = matchResult.destructured
-                val key = quotedKey.takeIf { it.isNotEmpty() } ?: unquotedKey
-                val value = quotedValue.takeIf { it.isNotEmpty() } ?: unquotedValue
-                attributes[key] = value.replaceQuotesAndTrim()
-            }
+        val attrRegex = Regex("([\\w-]+)=\"([^\"]*)\"|([\\w-]+)=([^\"]+)")
+        
+        // Tüm satırı tarayarak özellikleri bul
+        attrRegex.findAll(attributesString).forEach { matchResult ->
+            val (quotedKey, quotedValue, unquotedKey, unquotedValue) = matchResult.destructured
+            val key = quotedKey.takeIf { it.isNotEmpty() } ?: unquotedKey
+            val value = quotedValue.takeIf { it.isNotEmpty() } ?: unquotedValue
+            attributes[key] = value.replaceQuotesAndTrim()
         }
 
         if (!attributes.containsKey("tvg-country")) {
