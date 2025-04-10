@@ -117,7 +117,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
 
     override suspend fun quickSearch(query: String): List<SearchResponse> = search(query)
 
-    private suspend fun fetchTMDBData(title: String): JSONObject? {
+    private suspend fun fetchTMDBData(title: String, season: Int, episode: Int): JSONObject? {
         return withContext(Dispatchers.IO) {
             try {
                 val apiKey = BuildConfig.TMDB_SECRET_API.trim('"')
@@ -128,16 +128,16 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
 
                 val encodedTitle = URLEncoder.encode(title.replace(Regex("\\([^)]*\\)"), "").trim(), "UTF-8")
                 val searchUrl = "https://api.themoviedb.org/3/search/tv?api_key=$apiKey&query=$encodedTitle&language=tr-TR"
-                
+
                 val response = withContext(Dispatchers.IO) {
                     URL(searchUrl).readText()
                 }
                 val jsonResponse = JSONObject(response)
                 val results = jsonResponse.getJSONArray("results")
-                
+
                 if (results.length() > 0) {
                     val tvId = results.getJSONObject(0).getInt("id")
-                    val detailsUrl = "https://api.themoviedb.org/3/tv/$tvId?api_key=$apiKey&append_to_response=credits&language=tr-TR"
+                    val detailsUrl = "https://api.themoviedb.org/3/tv/$tvId/season/$season/episode/$episode?api_key=$apiKey&append_to_response=credits&language=tr-TR"
                     val detailsResponse = withContext(Dispatchers.IO) {
                         URL(detailsUrl).readText()
                     }
