@@ -266,11 +266,12 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         Log.d("IPTV", "kanal » $kanal")
 
         val videoUrl = loadData.url
-        val videoType = if (videoUrl.endsWith(".mkv", ignoreCase = true)) {
-            ExtractorLinkType.MP4
-        } else {
-            ExtractorLinkType.M3U8
-        }
+        val videoType = when {
+
+            videoUrl.endsWith(".m3u8", ignoreCase = true) -> ExtractorLinkType.M3U8
+            else -> ExtractorLinkType.VIDEO
+            
+            }
 
         callback.invoke(
             newExtractorLink(
