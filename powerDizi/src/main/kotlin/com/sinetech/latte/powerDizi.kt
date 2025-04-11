@@ -233,6 +233,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     val castArray = creditsObject.optJSONArray("cast")
                     if (castArray != null && castArray.length() > 0) {
                         append("<br>👥 <b>Oyuncular:</b><br>")
+                        append("<div style='display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-start;'>")
                         for (i in 0 until minOf(castArray.length(), 8)) {
                             val actor = castArray.optJSONObject(i)
                             val actorName = actor?.optString("name", "") ?: ""
@@ -240,17 +241,17 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                             val profilePath = actor?.optString("profile_path", "") ?: ""
                             
                             if (actorName.isNotEmpty()) {
-                                append("<div style='display:inline-block; margin:5px; text-align:center; width:100px;'>")
+                                append("<div style='flex:0 0 auto; text-align:center; width:80px;'>")
                                 if (profilePath.isNotEmpty()) {
                                     val imageUrl = "https://image.tmdb.org/t/p/w200$profilePath"
-                                    append("<img src='$imageUrl' width='100' height='150' style='border-radius:10px; margin-bottom:5px;'><br>")
+                                    append("<img src='$imageUrl' width='80' height='120' style='border-radius:8px; margin-bottom:4px;'><br>")
                                 }
-                                append("<b>$actorName</b>")
-                                if (character.isNotEmpty()) append("<br><small>$character</small>")
+                                append("<b style='font-size:12px;'>$actorName</b>")
+                                if (character.isNotEmpty()) append("<br><small style='font-size:10px;'>$character</small>")
                                 append("</div>")
                             }
                         }
-                        append("<br>")
+                        append("</div><br>")
                     } else {
                         val castList = mutableListOf<String>()
                         if (castArray != null) {
@@ -269,19 +270,25 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 if (videos != null) {
                     val results = videos.optJSONArray("results")
                     if (results != null && results.length() > 0) {
+                        var foundTrailer = false
                         for (i in 0 until results.length()) {
                             val video = results.optJSONObject(i)
                             val videoType = video?.optString("type", "") ?: ""
                             val videoKey = video?.optString("key", "") ?: ""
                             val videoSite = video?.optString("site", "") ?: ""
+                            val videoName = video?.optString("name", "") ?: ""
                             
                             if ((videoType == "Trailer" || videoType == "Teaser") && videoSite == "YouTube" && videoKey.isNotEmpty()) {
-                                append("<br>🎬 <b>Dizi Fragmanı:</b><br>")
+                                append("<br>🎬 <b>Dizi Fragmanı:</b> $videoName<br>")
                                 append("<div class='video-container' style='position:relative; padding-bottom:56.25%; height:0; overflow:hidden; margin:10px 0;'>")
                                 append("<iframe style='position:absolute; top:0; left:0; width:100%; height:100%;' src='https://www.youtube.com/embed/$videoKey' frameborder='0' allowfullscreen></iframe>")
                                 append("</div><br>")
+                                foundTrailer = true
                                 break
                             }
+                        }
+                        if (!foundTrailer) {
+                            Log.d("TMDB", "No trailer found in series videos")
                         }
                     }
                 }
@@ -309,6 +316,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     val episodeCast = episodeCredits.optJSONArray("cast")
                     if (episodeCast != null && episodeCast.length() > 0) {
                         append("<br>👥 <b>Bu Bölümdeki Oyuncular:</b><br>")
+                        append("<div style='display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-start;'>")
                         for (i in 0 until minOf(episodeCast.length(), 5)) {
                             val actor = episodeCast.optJSONObject(i)
                             val actorName = actor?.optString("name", "") ?: ""
@@ -316,38 +324,52 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                             val profilePath = actor?.optString("profile_path", "") ?: ""
                             
                             if (actorName.isNotEmpty()) {
-                                append("<div style='display:inline-block; margin:5px; text-align:center; width:100px;'>")
+                                append("<div style='flex:0 0 auto; text-align:center; width:80px;'>")
                                 if (profilePath.isNotEmpty()) {
                                     val imageUrl = "https://image.tmdb.org/t/p/w200$profilePath"
-                                    append("<img src='$imageUrl' width='100' height='150' style='border-radius:10px; margin-bottom:5px;'><br>")
+                                    append("<img src='$imageUrl' width='80' height='120' style='border-radius:8px; margin-bottom:4px;'><br>")
                                 }
-                                append("<b>$actorName</b>")
-                                if (character.isNotEmpty()) append("<br><small>$character</small>")
+                                append("<b style='font-size:12px;'>$actorName</b>")
+                                if (character.isNotEmpty()) append("<br><small style='font-size:10px;'>$character</small>")
                                 append("</div>")
                             }
                         }
-                        append("<br>")
+                        append("</div><br>")
                     }
                 }
                 
-                // Bölüm fragmanı
+                // Bölüm fragmanı ve diğer videoları
                 val videos = episodeData.optJSONObject("videos")
                 if (videos != null) {
                     val results = videos.optJSONArray("results")
                     if (results != null && results.length() > 0) {
+                        var foundVideo = false
                         for (i in 0 until results.length()) {
                             val video = results.optJSONObject(i)
                             val videoType = video?.optString("type", "") ?: ""
                             val videoKey = video?.optString("key", "") ?: ""
                             val videoSite = video?.optString("site", "") ?: ""
+                            val videoName = video?.optString("name", "") ?: ""
                             
-                            if ((videoType == "Trailer" || videoType == "Teaser") && videoSite == "YouTube" && videoKey.isNotEmpty()) {
-                                append("<br>🎬 <b>Bölüm Fragmanı:</b><br>")
+                            if (videoSite == "YouTube" && videoKey.isNotEmpty()) {
+                                val videoTypeText = when (videoType) {
+                                    "Trailer" -> "Fragman"
+                                    "Teaser" -> "Tanıtım"
+                                    "Clip" -> "Klip"
+                                    "Featurette" -> "Özel Video"
+                                    "Opening Credits" -> "Jenerik"
+                                    "Behind the Scenes" -> "Kamera Arkası"
+                                    else -> videoType
+                                }
+                                append("<br>🎬 <b>Bölüm $videoTypeText:</b> $videoName<br>")
                                 append("<div class='video-container' style='position:relative; padding-bottom:56.25%; height:0; overflow:hidden; margin:10px 0;'>")
                                 append("<iframe style='position:absolute; top:0; left:0; width:100%; height:100%;' src='https://www.youtube.com/embed/$videoKey' frameborder='0' allowfullscreen></iframe>")
                                 append("</div><br>")
-                                break
+                                foundVideo = true
                             }
+                        }
+                        if (!foundVideo) {
+                            Log.d("TMDB", "No videos found for episode")
                         }
                     }
                 }
