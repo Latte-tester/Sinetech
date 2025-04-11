@@ -233,6 +233,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     val castArray = creditsObject.optJSONArray("cast")
                     if (castArray != null && castArray.length() > 0) {
                         append("<br>👥 <b>Oyuncular:</b><br>")
+                        append("<div style='display:flex;flex-wrap:wrap;gap:10px;margin:5px 0'>")
                         for (i in 0 until minOf(castArray.length(), 8)) {
                             val actor = castArray.optJSONObject(i)
                             val actorName = actor?.optString("name", "") ?: ""
@@ -245,12 +246,13 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                                     2 -> "👨" // Erkek
                                     else -> "👤" // Belirsiz
                                 }
+                                append("<div style='background:#f0f0f0;padding:5px 10px;border-radius:5px'>")
                                 append("$genderIcon <b>$actorName</b>")
                                 if (character.isNotEmpty()) append(" as $character")
-                                append("<br>")
+                                append("</div>")
                             }
                         }
-                        append("<br>")
+                        append("</div><br>")
                     } else {
                         val castList = mutableListOf<String>()
                         if (castArray != null) {
