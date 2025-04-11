@@ -150,7 +150,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     Log.d("TMDB", "Found TV show: $foundTitle with ID: $tvId")
                     
                     // Dizi detaylarını getir
-                    val seriesUrl = "https://api.themoviedb.org/3/tv/$tvId?api_key=$apiKey&append_to_response=credits,images,videos&language=tr-TR"
+                    val seriesUrl = "https://api.themoviedb.org/3/tv/$tvId?api_key=$apiKey&append_to_response=credits,images&language=tr-TR"
                     val seriesResponse = withContext(Dispatchers.IO) {
                         URL(seriesUrl).readText()
                     }
@@ -158,7 +158,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     
                     // Bölüm detaylarını getir
                     try {
-                        val episodeUrl = "https://api.themoviedb.org/3/tv/$tvId/season/$season/episode/$episode?api_key=$apiKey&append_to_response=credits,images,videos&language=tr-TR"
+                        val episodeUrl = "https://api.themoviedb.org/3/tv/$tvId/season/$season/episode/$episode?api_key=$apiKey&append_to_response=credits,images&language=tr-TR"
                         val episodeResponse = withContext(Dispatchers.IO) {
                             URL(episodeUrl).readText()
                         }
@@ -192,8 +192,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val cleanTitle = loadData.title.replace(Regex("""[-\s]*\d+\.?\s*Sezon\s*\d+\.?\s*Bölüm.*"""), "").trim()
         val (seriesData, episodeData) = fetchTMDBData(cleanTitle, loadData.season, loadData.episode)
         
-        val plotBuilder = StringBuilder()
-        with(plotBuilder) {
+        val plot = buildString {
             // Her zaman önce dizi bilgilerini göster
             if (seriesData != null) {
                 append("<b>📺 DİZİ BİLGİLERİ</b><br><br>")
@@ -228,31 +227,42 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 if (numberOfSeasons > 1) append("📅 <b>Toplam Sezon:</b> $numberOfSeasons<br>")
                 if (genreList.isNotEmpty()) append("🎭 <b>Dizi Türü:</b> ${genreList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
                 
-                // Dizi oyuncuları listesi
+                // Dizi oyuncuları fotoğraflarıyla
                 val creditsObject = seriesData.optJSONObject("credits")
                 if (creditsObject != null) {
                     val castArray = creditsObject.optJSONArray("cast")
                     if (castArray != null && castArray.length() > 0) {
                         append("<br>👥 <b>Oyuncular:</b><br>")
-                        val castList = mutableListOf<String>()
-                        for (i in 0 until minOf(castArray.length(), 10)) {
+                        for (i in 0 until minOf(castArray.length(), 8)) {
                             val actor = castArray.optJSONObject(i)
                             val actorName = actor?.optString("name", "") ?: ""
                             val character = actor?.optString("character", "") ?: ""
+                            val profilePath = actor?.optString("profile_path", "") ?: ""
+                            
                             if (actorName.isNotEmpty()) {
-                                castList.add(if (character.isNotEmpty()) "$actorName ($character)" else actorName)
+                                if (profilePath.isNotEmpty()) {
+                                    val imageUrl = "https://image.tmdb.org/t/p/w200$profilePath"
+                                    append("<img src='$imageUrl' width='50' height='75' style='vertical-align:middle; margin-right:10px;'> ")
+                                }
+                                append("<b>$actorName</b>")
+                                if (character.isNotEmpty()) append(" as $character")
+                                append("<br>")
+                            }
+                        }
+                        append("<br>")
+                    } else {
+                        val castList = mutableListOf<String>()
+                        if (castArray != null) {
+                            for (i in 0 until minOf(castArray.length(), 10)) {
+                                castList.add(castArray.optJSONObject(i)?.optString("name") ?: "")
                             }
                         }
                         if (castList.isNotEmpty()) {
-                            append("<div style='background-color:#f8f9fa; border-radius:8px; padding:12px; margin:10px 0;'>")
-                            append(castList.joinToString("<br>"))
-                            append("</div><br>")
+                            append("👥 <b>Oyuncular:</b> ${castList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
                         }
                     }
                 }
-                }
                 
-                append("<hr>")
             }
             
             // Bölüm bilgileri
@@ -275,7 +285,6 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     val episodeCast = episodeCredits.optJSONArray("cast")
                     if (episodeCast != null && episodeCast.length() > 0) {
                         append("<br>👥 <b>Bu Bölümdeki Oyuncular:</b><br>")
-                        append("<div style='display:grid; grid-template-columns:repeat(auto-fill, minmax(120px, 1fr)); gap:12px; justify-content:center; padding:12px; margin:10px 0;'>")
                         for (i in 0 until minOf(episodeCast.length(), 5)) {
                             val actor = episodeCast.optJSONObject(i)
                             val actorName = actor?.optString("name", "") ?: ""
@@ -283,25 +292,19 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                             val profilePath = actor?.optString("profile_path", "") ?: ""
                             
                             if (actorName.isNotEmpty()) {
-                                append("<div style='text-align:center; background-color:#ffffff; border-radius:12px; padding:12px; box-shadow:0 4px 8px rgba(0,0,0,0.1); transition:transform 0.2s; cursor:pointer;'>")
                                 if (profilePath.isNotEmpty()) {
-                                    val imageUrl = "https://image.tmdb.org/t/p/w300$profilePath"
-                                    append("<div style='aspect-ratio:1/1; margin-bottom:10px; border-radius:50%; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.15);'>")
-                                    append("<img src='$imageUrl' style='width:100%; height:100%; object-fit:cover;'>")
-                                    append("</div>")
+                                    val imageUrl = "https://image.tmdb.org/t/p/w200$profilePath"
+                                    append("<img src='$imageUrl' width='50' height='75' style='vertical-align:middle; margin-right:10px;'> ")
                                 }
-                                append("<div style='padding:6px;'>")
-                                append("<b style='font-size:14px; display:block; margin-bottom:6px; color:#333;'>$actorName</b>")
-                                if (character.isNotEmpty()) append("<span style='font-size:12px; color:#666;'>$character</span>")
-                                append("</div>")
-                                append("</div>")
+                                append("<b>$actorName</b>")
+                                if (character.isNotEmpty()) append(" as $character")
+                                append("<br>")
                             }
                         }
-                        append("</div><br>")
+                        append("<br>")
                     }
                 }
                 
-                append("<hr>")
             }
             
             // Eğer hiçbir TMDB verisi yoksa, en azından temel bilgileri göster
@@ -342,8 +345,6 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     )
                 } else null
             }
-
-        val plot = plotBuilder.toString()
 
         return newTvSeriesLoadResponse(
             loadData.title,
