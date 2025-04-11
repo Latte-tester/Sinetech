@@ -201,7 +201,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 val firstAirDate = seriesData.optString("first_air_date", "").split("-").firstOrNull() ?: ""
                 val ratingValue = seriesData.optDouble("vote_average", -1.0)
                 val rating = if (ratingValue >= 0) String.format("%.1f", ratingValue) else null
-                val tagline = tmdbData.optString("tagline", "")
+                val tagline = seriesData.optString("tagline", "")
                 val originalName = seriesData.optString("original_name", "")
                 val originalLanguage = seriesData.optString("original_language", "")
                 val numberOfSeasons = seriesData.optInt("number_of_seasons", 1)
@@ -288,7 +288,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                                 }
                                 append("<div style='background:#f0f0f0;padding:5px 10px;border-radius:5px'>")
                                 append("$genderIcon <b>$actorName</b>")
-                                if (character.isNotEmpty()) append(" rolü: $character")
+                                if (character.isNotEmpty()) append(" ($character rolünde)")
                                 append("</div>")
                             }
                         }
