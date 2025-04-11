@@ -137,7 +137,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
 
                 if (results.length() > 0) {
                     val tvId = results.getJSONObject(0).getInt("id")
-                    val detailsUrl = "https://api.themoviedb.org/3/tv/$tvId/season/$season/episode/$episode?api_key=$apiKey&append_to_response=credits&language=tr-TR"
+                    val detailsUrl = "https://api.themoviedb.org/3/tv/$tvId/season/$season/episode/$episode?api_key=$apiKey&append_to_response=credits,images&language=tr-TR"
                     val detailsResponse = withContext(Dispatchers.IO) {
                         URL(detailsUrl).readText()
                     }
