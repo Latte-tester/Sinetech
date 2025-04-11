@@ -201,7 +201,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 val firstAirDate = seriesData.optString("first_air_date", "").split("-").firstOrNull() ?: ""
                 val ratingValue = seriesData.optDouble("vote_average", -1.0)
                 val rating = if (ratingValue >= 0) String.format("%.1f", ratingValue) else null
-                val tagline = seriesData.optString("tagline", "")
+                val tagline = seriesData.optString("tagline", "").trim()
                 val originalName = seriesData.optString("original_name", "")
                 val originalLanguage = seriesData.optString("original_language", "")
                 val numberOfSeasons = seriesData.optInt("number_of_seasons", 1)
@@ -225,8 +225,9 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     val turkishName = languageMap[langCode] ?: originalLanguage
                     append("🌐 <b>Orijinal Dil:</b> $turkishName<br>")
                 }
-                if (numberOfSeasons > 1) append("📅 <b>Toplam Sezon:</b> $numberOfSeasons<br>")
-                if (numberOfEpisodes > 1) append("📅 <b>Toplam Bölüm:</b> $numberOfEpisodes<br>")
+                if (numberOfSeasons > 0 && numberOfEpisodes > 0) 
+                    append("📅 <b>Toplam Sezon:</b> $numberOfSeasons ($numberOfEpisodes bölüm)<br>")
+
                 if (genreList.isNotEmpty()) append("🎭 <b>Dizi Türü:</b> ${genreList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
                 
                 // Dizi oyuncuları fotoğraflarıyla
