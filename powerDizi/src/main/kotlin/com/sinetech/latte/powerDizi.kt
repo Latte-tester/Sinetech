@@ -195,13 +195,13 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val plot = buildString {
             // Her zaman önce dizi bilgilerini göster
             if (seriesData != null) {
-                append("<b>📺<u> Dizi Bilgileri (Genel)</u></b><br><br>")
+                append("<b>📺<u> Dizi Bilgileri</u> (Genel)</b><br><br>")
                 
                 val overview = seriesData.optString("overview", "")
                 val firstAirDate = seriesData.optString("first_air_date", "").split("-").firstOrNull() ?: ""
                 val ratingValue = seriesData.optDouble("vote_average", -1.0)
                 val rating = if (ratingValue >= 0) String.format("%.1f", ratingValue) else null
-                val tagline = seriesData.optString("tagline", "").trim()
+                val tagline = tmdbData.optString("tagline", "")
                 val originalName = seriesData.optString("original_name", "")
                 val originalLanguage = seriesData.optString("original_language", "")
                 val numberOfSeasons = seriesData.optInt("number_of_seasons", 1)
@@ -254,7 +254,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             
             // Bölüm bilgileri
             if (episodeData != null) {
-                append("<br>")
+                append("<hr><br>")
                 append("<b>🎬<u> Bölüm Bilgileri</u></b><br><br>")
                 
                 val episodeTitle = episodeData.optString("name", "")
