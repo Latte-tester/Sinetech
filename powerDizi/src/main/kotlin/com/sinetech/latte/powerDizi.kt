@@ -237,14 +237,15 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                             val actor = castArray.optJSONObject(i)
                             val actorName = actor?.optString("name", "") ?: ""
                             val character = actor?.optString("character", "") ?: ""
-                            val profilePath = actor?.optString("profile_path", "") ?: ""
+                            val gender = actor?.optInt("gender", 0) ?: 0
                             
                             if (actorName.isNotEmpty()) {
-                                if (profilePath.isNotEmpty()) {
-                                    val imageUrl = "https://image.tmdb.org/t/p/w200$profilePath"
-                                    append("<img src='$imageUrl' width='50' height='75' style='vertical-align:middle; margin-right:10px;'> ")
+                                val genderIcon = when (gender) {
+                                    1 -> "👩" // Kadın
+                                    2 -> "👨" // Erkek
+                                    else -> "👤" // Belirsiz
                                 }
-                                append("<b>$actorName</b>")
+                                append("$genderIcon <b>$actorName</b>")
                                 if (character.isNotEmpty()) append(" as $character")
                                 append("<br>")
                             }
