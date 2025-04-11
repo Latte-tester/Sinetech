@@ -192,7 +192,8 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val cleanTitle = loadData.title.replace(Regex("""[-\s]*\d+\.?\s*Sezon\s*\d+\.?\s*Bölüm.*"""), "").trim()
         val (seriesData, episodeData) = fetchTMDBData(cleanTitle, loadData.season, loadData.episode)
         
-        val plot = buildString {
+        val plotBuilder = StringBuilder()
+        with(plotBuilder) {
             // Her zaman önce dizi bilgilerini göster
             if (seriesData != null) {
                 append("<b>📺 DİZİ BİLGİLERİ</b><br><br>")
@@ -341,6 +342,8 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     )
                 } else null
             }
+
+        val plot = plotBuilder.toString()
 
         return newTvSeriesLoadResponse(
             loadData.title,
