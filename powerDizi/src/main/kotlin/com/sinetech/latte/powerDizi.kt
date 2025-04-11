@@ -300,42 +300,6 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     }
                 }
                 
-                // Bölüm fragmanı ve diğer videoları
-                val videos = episodeData.optJSONObject("videos")
-                if (videos != null) {
-                    val results = videos.optJSONArray("results")
-                    if (results != null && results.length() > 0) {
-                        var foundVideo = false
-                        for (i in 0 until results.length()) {
-                            val video = results.optJSONObject(i)
-                            val videoType = video?.optString("type", "") ?: ""
-                            val videoKey = video?.optString("key", "") ?: ""
-                            val videoSite = video?.optString("site", "") ?: ""
-                            val videoName = video?.optString("name", "") ?: ""
-                            
-                            if (videoSite == "YouTube" && videoKey.isNotEmpty()) {
-                                val videoTypeText = when (videoType) {
-                                    "Trailer" -> "Fragman"
-                                    "Teaser" -> "Tanıtım"
-                                    "Clip" -> "Klip"
-                                    "Featurette" -> "Özel Video"
-                                    "Opening Credits" -> "Jenerik"
-                                    "Behind the Scenes" -> "Kamera Arkası"
-                                    else -> videoType
-                                }
-                                append("<br>🎬 <b>Bölüm $videoTypeText:</b> $videoName<br>")
-                                append("<div class='video-container' style='position:relative; padding-bottom:56.25%; height:0; overflow:hidden; margin:15px 0; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.1);'>")
-                                append("<iframe style='position:absolute; top:0; left:0; width:100%; height:100%; border:none;' src='https://www.youtube.com/embed/$videoKey' allowfullscreen></iframe>")
-                                append("</div><br>")
-                                foundVideo = true
-                            }
-                        }
-                        if (!foundVideo) {
-                            Log.d("TMDB", "No videos found for episode")
-                        }
-                    }
-                }
-                
                 append("<hr>")
             }
             
