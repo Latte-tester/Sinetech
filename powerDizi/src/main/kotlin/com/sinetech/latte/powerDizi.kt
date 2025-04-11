@@ -197,6 +197,34 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             if (seriesData != null) {
                 append("<b>📺 DİZİ BİLGİLERİ</b><br><br>")
                 
+                // Dizi fragmanını en üste taşı
+                val videos = seriesData.optJSONObject("videos")
+                if (videos != null) {
+                    val results = videos.optJSONArray("results")
+                    if (results != null && results.length() > 0) {
+                        var foundTrailer = false
+                        for (i in 0 until results.length()) {
+                            val video = results.optJSONObject(i)
+                            val videoType = video?.optString("type", "") ?: ""
+                            val videoKey = video?.optString("key", "") ?: ""
+                            val videoSite = video?.optString("site", "") ?: ""
+                            val videoName = video?.optString("name", "") ?: ""
+                            
+                            if (videoType == "Trailer" && videoSite == "YouTube" && videoKey.isNotEmpty()) {
+                                append("🎬 <b>Dizi Fragmanı:</b> $videoName<br>")
+                                append("<div class='video-container' style='position:relative; padding-bottom:56.25%; height:0; overflow:hidden; margin:15px 0; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.2); background-color:#000;'>")
+                                append("<iframe style='position:absolute; top:0; left:0; width:100%; height:100%; border:none;' src='https://www.youtube.com/embed/$videoKey?rel=0&showinfo=0&autoplay=0' allowfullscreen></iframe>")
+                                append("</div><br>")
+                                foundTrailer = true
+                                break
+                            }
+                        }
+                        if (!foundTrailer) {
+                            Log.d("TMDB", "No trailer found in series videos")
+                        }
+                    }
+                }
+                
                 val overview = seriesData.optString("overview", "")
                 val firstAirDate = seriesData.optString("first_air_date", "").split("-").firstOrNull() ?: ""
                 val ratingValue = seriesData.optDouble("vote_average", -1.0)
@@ -265,34 +293,6 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                         }
                         if (castList.isNotEmpty()) {
                             append("👥 <b>Oyuncular:</b> ${castList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
-                        }
-                    }
-                }
-                
-                // Dizi fragmanı
-                val videos = seriesData.optJSONObject("videos")
-                if (videos != null) {
-                    val results = videos.optJSONArray("results")
-                    if (results != null && results.length() > 0) {
-                        var foundTrailer = false
-                        for (i in 0 until results.length()) {
-                            val video = results.optJSONObject(i)
-                            val videoType = video?.optString("type", "") ?: ""
-                            val videoKey = video?.optString("key", "") ?: ""
-                            val videoSite = video?.optString("site", "") ?: ""
-                            val videoName = video?.optString("name", "") ?: ""
-                            
-                            if (videoType == "Trailer" && videoSite == "YouTube" && videoKey.isNotEmpty()) {
-                                append("<br>🎬 <b>Dizi Fragmanı:</b> $videoName<br>")
-                                append("<div class='video-container' style='position:relative; padding-bottom:56.25%; height:0; overflow:hidden; margin:15px 0; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.1); background-color:#000;'>")
-                                append("<iframe style='position:absolute; top:0; left:0; width:100%; height:100%; border:none;' src='https://www.youtube.com/embed/$videoKey?rel=0&showinfo=0' allowfullscreen></iframe>")
-                                append("</div><br>")
-                                foundTrailer = true
-                                break
-                            }
-                        }
-                        if (!foundTrailer) {
-                            Log.d("TMDB", "No trailer found in series videos")
                         }
                     }
                 }
