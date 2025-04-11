@@ -197,34 +197,6 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             if (seriesData != null) {
                 append("<b>📺 DİZİ BİLGİLERİ</b><br><br>")
                 
-                // Dizi fragmanını en üste taşı
-                val videos = seriesData.optJSONObject("videos")
-                if (videos != null) {
-                    val results = videos.optJSONArray("results")
-                    if (results != null && results.length() > 0) {
-                        var foundTrailer = false
-                        for (i in 0 until results.length()) {
-                            val video = results.optJSONObject(i)
-                            val videoType = video?.optString("type", "") ?: ""
-                            val videoKey = video?.optString("key", "") ?: ""
-                            val videoSite = video?.optString("site", "") ?: ""
-                            val videoName = video?.optString("name", "") ?: ""
-                            
-                            if (videoType == "Trailer" && videoSite == "YouTube" && videoKey.isNotEmpty()) {
-                                append("🎬 <b>Dizi Fragmanı:</b> $videoName<br>")
-                                append("<div class='video-container' style='position:relative; padding-bottom:56.25%; height:0; overflow:hidden; margin:15px 0; border-radius:12px; box-shadow:0 4px 12px rgba(0,0,0,0.2); background-color:#000;'>")
-                                append("<iframe style='position:absolute; top:0; left:0; width:100%; height:100%; border:none;' src='https://www.youtube.com/embed/$videoKey?rel=0&showinfo=0&autoplay=0' allowfullscreen></iframe>")
-                                append("</div><br>")
-                                foundTrailer = true
-                                break
-                            }
-                        }
-                        if (!foundTrailer) {
-                            Log.d("TMDB", "No trailer found in series videos")
-                        }
-                    }
-                }
-                
                 val overview = seriesData.optString("overview", "")
                 val firstAirDate = seriesData.optString("first_air_date", "").split("-").firstOrNull() ?: ""
                 val ratingValue = seriesData.optDouble("vote_average", -1.0)
@@ -255,46 +227,28 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 if (numberOfSeasons > 1) append("📅 <b>Toplam Sezon:</b> $numberOfSeasons<br>")
                 if (genreList.isNotEmpty()) append("🎭 <b>Dizi Türü:</b> ${genreList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
                 
-                // Dizi oyuncuları fotoğraflarıyla
+                // Dizi oyuncuları listesi
                 val creditsObject = seriesData.optJSONObject("credits")
                 if (creditsObject != null) {
                     val castArray = creditsObject.optJSONArray("cast")
                     if (castArray != null && castArray.length() > 0) {
                         append("<br>👥 <b>Oyuncular:</b><br>")
-                        append("<div style='display:grid; grid-template-columns:repeat(auto-fill, minmax(120px, 1fr)); gap:12px; justify-content:center; padding:12px; margin:10px 0;'>")
-                        for (i in 0 until minOf(castArray.length(), 8)) {
+                        val castList = mutableListOf<String>()
+                        for (i in 0 until minOf(castArray.length(), 10)) {
                             val actor = castArray.optJSONObject(i)
                             val actorName = actor?.optString("name", "") ?: ""
                             val character = actor?.optString("character", "") ?: ""
-                            val profilePath = actor?.optString("profile_path", "") ?: ""
-                            
                             if (actorName.isNotEmpty()) {
-                                append("<div style='text-align:center; background-color:#ffffff; border-radius:12px; padding:12px; box-shadow:0 4px 8px rgba(0,0,0,0.1); transition:transform 0.2s; cursor:pointer;'>")
-                                if (profilePath.isNotEmpty()) {
-                                    val imageUrl = "https://image.tmdb.org/t/p/w300$profilePath"
-                                    append("<div style='aspect-ratio:1/1; margin-bottom:10px; border-radius:50%; overflow:hidden; box-shadow:0 4px 12px rgba(0,0,0,0.15);'>")
-                                    append("<img src='$imageUrl' style='width:100%; height:100%; object-fit:cover;'>")
-                                    append("</div>")
-                                }
-                                append("<div style='padding:6px;'>")
-                                append("<b style='font-size:14px; display:block; margin-bottom:6px; color:#333;'>$actorName</b>")
-                                if (character.isNotEmpty()) append("<span style='font-size:12px; color:#666;'>$character</span>")
-                                append("</div>")
-                                append("</div>")
-                            }
-                        }
-                        append("</div><br>")
-                    } else {
-                        val castList = mutableListOf<String>()
-                        if (castArray != null) {
-                            for (i in 0 until minOf(castArray.length(), 10)) {
-                                castList.add(castArray.optJSONObject(i)?.optString("name") ?: "")
+                                castList.add(if (character.isNotEmpty()) "$actorName ($character)" else actorName)
                             }
                         }
                         if (castList.isNotEmpty()) {
-                            append("👥 <b>Oyuncular:</b> ${castList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
+                            append("<div style='background-color:#f8f9fa; border-radius:8px; padding:12px; margin:10px 0;'>")
+                            append(castList.joinToString("<br>"))
+                            append("</div><br>")
                         }
                     }
+                }
                 }
                 
                 append("<hr>")
