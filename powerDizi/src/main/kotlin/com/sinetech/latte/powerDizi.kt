@@ -233,7 +233,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     val castArray = creditsObject.optJSONArray("cast")
                     if (castArray != null && castArray.length() > 0) {
                         append("<br>👥 <b>Oyuncular:</b><br>")
-                        append("<div style='display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-start;'>")
+                        append("<div style='display:grid; grid-template-columns:repeat(auto-fill, minmax(120px, 1fr)); gap:16px; justify-content:center; padding:8px;'>")
                         for (i in 0 until minOf(castArray.length(), 8)) {
                             val actor = castArray.optJSONObject(i)
                             val actorName = actor?.optString("name", "") ?: ""
@@ -241,13 +241,17 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                             val profilePath = actor?.optString("profile_path", "") ?: ""
                             
                             if (actorName.isNotEmpty()) {
-                                append("<div style='flex:0 0 auto; text-align:center; width:80px;'>")
+                                append("<div style='text-align:center;'>")
                                 if (profilePath.isNotEmpty()) {
-                                    val imageUrl = "https://image.tmdb.org/t/p/w200$profilePath"
-                                    append("<img src='$imageUrl' width='80' height='120' style='border-radius:8px; margin-bottom:4px;'><br>")
+                                    val imageUrl = "https://image.tmdb.org/t/p/w300$profilePath"
+                                    append("<div style='aspect-ratio:2/3; margin-bottom:8px; border-radius:12px; overflow:hidden; box-shadow:0 2px 8px rgba(0,0,0,0.1);'>")
+                                    append("<img src='$imageUrl' style='width:100%; height:100%; object-fit:cover;'>")
+                                    append("</div>")
                                 }
-                                append("<b style='font-size:12px;'>$actorName</b>")
-                                if (character.isNotEmpty()) append("<br><small style='font-size:10px;'>$character</small>")
+                                append("<div style='padding:4px;'>")
+                                append("<b style='font-size:14px; display:block; margin-bottom:4px;'>$actorName</b>")
+                                if (character.isNotEmpty()) append("<span style='font-size:12px; color:#666;'>$character</span>")
+                                append("</div>")
                                 append("</div>")
                             }
                         }
@@ -280,8 +284,8 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                             
                             if ((videoType == "Trailer" || videoType == "Teaser") && videoSite == "YouTube" && videoKey.isNotEmpty()) {
                                 append("<br>🎬 <b>Dizi Fragmanı:</b> $videoName<br>")
-                                append("<div class='video-container' style='position:relative; padding-bottom:56.25%; height:0; overflow:hidden; margin:10px 0;'>")
-                                append("<iframe style='position:absolute; top:0; left:0; width:100%; height:100%;' src='https://www.youtube.com/embed/$videoKey' frameborder='0' allowfullscreen></iframe>")
+                                append("<div class='video-container' style='position:relative; padding-bottom:56.25%; height:0; overflow:hidden; margin:15px 0; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.1);'>")
+                                append("<iframe style='position:absolute; top:0; left:0; width:100%; height:100%; border:none;' src='https://www.youtube.com/embed/$videoKey' allowfullscreen></iframe>")
                                 append("</div><br>")
                                 foundTrailer = true
                                 break
@@ -362,8 +366,8 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                                     else -> videoType
                                 }
                                 append("<br>🎬 <b>Bölüm $videoTypeText:</b> $videoName<br>")
-                                append("<div class='video-container' style='position:relative; padding-bottom:56.25%; height:0; overflow:hidden; margin:10px 0;'>")
-                                append("<iframe style='position:absolute; top:0; left:0; width:100%; height:100%;' src='https://www.youtube.com/embed/$videoKey' frameborder='0' allowfullscreen></iframe>")
+                                append("<div class='video-container' style='position:relative; padding-bottom:56.25%; height:0; overflow:hidden; margin:15px 0; border-radius:12px; box-shadow:0 2px 8px rgba(0,0,0,0.1);'>")
+                                append("<iframe style='position:absolute; top:0; left:0; width:100%; height:100%; border:none;' src='https://www.youtube.com/embed/$videoKey' allowfullscreen></iframe>")
                                 append("</div><br>")
                                 foundVideo = true
                             }
