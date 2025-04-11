@@ -288,23 +288,26 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     val episodeCast = episodeCredits.optJSONArray("cast")
                     if (episodeCast != null && episodeCast.length() > 0) {
                         append("<br>👥 <b>Bu Bölümdeki Oyuncular:</b><br>")
-                        for (i in 0 until minOf(episodeCast.length(), 5)) {
+                        append("<div style='display:flex;flex-wrap:wrap;gap:10px;margin:5px 0'>")
+                        for (i in 0 until minOf(episodeCast.length(), 8)) {
                             val actor = episodeCast.optJSONObject(i)
                             val actorName = actor?.optString("name", "") ?: ""
                             val character = actor?.optString("character", "") ?: ""
-                            val profilePath = actor?.optString("profile_path", "") ?: ""
+                            val gender = actor?.optInt("gender", 0) ?: 0
                             
                             if (actorName.isNotEmpty()) {
-                                if (profilePath.isNotEmpty()) {
-                                    val imageUrl = "https://image.tmdb.org/t/p/w200$profilePath"
-                                    append("<img src='$imageUrl' width='50' height='75' style='vertical-align:middle; margin-right:10px;'> ")
+                                val genderIcon = when (gender) {
+                                    1 -> "👩" // Kadın
+                                    2 -> "👨" // Erkek
+                                    else -> "👤" // Belirsiz
                                 }
-                                append("<b>$actorName</b>")
+                                append("<div style='background:#f0f0f0;padding:5px 10px;border-radius:5px'>")
+                                append("$genderIcon <b>$actorName</b>")
                                 if (character.isNotEmpty()) append(" as $character")
-                                append("<br>")
+                                append("</div>")
                             }
                         }
-                        append("<br>")
+                        append("</div><br>")
                     }
                 }
                 
