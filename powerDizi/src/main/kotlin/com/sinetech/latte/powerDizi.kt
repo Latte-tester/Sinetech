@@ -117,13 +117,13 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
 
     override suspend fun quickSearch(query: String): List<SearchResponse> = search(query)
 
-    private suspend fun fetchTMDBData(title: String, season: Int, episode: Int): JSONObject? {
+    private suspend fun fetchTMDBData(title: String, season: Int, episode: Int): Pair<JSONObject?, JSONObject?> {
         return withContext(Dispatchers.IO) {
             try {
                 val apiKey = BuildConfig.TMDB_SECRET_API.trim('"')
                 if (apiKey.isEmpty()) {
                     Log.e("TMDB", "API key is empty")
-                    return@withContext null
+                    return@withContext Pair(null, null)
                 }
 
                 val encodedTitle = URLEncoder.encode(title.replace(Regex("\\([^)]*\\)"), "").trim(), "UTF-8")
@@ -137,16 +137,27 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
 
                 if (results.length() > 0) {
                     val tvId = results.getJSONObject(0).getInt("id")
-                    val detailsUrl = "https://api.themoviedb.org/3/tv/$tvId/season/$season/episode/$episode?api_key=$apiKey&append_to_response=credits,images&language=tr-TR"
-                    val detailsResponse = withContext(Dispatchers.IO) {
-                        URL(detailsUrl).readText()
+                    
+                    // Fetch series details
+                    val seriesUrl = "https://api.themoviedb.org/3/tv/$tvId?api_key=$apiKey&append_to_response=credits,images,videos&language=tr-TR"
+                    val seriesResponse = withContext(Dispatchers.IO) {
+                        URL(seriesUrl).readText()
                     }
-                    return@withContext JSONObject(detailsResponse)
+                    val seriesData = JSONObject(seriesResponse)
+                    
+                    // Fetch episode details
+                    val episodeUrl = "https://api.themoviedb.org/3/tv/$tvId/season/$season/episode/$episode?api_key=$apiKey&append_to_response=credits,images,videos&language=tr-TR"
+                    val episodeResponse = withContext(Dispatchers.IO) {
+                        URL(episodeUrl).readText()
+                    }
+                    val episodeData = JSONObject(episodeResponse)
+                    
+                    return@withContext Pair(seriesData, episodeData)
                 }
-                null
+                Pair(null, null)
             } catch (e: Exception) {
                 Log.e("TMDB", "Error fetching TMDB data: ${e.message}")
-                null
+                Pair(null, null)
             }
         }
     }
@@ -158,20 +169,83 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val watchProgress = sharedPref?.getLong(progressKey, 0L) ?: 0L
         val loadData = fetchDataFromUrlOrJson(url)
         
-        val tmdbData = fetchTMDBData(loadData.title.replace(Regex("-\\d+\\.\\s*Sezon\\s*\\d+\\.\\s*Bölüm.*"), ""), loadData.season, loadData.episode)
+        val cleanTitle = loadData.title.replace(Regex("-\d+\.\s*Sezon\s*\d+\.\s*Bölüm.*"), "")
+        val (seriesData, episodeData) = fetchTMDBData(cleanTitle, loadData.season, loadData.episode)
         
         val plot = buildString {
-            if (tmdbData != null) {
-                val overview = tmdbData.optString("overview", "")
-                val firstAirDate = tmdbData.optString("first_air_date", "").split("-").firstOrNull() ?: ""
-                val ratingValue = tmdbData.optDouble("vote_average", -1.0)
+            // Bölüm bilgileri
+            if (episodeData != null) {
+                val episodeTitle = episodeData.optString("name", "")
+                val episodeOverview = episodeData.optString("overview", "")
+                val episodeAirDate = episodeData.optString("air_date", "").split("-").firstOrNull() ?: ""
+                val episodeRating = episodeData.optDouble("vote_average", -1.0)
+                
+                if (episodeTitle.isNotEmpty()) append("🎬 <b>Bölüm Adı:</b> ${episodeTitle}<br>")
+                if (episodeOverview.isNotEmpty()) append("📝 <b>Bölüm Konusu:</b><br>${episodeOverview}<br><br>")
+                if (episodeAirDate.isNotEmpty()) append("📅 <b>Yayın Tarihi:</b> $episodeAirDate<br>")
+                if (episodeRating >= 0) append("⭐ <b>Bölüm Puanı:</b> ${String.format("%.1f", episodeRating)} / 10<br>")
+                
+                // Bölüm oyuncuları
+                val episodeCredits = episodeData.optJSONObject("credits")
+                if (episodeCredits != null) {
+                    val episodeCast = episodeCredits.optJSONArray("cast")
+                    if (episodeCast != null && episodeCast.length() > 0) {
+                        append("<br>👥 <b>Bu Bölümdeki Oyuncular:</b><br>")
+                        for (i in 0 until minOf(episodeCast.length(), 5)) {
+                            val actor = episodeCast.optJSONObject(i)
+                            val actorName = actor?.optString("name", "") ?: ""
+                            val character = actor?.optString("character", "") ?: ""
+                            val profilePath = actor?.optString("profile_path", "") ?: ""
+                            
+                            if (actorName.isNotEmpty()) {
+                                if (profilePath.isNotEmpty()) {
+                                    val imageUrl = "https://image.tmdb.org/t/p/w200$profilePath"
+                                    append("<img src='$imageUrl' width='50' height='75' style='vertical-align:middle; margin-right:10px;'> ")
+                                }
+                                append("<b>$actorName</b>")
+                                if (character.isNotEmpty()) append(" as $character")
+                                append("<br>")
+                            }
+                        }
+                        append("<br>")
+                    }
+                }
+                
+                // Bölüm fragmanı
+                val videos = episodeData.optJSONObject("videos")
+                if (videos != null) {
+                    val results = videos.optJSONArray("results")
+                    if (results != null && results.length() > 0) {
+                        for (i in 0 until results.length()) {
+                            val video = results.optJSONObject(i)
+                            val videoType = video?.optString("type", "") ?: ""
+                            val videoKey = video?.optString("key", "") ?: ""
+                            val videoSite = video?.optString("site", "") ?: ""
+                            
+                            if ((videoType == "Trailer" || videoType == "Teaser") && videoSite == "YouTube" && videoKey.isNotEmpty()) {
+                                append("🎬 <b>Bölüm Fragmanı:</b><br>")
+                                append("<a href='https://www.youtube.com/watch?v=$videoKey'>İzlemek için tıklayın</a><br><br>")
+                                break
+                            }
+                        }
+                    }
+                }
+                
+                append("<hr>")
+            }
+            
+            // Dizi bilgileri
+            if (seriesData != null) {
+                val overview = seriesData.optString("overview", "")
+                val firstAirDate = seriesData.optString("first_air_date", "").split("-").firstOrNull() ?: ""
+                val ratingValue = seriesData.optDouble("vote_average", -1.0)
                 val rating = if (ratingValue >= 0) String.format("%.1f", ratingValue) else null
-                val tagline = tmdbData.optString("tagline", "")
-                val originalName = tmdbData.optString("original_name", "")
-                val originalLanguage = tmdbData.optString("original_language", "")
-                val numberOfSeasons = tmdbData.optInt("number_of_seasons", 1)
+                val tagline = seriesData.optString("tagline", "")
+                val originalName = seriesData.optString("original_name", "")
+                val originalLanguage = seriesData.optString("original_language", "")
+                val numberOfSeasons = seriesData.optInt("number_of_seasons", 1)
 
-                val genresArray = tmdbData.optJSONArray("genres")
+                val genresArray = seriesData.optJSONArray("genres")
                 val genreList = mutableListOf<String>()
                 if (genresArray != null) {
                     for (i in 0 until genresArray.length()) {
@@ -179,7 +253,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     }
                 }
                 
-                val creditsObject = tmdbData.optJSONObject("credits")
+                val creditsObject = seriesData.optJSONObject("credits")
                 val castList = mutableListOf<String>()
                 if (creditsObject != null) {
                     val castArray = creditsObject.optJSONArray("cast")
@@ -190,6 +264,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     }
                 }
                 
+                append("<b>📺 DİZİ BİLGİLERİ</b><br><br>")
                 if (tagline.isNotEmpty()) append("💭 <b>Slogan:</b><br>${tagline}<br><br>")
                 if (overview.isNotEmpty()) append("📝 <b>Konu:</b><br>${overview}<br><br>")
                 if (firstAirDate.isNotEmpty()) append("📅 <b>İlk Yayın Tarihi:</b> $firstAirDate<br>")
@@ -202,7 +277,53 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 }
                 if (numberOfSeasons > 1) append("📅 <b>Toplam Sezon:</b> $numberOfSeasons<br>")
                 if (genreList.isNotEmpty()) append("🎭 <b>Dizi Türü:</b> ${genreList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
-                if (castList.isNotEmpty()) append("👥 <b>Oyuncular:</b> ${castList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
+                
+                // Dizi oyuncuları fotoğraflarıyla
+                if (creditsObject != null) {
+                    val castArray = creditsObject.optJSONArray("cast")
+                    if (castArray != null && castArray.length() > 0) {
+                        append("<br>👥 <b>Oyuncular:</b><br>")
+                        for (i in 0 until minOf(castArray.length(), 8)) {
+                            val actor = castArray.optJSONObject(i)
+                            val actorName = actor?.optString("name", "") ?: ""
+                            val character = actor?.optString("character", "") ?: ""
+                            val profilePath = actor?.optString("profile_path", "") ?: ""
+                            
+                            if (actorName.isNotEmpty()) {
+                                if (profilePath.isNotEmpty()) {
+                                    val imageUrl = "https://image.tmdb.org/t/p/w200$profilePath"
+                                    append("<img src='$imageUrl' width='50' height='75' style='vertical-align:middle; margin-right:10px;'> ")
+                                }
+                                append("<b>$actorName</b>")
+                                if (character.isNotEmpty()) append(" as $character")
+                                append("<br>")
+                            }
+                        }
+                    } else if (castList.isNotEmpty()) {
+                        append("👥 <b>Oyuncular:</b> ${castList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
+                    }
+                }
+                
+                // Dizi fragmanı
+                val videos = seriesData.optJSONObject("videos")
+                if (videos != null) {
+                    val results = videos.optJSONArray("results")
+                    if (results != null && results.length() > 0) {
+                        for (i in 0 until results.length()) {
+                            val video = results.optJSONObject(i)
+                            val videoType = video?.optString("type", "") ?: ""
+                            val videoKey = video?.optString("key", "") ?: ""
+                            val videoSite = video?.optString("site", "") ?: ""
+                            
+                            if ((videoType == "Trailer" || videoType == "Teaser") && videoSite == "YouTube" && videoKey.isNotEmpty()) {
+                                append("<br>🎬 <b>Dizi Fragmanı:</b><br>")
+                                append("<a href='https://www.youtube.com/watch?v=$videoKey'>İzlemek için tıklayın</a><br>")
+                                break
+                            }
+                        }
+                    }
+                }
+                
                 append("<br>")
             }
             
