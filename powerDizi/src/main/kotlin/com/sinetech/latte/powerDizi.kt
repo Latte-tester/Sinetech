@@ -232,36 +232,17 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 if (creditsObject != null) {
                     val castArray = creditsObject.optJSONArray("cast")
                     if (castArray != null && castArray.length() > 0) {
-                        append("<br>👥 <b>Oyuncular:</b><br>")
-                        append("<div style='display:flex;flex-wrap:wrap;gap:10px;margin:5px 0'>")
-                        for (i in 0 until minOf(castArray.length(), 8)) {
+                        val castList = mutableListOf<String>()
+                        for (i in 0 until minOf(castArray.length(), 10)) {
                             val actor = castArray.optJSONObject(i)
                             val actorName = actor?.optString("name", "") ?: ""
                             val character = actor?.optString("character", "") ?: ""
-                            val gender = actor?.optInt("gender", 0) ?: 0
-                            
                             if (actorName.isNotEmpty()) {
-                                val genderIcon = when (gender) {
-                                    1 -> "👩" // Kadın
-                                    2 -> "👨" // Erkek
-                                    else -> "👤" // Belirsiz
-                                }
-                                append("<div style='background:#f0f0f0;padding:5px 10px;border-radius:5px'>")
-                                append("$genderIcon <b>$actorName</b>")
-                                if (character.isNotEmpty()) append(" as $character")
-                                append("</div>")
-                            }
-                        }
-                        append("</div><br>")
-                    } else {
-                        val castList = mutableListOf<String>()
-                        if (castArray != null) {
-                            for (i in 0 until minOf(castArray.length(), 10)) {
-                                castList.add(castArray.optJSONObject(i)?.optString("name") ?: "")
+                                castList.add(if (character.isNotEmpty()) "$actorName (${character})" else actorName)
                             }
                         }
                         if (castList.isNotEmpty()) {
-                            append("👥 <b>Oyuncular:</b> ${castList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
+                            append("👥 <b>Oyuncular:</b> ${castList.joinToString(", ")}<br>")
                         }
                     }
                 }
@@ -288,7 +269,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     val episodeCast = episodeCredits.optJSONArray("cast")
                     if (episodeCast != null && episodeCast.length() > 0) {
                         append("<br>👥 <b>Bu Bölümdeki Oyuncular:</b><br>")
-                        append("<div style='display:flex;flex-wrap:wrap;gap:10px;margin:5px 0'>")
+                        append("<div style='display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:5px 0'>")
                         for (i in 0 until minOf(episodeCast.length(), 8)) {
                             val actor = episodeCast.optJSONObject(i)
                             val actorName = actor?.optString("name", "") ?: ""
