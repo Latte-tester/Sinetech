@@ -240,13 +240,14 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                             val profilePath = actor?.optString("profile_path", "") ?: ""
                             
                             if (actorName.isNotEmpty()) {
+                                append("<div style='display:inline-block; margin:5px; text-align:center; width:100px;'>")
                                 if (profilePath.isNotEmpty()) {
                                     val imageUrl = "https://image.tmdb.org/t/p/w200$profilePath"
-                                    append("<img src='$imageUrl' width='50' height='75' style='vertical-align:middle; margin-right:10px;'> ")
+                                    append("<img src='$imageUrl' width='100' height='150' style='border-radius:10px; margin-bottom:5px;'><br>")
                                 }
                                 append("<b>$actorName</b>")
-                                if (character.isNotEmpty()) append(" as $character")
-                                append("<br>")
+                                if (character.isNotEmpty()) append("<br><small>$character</small>")
+                                append("</div>")
                             }
                         }
                         append("<br>")
@@ -276,7 +277,9 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                             
                             if ((videoType == "Trailer" || videoType == "Teaser") && videoSite == "YouTube" && videoKey.isNotEmpty()) {
                                 append("<br>🎬 <b>Dizi Fragmanı:</b><br>")
-                                append("<iframe width='100%' height='200' src='https://www.youtube.com/embed/$videoKey' frameborder='0' allowfullscreen></iframe><br>")
+                                append("<div class='video-container' style='position:relative; padding-bottom:56.25%; height:0; overflow:hidden; margin:10px 0;'>")
+                                append("<iframe style='position:absolute; top:0; left:0; width:100%; height:100%;' src='https://www.youtube.com/embed/$videoKey' frameborder='0' allowfullscreen></iframe>")
+                                append("</div><br>")
                                 break
                             }
                         }
@@ -313,13 +316,14 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                             val profilePath = actor?.optString("profile_path", "") ?: ""
                             
                             if (actorName.isNotEmpty()) {
+                                append("<div style='display:inline-block; margin:5px; text-align:center; width:100px;'>")
                                 if (profilePath.isNotEmpty()) {
                                     val imageUrl = "https://image.tmdb.org/t/p/w200$profilePath"
-                                    append("<img src='$imageUrl' width='50' height='75' style='vertical-align:middle; margin-right:10px;'> ")
+                                    append("<img src='$imageUrl' width='100' height='150' style='border-radius:10px; margin-bottom:5px;'><br>")
                                 }
                                 append("<b>$actorName</b>")
-                                if (character.isNotEmpty()) append(" as $character")
-                                append("<br>")
+                                if (character.isNotEmpty()) append("<br><small>$character</small>")
+                                append("</div>")
                             }
                         }
                         append("<br>")
@@ -339,7 +343,9 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                             
                             if ((videoType == "Trailer" || videoType == "Teaser") && videoSite == "YouTube" && videoKey.isNotEmpty()) {
                                 append("<br>🎬 <b>Bölüm Fragmanı:</b><br>")
-                                append("<iframe width='100%' height='200' src='https://www.youtube.com/embed/$videoKey' frameborder='0' allowfullscreen></iframe><br>")
+                                append("<div class='video-container' style='position:relative; padding-bottom:56.25%; height:0; overflow:hidden; margin:10px 0;'>")
+                                append("<iframe style='position:absolute; top:0; left:0; width:100%; height:100%;' src='https://www.youtube.com/embed/$videoKey' frameborder='0' allowfullscreen></iframe>")
+                                append("</div><br>")
                                 break
                             }
                         }
