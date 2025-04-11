@@ -189,7 +189,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val loadData = fetchDataFromUrlOrJson(url)
         
         // Dizi adını temizle - hem "Dizi-1.Sezon" hem de "Dizi 1. Sezon" formatlarını destekler
-        val cleanTitle = loadData.title.replace(Regex("[-\s]*\d+\.?\s*Sezon\s*\d+\.?\s*Bölüm.*"), "").trim()
+        val cleanTitle = loadData.title.replace(Regex("""[-\s]*\d+\.?\s*Sezon\s*\d+\.?\s*Bölüm.*"""), "").trim()
         val (seriesData, episodeData) = fetchTMDBData(cleanTitle, loadData.season, loadData.episode)
         
         val plot = buildString {
