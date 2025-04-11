@@ -195,7 +195,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val plot = buildString {
             // Her zaman önce dizi bilgilerini göster
             if (seriesData != null) {
-                append("<b>📺 DİZİ BİLGİLERİ</b><br><br>")
+                append("<b>📺<u> Dizi Bilgileri (Genel)</u></b><br><br>")
                 
                 val overview = seriesData.optString("overview", "")
                 val firstAirDate = seriesData.optString("first_air_date", "").split("-").firstOrNull() ?: ""
@@ -205,6 +205,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 val originalName = seriesData.optString("original_name", "")
                 val originalLanguage = seriesData.optString("original_language", "")
                 val numberOfSeasons = seriesData.optInt("number_of_seasons", 1)
+                val numberOfEpisodes = seriesData.optInt("number_of_episodes", 1)
 
                 val genresArray = seriesData.optJSONArray("genres")
                 val genreList = mutableListOf<String>()
@@ -214,7 +215,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     }
                 }
                 
-                if (tagline.isNotEmpty()) append("💭 <b>Slogan:</b><br>${tagline}<br><br>")
+                if (tagline.isNotEmpty()) append("💭 <b>Dizi Sloganı:</b><br><i>${tagline}</i><br><br>")
                 if (overview.isNotEmpty()) append("📝 <b>Konu:</b><br>${overview}<br><br>")
                 if (firstAirDate.isNotEmpty()) append("📅 <b>İlk Yayın Tarihi:</b> $firstAirDate<br>")
                 if (rating != null) append("⭐ <b>TMDB Puanı:</b> $rating / 10<br>")
@@ -225,6 +226,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     append("🌐 <b>Orijinal Dil:</b> $turkishName<br>")
                 }
                 if (numberOfSeasons > 1) append("📅 <b>Toplam Sezon:</b> $numberOfSeasons<br>")
+                if (numberOfEpisodes > 1) append("📅 <b>Toplam Bölüm:</b> $numberOfEpisodes<br>")
                 if (genreList.isNotEmpty()) append("🎭 <b>Dizi Türü:</b> ${genreList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
                 
                 // Dizi oyuncuları fotoğraflarıyla
@@ -233,7 +235,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     val castArray = creditsObject.optJSONArray("cast")
                     if (castArray != null && castArray.length() > 0) {
                         val castList = mutableListOf<String>()
-                        for (i in 0 until minOf(castArray.length(), 10)) {
+                        for (i in 0 until minOf(castArray.length(), 25)) {
                             val actor = castArray.optJSONObject(i)
                             val actorName = actor?.optString("name", "") ?: ""
                             val character = actor?.optString("character", "") ?: ""
@@ -242,7 +244,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                             }
                         }
                         if (castList.isNotEmpty()) {
-                            append("👥 <b>Oyuncular:</b> ${castList.joinToString(", ")}<br>")
+                            append("👥 <b>Tüm Oyuncular:</b> ${castList.joinToString(", ")}<br>")
                         }
                     }
                 }
@@ -251,15 +253,16 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             
             // Bölüm bilgileri
             if (episodeData != null) {
-                append("<b>🎬 BÖLÜM BİLGİLERİ</b><br><br>")
+                append("<br>")
+                append("<b>🎬<u> Bölüm Bilgileri</u></b><br><br>")
                 
                 val episodeTitle = episodeData.optString("name", "")
                 val episodeOverview = episodeData.optString("overview", "")
                 val episodeAirDate = episodeData.optString("air_date", "").split("-").firstOrNull() ?: ""
                 val episodeRating = episodeData.optDouble("vote_average", -1.0)
                 
-                if (episodeTitle.isNotEmpty()) append("🎬 <b>Bölüm Adı:</b> ${episodeTitle}<br>")
-                if (episodeOverview.isNotEmpty()) append("📝 <b>Bölüm Konusu:</b><br>${episodeOverview}<br><br>")
+                if (episodeTitle.isNotEmpty()) append("📽️ <b>Bölüm Adı:</b> ${episodeTitle}<br>")
+                if (episodeOverview.isNotEmpty()) append("✍🏻 <b>Bölüm Konusu:</b><br><i>${episodeOverview}</i><br><br>")
                 if (episodeAirDate.isNotEmpty()) append("📅 <b>Yayın Tarihi:</b> $episodeAirDate<br>")
                 if (episodeRating >= 0) append("⭐ <b>Bölüm Puanı:</b> ${String.format("%.1f", episodeRating)} / 10<br>")
                 
@@ -270,7 +273,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     if (episodeCast != null && episodeCast.length() > 0) {
                         append("<br>👥 <b>Bu Bölümdeki Oyuncular:</b><br>")
                         append("<div style='display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:5px 0'>")
-                        for (i in 0 until minOf(episodeCast.length(), 8)) {
+                        for (i in 0 until minOf(episodeCast.length(), 25)) {
                             val actor = episodeCast.optJSONObject(i)
                             val actorName = actor?.optString("name", "") ?: ""
                             val character = actor?.optString("character", "") ?: ""
@@ -278,13 +281,13 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                             
                             if (actorName.isNotEmpty()) {
                                 val genderIcon = when (gender) {
-                                    1 -> "👩" // Kadın
-                                    2 -> "👨" // Erkek
+                                    1 -> "👱🏼‍♀" // Kadın
+                                    2 -> "👱🏻" // Erkek
                                     else -> "👤" // Belirsiz
                                 }
                                 append("<div style='background:#f0f0f0;padding:5px 10px;border-radius:5px'>")
                                 append("$genderIcon <b>$actorName</b>")
-                                if (character.isNotEmpty()) append(" as $character")
+                                if (character.isNotEmpty()) append(" rolü: $character")
                                 append("</div>")
                             }
                         }
