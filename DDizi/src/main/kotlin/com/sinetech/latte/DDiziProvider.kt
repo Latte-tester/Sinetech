@@ -452,35 +452,43 @@ class DDiziProvider : MainAPI() {
                                             val matches = urlRegex.findAll(content)
                                             
                                             matches.forEach { match ->
-                                                val videoUrl = match.groupValues[1]
+                                                val videoUrl = match.groupValues[1].trim()
                                                 Log.d("DDizi:", "Found video URL: $videoUrl")
                                                 
-                                                // Kalite bilgisini belirle
-                                                val quality = when {
-                                                    videoUrl.contains("1080") -> "1080p"
-                                                    videoUrl.contains("720") -> "720p"
-                                                    videoUrl.contains("480") -> "480p"
-                                                    videoUrl.contains("360") -> "360p"
-                                                    else -> "Auto"
+                                                if (videoUrl.isNotEmpty()) {
+                                                    // Video URL'sini doğrula
+                                                    val urlResponse = app.get(videoUrl, headers = videoHeaders, verify = false)
+                                                    if (urlResponse.isSuccessful) {
+                                                        // Kalite bilgisini belirle
+                                                        val quality = when {
+                                                            videoUrl.contains("1080") -> "1080p"
+                                                            videoUrl.contains("720") -> "720p"
+                                                            videoUrl.contains("480") -> "480p"
+                                                            videoUrl.contains("360") -> "360p"
+                                                            else -> "Auto"
+                                                        }
+                                                        
+                                                        val type = if (videoUrl.endsWith(".m3u8")) {
+                                                            ExtractorLinkType.M3U8
+                                                        } else {
+                                                            ExtractorLinkType.VIDEO
+                                                        }
+                                                        
+                                                        callback.invoke(
+                                                            ExtractorLink(
+                                                                source = name,
+                                                                name = "$name - $quality",
+                                                                url = videoUrl,
+                                                                referer = ogVideo,
+                                                                quality = getQualityFromName(quality),
+                                                                headers = videoHeaders,
+                                                                type = type
+                                                            )
+                                                        )
+                                                    } else {
+                                                        Log.d("DDizi:", "Invalid video URL: $videoUrl, status: ${urlResponse.code}")
+                                                    }
                                                 }
-                                                
-                                                val type = if (videoUrl.endsWith(".m3u8")) {
-                                                    ExtractorLinkType.M3U8
-                                                } else {
-                                                    ExtractorLinkType.VIDEO
-                                                }
-                                                
-                                                callback.invoke(
-                                                    ExtractorLink(
-                                                        source = name,
-                                                        name = "$name - $quality",
-                                                        url = videoUrl,
-                                                        referer = ogVideo,
-                                                        quality = getQualityFromName(quality),
-                                                        headers = videoHeaders,
-                                                        type = type
-                                                    )
-                                                )
                                             }
                                         }
                                     }
