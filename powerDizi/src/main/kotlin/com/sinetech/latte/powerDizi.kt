@@ -27,7 +27,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
 
         // Parse episode information from titles
-        val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
+        val episodeRegex = Regex("""(.*?)[^\w\d]+(\d+)\.\s*Sezon\s*(\d+)\.\s*Bölüm.*""")
         val processedItems = kanallar.items.map { item ->
             val title = item.title.toString()
             val match = episodeRegex.find(title)
@@ -85,7 +85,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
 
     override suspend fun search(query: String): List<SearchResponse> {
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-        val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
+        val episodeRegex = Regex("""(.*?)[^\w\d]+(\d+)\.\s*Sezon\s*(\d+)\.\s*Bölüm.*""")
 
         return kanallar.items.filter { it.title.toString().lowercase().contains(query.lowercase()) }.map { kanal ->
             val streamurl   = kanal.url.toString()
@@ -117,36 +117,66 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
 
     override suspend fun quickSearch(query: String): List<SearchResponse> = search(query)
 
-    private suspend fun fetchTMDBData(title: String): JSONObject? {
+    private suspend fun fetchTMDBData(title: String, season: Int, episode: Int): Pair<JSONObject?, JSONObject?> {
         return withContext(Dispatchers.IO) {
             try {
                 val apiKey = BuildConfig.TMDB_SECRET_API.trim('"')
                 if (apiKey.isEmpty()) {
                     Log.e("TMDB", "API key is empty")
-                    return@withContext null
+                    return@withContext Pair(null, null)
                 }
 
-                val encodedTitle = URLEncoder.encode(title.replace(Regex("\\([^)]*\\)"), "").trim(), "UTF-8")
-                val searchUrl = "https://api.themoviedb.org/3/search/tv?api_key=$apiKey&query=$encodedTitle&language=tr-TR"
+                // Dizi adını temizle ve hazırla
+                val cleanedTitle = title
+                    .replace(Regex("\\([^)]*\\)"), "") // Parantez içindeki metinleri kaldır
+                    .trim()
                 
+                Log.d("TMDB", "Searching for TV show: $cleanedTitle")
+                val encodedTitle = URLEncoder.encode(cleanedTitle, "UTF-8")
+                val searchUrl = "https://api.themoviedb.org/3/search/tv?api_key=$apiKey&query=$encodedTitle&language=tr-TR"
+
                 val response = withContext(Dispatchers.IO) {
                     URL(searchUrl).readText()
                 }
                 val jsonResponse = JSONObject(response)
                 val results = jsonResponse.getJSONArray("results")
                 
+                Log.d("TMDB", "Search results count: ${results.length()}")
+                
                 if (results.length() > 0) {
+                    // İlk sonucu al
                     val tvId = results.getJSONObject(0).getInt("id")
-                    val detailsUrl = "https://api.themoviedb.org/3/tv/$tvId?api_key=$apiKey&append_to_response=credits&language=tr-TR"
-                    val detailsResponse = withContext(Dispatchers.IO) {
-                        URL(detailsUrl).readText()
+                    val foundTitle = results.getJSONObject(0).optString("name", "")
+                    Log.d("TMDB", "Found TV show: $foundTitle with ID: $tvId")
+                    
+                    // Dizi detaylarını getir
+                    val seriesUrl = "https://api.themoviedb.org/3/tv/$tvId?api_key=$apiKey&append_to_response=credits,images&language=tr-TR"
+                    val seriesResponse = withContext(Dispatchers.IO) {
+                        URL(seriesUrl).readText()
                     }
-                    return@withContext JSONObject(detailsResponse)
+                    val seriesData = JSONObject(seriesResponse)
+                    
+                    // Bölüm detaylarını getir
+                    try {
+                        val episodeUrl = "https://api.themoviedb.org/3/tv/$tvId/season/$season/episode/$episode?api_key=$apiKey&append_to_response=credits,images&language=tr-TR"
+                        val episodeResponse = withContext(Dispatchers.IO) {
+                            URL(episodeUrl).readText()
+                        }
+                        val episodeData = JSONObject(episodeResponse)
+                        
+                        return@withContext Pair(seriesData, episodeData)
+                    } catch (e: Exception) {
+                        Log.e("TMDB", "Error fetching episode data: ${e.message}")
+                        // Bölüm bilgisi alınamazsa sadece dizi bilgisini döndür
+                        return@withContext Pair(seriesData, null)
+                    }
+                } else {
+                    Log.d("TMDB", "No results found for: $cleanedTitle")
                 }
-                null
+                Pair(null, null)
             } catch (e: Exception) {
                 Log.e("TMDB", "Error fetching TMDB data: ${e.message}")
-                null
+                Pair(null, null)
             }
         }
     }
@@ -158,20 +188,26 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val watchProgress = sharedPref?.getLong(progressKey, 0L) ?: 0L
         val loadData = fetchDataFromUrlOrJson(url)
         
-        val tmdbData = fetchTMDBData(loadData.title.replace(Regex("-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*"), ""))
+        // Dizi adını temizle - hem "Dizi-1.Sezon" hem de "Dizi 1. Sezon" formatlarını destekler
+        val cleanTitle = loadData.title.replace(Regex("""[-\s]*\d+\.?\s*Sezon\s*\d+\.?\s*Bölüm.*"""), "").trim()
+        val (seriesData, episodeData) = fetchTMDBData(cleanTitle, loadData.season, loadData.episode)
         
         val plot = buildString {
-            if (tmdbData != null) {
-                val overview = tmdbData.optString("overview", "")
-                val firstAirDate = tmdbData.optString("first_air_date", "").split("-").firstOrNull() ?: ""
-                val ratingValue = tmdbData.optDouble("vote_average", -1.0)
+            // Her zaman önce dizi bilgilerini göster
+            if (seriesData != null) {
+                append("<b>📺<u> Dizi Bilgileri</u> (Genel)</b><br><br>")
+                
+                val overview = seriesData.optString("overview", "")
+                val firstAirDate = seriesData.optString("first_air_date", "").split("-").firstOrNull() ?: ""
+                val ratingValue = seriesData.optDouble("vote_average", -1.0)
                 val rating = if (ratingValue >= 0) String.format("%.1f", ratingValue) else null
-                val tagline = tmdbData.optString("tagline", "")
-                val originalName = tmdbData.optString("original_name", "")
-                val originalLanguage = tmdbData.optString("original_language", "")
-                val numberOfSeasons = tmdbData.optInt("number_of_seasons", 1)
+                val tagline = seriesData.optString("tagline", "")
+                val originalName = seriesData.optString("original_name", "")
+                val originalLanguage = seriesData.optString("original_language", "")
+                val numberOfSeasons = seriesData.optInt("number_of_seasons", 1)
+                val numberOfEpisodes = seriesData.optInt("number_of_episodes", 1)
 
-                val genresArray = tmdbData.optJSONArray("genres")
+                val genresArray = seriesData.optJSONArray("genres")
                 val genreList = mutableListOf<String>()
                 if (genresArray != null) {
                     for (i in 0 until genresArray.length()) {
@@ -179,18 +215,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     }
                 }
                 
-                val creditsObject = tmdbData.optJSONObject("credits")
-                val castList = mutableListOf<String>()
-                if (creditsObject != null) {
-                    val castArray = creditsObject.optJSONArray("cast")
-                    if (castArray != null) {
-                        for (i in 0 until minOf(castArray.length(), 10)) {
-                            castList.add(castArray.optJSONObject(i)?.optString("name") ?: "")
-                        }
-                    }
-                }
-                
-                if (tagline.isNotEmpty()) append("💭 <b>Slogan:</b><br>${tagline}<br><br>")
+                if (tagline.isNotEmpty()) append("💭 <b>Dizi Sloganı:</b><br><i>${tagline}</i><br><br>")
                 if (overview.isNotEmpty()) append("📝 <b>Konu:</b><br>${overview}<br><br>")
                 if (firstAirDate.isNotEmpty()) append("📅 <b>İlk Yayın Tarihi:</b> $firstAirDate<br>")
                 if (rating != null) append("⭐ <b>TMDB Puanı:</b> $rating / 10<br>")
@@ -200,10 +225,83 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     val turkishName = languageMap[langCode] ?: originalLanguage
                     append("🌐 <b>Orijinal Dil:</b> $turkishName<br>")
                 }
-                if (numberOfSeasons > 1) append("📅 <b>Toplam Sezon:</b> $numberOfSeasons<br>")
+                if (numberOfSeasons > 0 && numberOfEpisodes > 0) 
+                    append("📅 <b>Toplam Sezon:</b> $numberOfSeasons ($numberOfEpisodes bölüm)<br>")
+
                 if (genreList.isNotEmpty()) append("🎭 <b>Dizi Türü:</b> ${genreList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
-                if (castList.isNotEmpty()) append("👥 <b>Oyuncular:</b> ${castList.filter { it.isNotEmpty() }.joinToString(", ")}<br>")
-                append("<br>")
+                
+                // Dizi oyuncuları fotoğraflarıyla
+                val creditsObject = seriesData.optJSONObject("credits")
+                if (creditsObject != null) {
+                    val castArray = creditsObject.optJSONArray("cast")
+                    if (castArray != null && castArray.length() > 0) {
+                        val castList = mutableListOf<String>()
+                        for (i in 0 until minOf(castArray.length(), 25)) {
+                            val actor = castArray.optJSONObject(i)
+                            val actorName = actor?.optString("name", "") ?: ""
+                            val character = actor?.optString("character", "") ?: ""
+                            if (actorName.isNotEmpty()) {
+                                castList.add(if (character.isNotEmpty()) "$actorName (${character})" else actorName)
+                            }
+                        }
+                        if (castList.isNotEmpty()) {
+                            append("👥 <b>Tüm Oyuncular:</b> ${castList.joinToString(", ")}<br>")
+                        }
+                    }
+                }
+                
+            }
+            
+            // Bölüm bilgileri
+            if (episodeData != null) {
+                append("<hr><br>")
+                append("<b>🎬<u> Bölüm Bilgileri</u></b><br><br>")
+                
+                val episodeTitle = episodeData.optString("name", "")
+                val episodeOverview = episodeData.optString("overview", "")
+                val episodeAirDate = episodeData.optString("air_date", "").split("-").firstOrNull() ?: ""
+                val episodeRating = episodeData.optDouble("vote_average", -1.0)
+                
+                if (episodeTitle.isNotEmpty()) append("📽️ <b>Bölüm Adı:</b> ${episodeTitle}<br>")
+                if (episodeOverview.isNotEmpty()) append("✍🏻 <b>Bölüm Konusu:</b><br><i>${episodeOverview}</i><br><br>")
+                if (episodeAirDate.isNotEmpty()) append("📅 <b>Yayın Tarihi:</b> $episodeAirDate<br>")
+                if (episodeRating >= 0) append("⭐ <b>Bölüm Puanı:</b> ${String.format("%.1f", episodeRating)} / 10<br>")
+                
+                // Bölüm oyuncuları
+                val episodeCredits = episodeData.optJSONObject("credits")
+                if (episodeCredits != null) {
+                    val episodeCast = episodeCredits.optJSONArray("cast")
+                    if (episodeCast != null && episodeCast.length() > 0) {
+                        append("<br>👥 <b>Bu Bölümdeki Oyuncular:</b><br>")
+                        append("<div style='display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:5px 0'>")
+                        for (i in 0 until minOf(episodeCast.length(), 25)) {
+                            val actor = episodeCast.optJSONObject(i)
+                            val actorName = actor?.optString("name", "") ?: ""
+                            val character = actor?.optString("character", "") ?: ""
+                            val gender = actor?.optInt("gender", 0) ?: 0
+                            
+                            if (actorName.isNotEmpty()) {
+                                val genderIcon = when (gender) {
+                                    1 -> "👱🏼‍♀" // Kadın
+                                    2 -> "👱🏻" // Erkek
+                                    else -> "👤" // Belirsiz
+                                }
+                                append("<div style='background:#f0f0f0;padding:5px 10px;border-radius:5px'>")
+                                append("$genderIcon <b>$actorName</b>")
+                                if (character.isNotEmpty()) append(" ($character rolünde)")
+                                append("</div>")
+                            }
+                        }
+                        append("</div><br>")
+                    }
+                }
+                
+            }
+            
+            // Eğer hiçbir TMDB verisi yoksa, en azından temel bilgileri göster
+            if (seriesData == null && episodeData == null) {
+                append("<b>📺 DİZİ BİLGİLERİ</b><br><br>")
+                append("📝 <b>TMDB'den bilgi alınamadı.</b><br><br>")
             }
             
             val nation = if (listOf("adult", "erotic", "erotik", "porn", "porno").any { loadData.group.contains(it, ignoreCase = true) }) {
@@ -215,7 +313,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         }
 
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-        val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
+        val episodeRegex = Regex("""(.*?)[^\w\d]+(\d+)\.\s*Sezon\s*(\d+)\.\s*Bölüm.*""")
         val groupEpisodes = kanallar.items
             .filter { it.attributes["group-title"]?.toString() ?: "" == loadData.group }
             .mapNotNull { kanal ->
@@ -265,16 +363,25 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
         val kanal    = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
         Log.d("IPTV", "kanal » $kanal")
 
+        val videoUrl = loadData.url
+        val videoType = when {
+
+            videoUrl.endsWith(".mkv", ignoreCase = true) -> ExtractorLinkType.VIDEO
+            else -> ExtractorLinkType.M3U8
+            
+            }
+
         callback.invoke(
-            ExtractorLink(
-                source  = this.name,
-                name    = "${loadData.title} (S${loadData.season}:E${loadData.episode})",
-                url     = loadData.url,
-                headers = kanal.headers,
-                referer = kanal.headers["referrer"] ?: "",
-                quality = Qualities.Unknown.value,
-                type    = ExtractorLinkType.M3U8
-            )
+            newExtractorLink(
+                source = this.name,
+                name = "${loadData.title} (S${loadData.season}:E${loadData.episode})",
+                url = videoUrl,
+                type = videoType
+            ) {
+                headers = kanal.headers
+                referer = kanal.headers["referrer"] ?: ""
+                quality = Qualities.Unknown.value
+            }
         )
 
         return true
@@ -465,7 +572,7 @@ class IptvPlaylistParser {
             attributes["tvg-language"] = "TR/Altyazılı"
         }
         if (!attributes.containsKey("group-title")) {
-            val episodeRegex = Regex("(.*?)-(\\d+)\\.\\s*Sezon\\s*(\\d+)\\.\\s*Bölüm.*")
+            val episodeRegex = Regex("""(.*?)[^\w\d]+(\d+)\.\s*Sezon\s*(\d+)\.\s*Bölüm.*""")
             val match = episodeRegex.find(titleAndAttributes.last())
             if (match != null) {
                 val (showName, _, _) = match.destructured
