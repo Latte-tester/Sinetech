@@ -288,17 +288,25 @@ class powerSinema(private val context: android.content.Context, private val shar
             val progressKey = "progress_${data.hashCode()}"
             sharedPref?.edit()?.putBoolean(watchKey, true)?.apply()
 
+            val videoUrl = loadData.url
+            val videoType = when {
+
+                videoUrl.endsWith(".mkv", ignoreCase = true) -> ExtractorLinkType.VIDEO
+                else -> ExtractorLinkType.M3U8
+            
+                }
+
             callback.invoke(
                 ExtractorLink(
                     source = this.name,
                     name = loadData.title,
-                    url = loadData.url,
+                    url = videoUrl,
                     headers = kanal.headers + mapOf(
                         "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
                     ),
                     referer = kanal.headers["referrer"] ?: "",
                     quality = Qualities.Unknown.value,
-                    type    = ExtractorLinkType.M3U8
+                    type = videoType
                 )
             )
 
