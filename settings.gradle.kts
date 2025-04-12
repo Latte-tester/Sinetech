@@ -9,5 +9,5 @@ include(
     "KoolTO",
     "DaddyLive",
     "HuhuTO",
-    "Ddizi"
+    "DDizi"
 )
