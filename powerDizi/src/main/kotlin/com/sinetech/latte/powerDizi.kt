@@ -51,11 +51,11 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             }
         }
 
-        val groupedShows = processedItems.groupBy { it.title?.firstOrNull()?.uppercase() ?: "#" }
+        val groupedShows = processedItems.groupBy { it.attributes["group-title"]?.toString()?.trim() ?: "Diğer" }
 
         val homePageLists = mutableListOf<HomePageList>()
 
-        groupedShows.forEach { (initial, shows) ->
+        groupedShows.forEach { (group, shows) ->
             val searchResponses = shows.map { kanal ->
                 val streamurl = kanal.url.toString()
                 val channelname = kanal.title.toString()
@@ -64,7 +64,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
 
                 newLiveSearchResponse(
                     channelname,
-                    LoadData(streamurl, channelname, posterurl, initial, nation, kanal.season, kanal.episode).toJson(),
+                    LoadData(streamurl, channelname, posterurl, group, nation, kanal.season, kanal.episode).toJson(),
                     type = TvType.TvSeries
                 ) {
                     this.posterUrl = posterurl
@@ -73,7 +73,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
             }
             
             if (searchResponses.isNotEmpty()) {
-                homePageLists.add(HomePageList(initial, searchResponses, isHorizontalImages = true))
+                homePageLists.add(HomePageList(group, searchResponses, isHorizontalImages = true))
             }
         }
 
