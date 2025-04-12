@@ -396,24 +396,21 @@ class DDiziProvider : MainAPI() {
                                 Log.d("DDizi:", "Video type: $fileType, quality: $quality")
                                 
                                 // master.txt dosyası için özel başlıklar
-                                val videoHeaders = if (fileUrl.contains("master.txt")) {
-                                    mapOf(
-                                        "accept" to "*/*",
-                                        "accept-language" to "tr-TR,tr;q=0.5",
-                                        "cache-control" to "no-cache",
-                                        "pragma" to "no-cache",
-                                        "sec-ch-ua" to "\"Chromium\";v=\"134\", \"Not:A-Brand\";v=\"24\"",
-                                        "sec-ch-ua-mobile" to "?0",
-                                        "sec-ch-ua-platform" to "\"Windows\"",
-                                        "sec-fetch-dest" to "empty",
-                                        "sec-fetch-mode" to "cors",
-                                        "sec-fetch-site" to "cross-site",
-                                        "user-agent" to USER_AGENT,
-                                        "referer" to mainUrl
-                                    )
-                                } else {
-                                    getHeaders(ogVideo)
-                                }
+                                val videoHeaders = mapOf(
+                                    "accept" to "*/*",
+                                    "accept-language" to "tr-TR,tr;q=0.9,en;q=0.8",
+                                    "cache-control" to "no-cache",
+                                    "origin" to mainUrl,
+                                    "pragma" to "no-cache",
+                                    "referer" to ogVideo,
+                                    "sec-ch-ua" to "\"Not A(Brand\";v=\"99\", \"Chromium\";v=\"99\"",
+                                    "sec-ch-ua-mobile" to "?0",
+                                    "sec-ch-ua-platform" to "\"Windows\"",
+                                    "sec-fetch-dest" to "empty",
+                                    "sec-fetch-mode" to "cors",
+                                    "sec-fetch-site" to "cross-site",
+                                    "user-agent" to USER_AGENT
+                                )
                                 
                                 Log.d("DDizi:", "Using headers for video source: ${videoHeaders.keys.joinToString()}")
                                 
@@ -423,7 +420,7 @@ class DDiziProvider : MainAPI() {
                                         source = name,
                                         name = "$name - $quality",
                                         url = fileUrl,
-                                        referer = ogVideo,
+                                        referer = mainUrl,
                                         quality = getQualityFromName(quality),
                                         headers = videoHeaders,
                                         type = if (fileType == "hls") ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
@@ -471,7 +468,7 @@ class DDiziProvider : MainAPI() {
                                         source = name,
                                         name = "$name - $quality",
                                         url = fileUrl,
-                                        referer = ogVideo,
+                                        referer = mainUrl,
                                         quality = getQualityFromName(quality),
                                         headers = videoHeaders,
                                         type = if (fileType == "hls") ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
