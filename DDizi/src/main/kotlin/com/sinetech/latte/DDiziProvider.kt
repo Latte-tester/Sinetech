@@ -414,54 +414,71 @@ class DDiziProvider : MainAPI() {
                                 
                                 Log.d("DDizi:", "Using headers for video source: ${videoHeaders.keys.joinToString()}")
                                 
-                                // ExtractorLink oluştur
-                                callback.invoke(
-                                    ExtractorLink(
-                                        source = name,
-                                        name = "$name - $quality",
-                                        url = fileUrl,
-                                        referer = mainUrl,
-                                        quality = getQualityFromName(quality),
-                                        headers = videoHeaders,
-                                        type = if (fileType == "hls") ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
-                                    )
-                                )
-                                // Eğer dosya türü hls ise, M3u8Helper ile işle
+                                // HLS için özel codec yapılandırması
                                 if (fileType == "hls") {
                                     try {
-                                        Log.d("DDizi:", "Generating M3u8 for: $fileUrl")
+                                        Log.d("DDizi:", "Processing HLS stream: $fileUrl")
+                                        
+                                        // HLS akışı için özel başlıklar ekle
+                                        val hlsHeaders = videoHeaders.toMutableMap().apply {
+                                            put("Accept", "application/x-mpegURL, application/vnd.apple.mpegurl, application/json, text/plain")
+                                        }
+                                        
+                                        // M3u8Helper ile HLS akışını işle
                                         M3u8Helper.generateM3u8(
                                             name,
                                             fileUrl,
-                                            mainUrl, // Referrer olarak ana URL'yi kullan
-                                            headers = videoHeaders
-                                        ).forEach(callback)
+                                            mainUrl,
+                                            headers = hlsHeaders
+                                        ).forEach { link ->
+                                            // Her kalite seçeneği için codec yapılandırması
+                                            val codecConfig = when {
+                                                link.quality >= 720 -> "avc1.640028,mp4a.40.2"
+                                                link.quality >= 480 -> "avc1.4d401f,mp4a.40.2"
+                                                else -> "avc1.42e01e,mp4a.40.2"
+                                            }
+                                            
+                                            callback.invoke(
+                                                ExtractorLink(
+                                                    source = name,
+                                                    name = "$name - ${link.quality}p",
+                                                    url = link.url,
+                                                    referer = mainUrl,
+                                                    quality = link.quality,
+                                                    headers = hlsHeaders + mapOf("Codec" to codecConfig),
+                                                    type = ExtractorLinkType.M3U8
+                                                )
+                                            )
+                                        }
                                     } catch (e: Exception) {
-                                        Log.d("DDizi:", "Error generating M3u8: ${e.message}")
-                                        
-                                        // Doğrudan bağlantıyı dene
-                                        if (fileUrl.contains("master.txt")) {
-                                            try {
-                                                Log.d("DDizi:", "Trying to get master.txt content directly")
-                                                val masterContent = app.get(fileUrl, headers = videoHeaders).text
-                                                Log.d("DDizi:", "Master.txt content length: ${masterContent.length}")
-                                                
-                                                // m3u8 bağlantılarını bul
-                                                val m3u8Regex = Regex("""(https?://.*?\.m3u8[^"\s]*)""")
-                                                val m3u8Matches = m3u8Regex.findAll(masterContent)
-                                                
-                                                m3u8Matches.forEach { m3u8Match ->
-                                                    val m3u8Url = m3u8Match.groupValues[1]
-                                                    Log.d("DDizi:", "Found m3u8 in master.txt: $m3u8Url")
-                                                    
-                                                    // Kalite bilgisini çıkar
-                                                    val m3u8Quality = when {
-                                                        m3u8Url.contains("1080") -> "1080p"
-                                                        m3u8Url.contains("720") -> "720p"
-                                                        m3u8Url.contains("480") -> "480p"
-                                                        m3u8Url.contains("360") -> "360p"
-                                                        else -> "Auto"
-                                                    }
+                                        Log.d("DDizi:", "Error processing HLS stream: ${e.message}")
+                                        // Hata durumunda doğrudan video bağlantısını kullan
+                                        callback.invoke(
+                                            ExtractorLink(
+                                                source = name,
+                                                name = "$name - $quality (Direct)",
+                                                url = fileUrl,
+                                                referer = mainUrl,
+                                                quality = getQualityFromName(quality),
+                                                headers = videoHeaders,
+                                                type = ExtractorLinkType.VIDEO
+                                            )
+                                        )
+                                    }
+                                } else {
+                                    // Normal video bağlantısı için
+                                    callback.invoke(
+                                        ExtractorLink(
+                                            source = name,
+                                            name = "$name - $quality",
+                                            url = fileUrl,
+                                            referer = mainUrl,
+                                            quality = getQualityFromName(quality),
+                                            headers = videoHeaders,
+                                            type = ExtractorLinkType.VIDEO
+                                        )
+                                    )
+                                }
                                                     
                                                     callback.invoke(
                                     ExtractorLink(
