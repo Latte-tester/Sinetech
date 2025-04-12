@@ -373,65 +373,55 @@ class DDiziProvider : MainAPI() {
                         val sourcesMatch = sourcesRegex.find(content)
                         
                         if (sourcesMatch != null) {
-                            // file parametresini bul
-                            val fileRegex = Regex("""file:\s*["'](.*?)["']""")
-                            val fileMatch = fileRegex.find(sourcesMatch.groupValues[1])
+                            // M3U8 dosyasını bul
+                            val m3u8Regex = Regex("""file:\s*["'](.*?\.m3u8.*?)["']""", RegexOption.DOT_MATCHES_ALL)
+                            val m3u8Match = m3u8Regex.find(sourcesMatch.groupValues[1])
                             
-                            if (fileMatch != null) {
-                                val fileUrl = fileMatch.groupValues[1]
-                                Log.d("DDizi:", "Found video source: $fileUrl")
-                                
-                                // Dosya türünü belirle
-                                val fileType = when {
-                                    fileUrl.contains(".m3u8") || fileUrl.contains("hls") -> "hls"
-                                    fileUrl.contains(".mp4") -> "mp4"
-                                    else -> "hls" // Varsayılan olarak hls kabul et
-                                }
+                            if (m3u8Match != null) {
+                                val m3u8Url = m3u8Match.groupValues[1]
+                                Log.d("DDizi:", "Found M3U8 source: $m3u8Url")
                                 
                                 // Kalite bilgisini belirle
-                                val qualityRegex = Regex("""label:\s*["'](.*?)["']""")
-                                val qualityMatch = qualityRegex.find(sourcesMatch.groupValues[1])
-                                val quality = qualityMatch?.groupValues?.get(1) ?: "Auto"
+                                val m3u8QualityRegex = Regex("""label:\s*["'](.*?)["']""", RegexOption.DOT_MATCHES_ALL)
+                                val m3u8QualityMatch = m3u8QualityRegex.find(sourcesMatch.groupValues[1])
+                                val m3u8Quality = m3u8QualityMatch?.groupValues?.get(1) ?: "Auto"
                                 
-                                Log.d("DDizi:", "Video type: $fileType, quality: $quality")
+                                Log.d("DDizi:", "M3U8 quality: $m3u8Quality")
                                 
-                                // master.txt dosyası için özel başlıklar
-                                val videoHeaders = if (fileUrl.contains("master.txt")) {
-                                    mapOf(
-                                        "accept" to "*/*",
-                                        "accept-language" to "tr-TR,tr;q=0.5",
-                                        "cache-control" to "no-cache",
-                                        "pragma" to "no-cache",
-                                        "sec-ch-ua" to "\"Chromium\";v=\"134\", \"Not:A-Brand\";v=\"24\"",
-                                        "sec-ch-ua-mobile" to "?0",
-                                        "sec-ch-ua-platform" to "\"Windows\"",
-                                        "sec-fetch-dest" to "empty",
-                                        "sec-fetch-mode" to "cors",
-                                        "sec-fetch-site" to "cross-site",
-                                        "user-agent" to USER_AGENT,
-                                        "referer" to mainUrl
-                                    )
-                                } else {
-                                    getHeaders(ogVideo)
-                                }
+                                // Video başlıkları
+                                val videoHeaders = mapOf(
+                                    "accept" to "*/*",
+                                    "accept-language" to "tr-TR,tr;q=0.5",
+                                    "cache-control" to "no-cache",
+                                    "pragma" to "no-cache",
+                                    "sec-ch-ua" to "\"Chromium\";v=\"134\", \"Not:A-Brand\";v=\"24\"",
+                                    "sec-ch-ua-mobile" to "?0",
+                                    "sec-ch-ua-platform" to "\"Windows\"",
+                                    "sec-fetch-dest" to "empty",
+                                    "sec-fetch-mode" to "cors",
+                                    "sec-fetch-site" to "cross-site",
+                                    "user-agent" to USER_AGENT,
+                                    "origin" to ogVideo,
+                                    "referer" to ogVideo
+                                )
                                 
-                                Log.d("DDizi:", "Using headers for video source: ${videoHeaders.keys.joinToString()}")
+                                Log.d("DDizi:", "Using headers for M3U8: ${videoHeaders.keys.joinToString()}")
                                 
-                                // ExtractorLink oluştur
+                                // M3U8 ExtractorLink oluştur
                                 callback.invoke(
                                     ExtractorLink(
                                         source = name,
-                                        name = "$name - $quality",
-                                        url = fileUrl,
+                                        name = "$name - $m3u8Quality",
+                                        url = m3u8Url,
                                         referer = ogVideo,
-                                        quality = getQualityFromName(quality),
+                                        quality = getQualityFromName(m3u8Quality),
                                         headers = videoHeaders,
-                                        type = if (fileType == "hls") ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
+                                        type = ExtractorLinkType.M3U8
                                     )
                                 )
-                                // Eğer dosya türü hls ise, M3u8Helper ile işle
-                                if (fileType == "hls") {
-                                    try {
+                                
+                                // M3U8 Helper ile alternatif kaliteleri işle
+                                try {
                                         Log.d("DDizi:", "Generating M3u8 for: $fileUrl")
                                         M3u8Helper.generateM3u8(
                                             name,
@@ -467,16 +457,16 @@ class DDiziProvider : MainAPI() {
                                                     }
                                                     
                                                     callback.invoke(
-                                    ExtractorLink(
-                                        source = name,
-                                        name = "$name - $quality",
-                                        url = fileUrl,
-                                        referer = ogVideo,
-                                        quality = getQualityFromName(quality),
-                                        headers = videoHeaders,
-                                        type = if (fileType == "hls") ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
-                                    )
-                                )
+                                                        ExtractorLink(
+                                                            source = name,
+                                                            name = "$name - $m3u8Quality",
+                                                            url = m3u8Url,
+                                                            referer = ogVideo,
+                                                            quality = getQualityFromName(m3u8Quality),
+                                                            headers = videoHeaders,
+                                                            type = ExtractorLinkType.M3U8
+                                                        )
+                                                    )
                                                 }
                                             } catch (e2: Exception) {
                                                 Log.d("DDizi:", "Error parsing master.txt: ${e2.message}")
