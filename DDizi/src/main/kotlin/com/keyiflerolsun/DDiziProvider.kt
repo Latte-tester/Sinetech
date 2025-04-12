@@ -198,6 +198,72 @@ class DDiziProvider : MainAPI() {
         
         // Poster URL'yi doğru şekilde al
         val posterImg = document.selectFirst("div.afis img, img.afis, img.img-back, img.img-back-cat")
+
+        // Tüm bölümleri toplamak için sayfalama sistemini kullan
+        val episodes = mutableListOf<Episode>()
+        var currentPage = 0
+        var hasMorePages = true
+
+        while (hasMorePages) {
+            val pageUrl = if (url.contains("/dizi/") || url.contains("/diziler/")) {
+                if (currentPage == 0) url else "$url/sayfa-$currentPage"
+            } else {
+                url
+            }
+
+            val pageDocument = if (currentPage == 0) document else app.get(pageUrl, headers = getHeaders(mainUrl)).document
+            Log.d("DDizi:", "Loading page: $pageUrl")
+
+            val pageEpisodes = pageDocument.select("div.bolumler a, div.sezonlar a, div.dizi-arsiv a, div.dizi-boxpost-cat a").map { ep ->
+                val name = ep.text().trim()
+                val href = fixUrl(ep.attr("href"))
+                
+                val epSeasonMatch = seasonRegex.find(name)
+                val epEpisodeMatch = episodeRegex.find(name)
+                val epIsSeasonFinal = finalRegex.find(name) != null
+                
+                val epSeasonNumber = epSeasonMatch?.groupValues?.get(1)?.toIntOrNull() ?: 1
+                val epEpisodeNumber = epEpisodeMatch?.groupValues?.get(1)?.toIntOrNull()
+                
+                val epDescription = ep.parent()?.selectFirst("p")?.text()
+                val epCommentCount = ep.parent()?.selectFirst("span.comments-ss")?.text()?.replace(Regex("[^0-9]"), "")?.toIntOrNull()
+                
+                Log.d("DDizi:", "Found episode: $name, Season: $epSeasonNumber, Episode: $epEpisodeNumber, Final: $epIsSeasonFinal, Comments: $epCommentCount")
+                
+                Episode(
+                    href,
+                    name,
+                    epSeasonNumber,
+                    epEpisodeNumber,
+                    description = epDescription
+                )
+            }
+
+            if (pageEpisodes.isNotEmpty()) {
+                episodes.addAll(pageEpisodes)
+                currentPage++
+                // Sonraki sayfa kontrolü
+                hasMorePages = pageDocument.select(".pagination a").any { it.text().contains("Sonraki") }
+                Log.d("DDizi:", "Found ${pageEpisodes.size} episodes on page $currentPage, hasMorePages: $hasMorePages")
+            } else {
+                hasMorePages = false
+            }
+        }
+
+        Log.d("DDizi:", "Total episodes found: ${episodes.size}")
+
+        // Eğer hiç bölüm bulunamazsa ve şu anki sayfa bir bölüm sayfasıysa, sadece bu bölümü ekle
+        if (episodes.isEmpty() && !url.contains("/dizi/") && !url.contains("/diziler/")) {
+            episodes.add(
+                Episode(
+                    url,
+                    fullTitle,
+                    seasonNumber,
+                    episodeNumber,
+                    description = document.selectFirst("div.dizi-aciklama, div.aciklama, p")?.text()?.trim()
+                )
+            )
+        }
         val poster = when {
             posterImg?.hasAttr("data-src") == true -> fixUrlNull(posterImg.attr("data-src"))
             posterImg?.hasAttr("src") == true -> fixUrlNull(posterImg.attr("src"))
