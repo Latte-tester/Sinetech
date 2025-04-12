@@ -18,7 +18,7 @@ class DDiziProvider : MainAPI() {
     override val supportedTypes      = setOf(TvType.TvSeries)
 
     override val mainPage = mainPageOf(
-        "$mainUrl/yeni-eklenenler1" to "Yeni Eklenen Bölümler",
+        "$mainUrl/yeni-eklenenler1" to "Son Eklenen Bölümler",
         "$mainUrl/yabanci-dizi-izle" to "Yabancı Diziler",
         "$mainUrl/eski.diziler" to "Eski Diziler",
     )
@@ -28,9 +28,31 @@ class DDiziProvider : MainAPI() {
         Log.d("DDizi:", "Request for $url")
         val document = app.get(url, headers = getHeaders(mainUrl)).document
         
-        val home = document.select("div.dizi-boxpost").mapNotNull { it.toSearchResult() }
-        Log.d("DDizi:", "Added ${home.size} recent episodes")
-
+        val home = mutableListOf<SearchResponse>()
+        
+        // dizi-boxpost-cat div'lerini kontrol et
+        try {
+            val boxCatResults = document.select("div.dizi-boxpost-cat").mapNotNull { it.toSearchResult() }
+            if (boxCatResults.isNotEmpty()) {
+                Log.d("DDizi:", "Found ${boxCatResults.size} box-cat results")
+                home.addAll(boxCatResults)
+            }
+        } catch (e: Exception) {
+            Log.d("DDizi:", "Error parsing box-cat results: ${e.message}")
+        }
+        
+        // dizi-boxpost div'lerini kontrol et
+        try {
+            val boxResults = document.select("div.dizi-boxpost").mapNotNull { it.toSearchResult() }
+            if (boxResults.isNotEmpty()) {
+                Log.d("DDizi:", "Found ${boxResults.size} box results")
+                home.addAll(boxResults)
+            }
+        } catch (e: Exception) {
+            Log.d("DDizi:", "Error parsing box results: ${e.message}")
+        }
+        
+        Log.d("DDizi:", "Added ${home.size} total episodes")
         return newHomePageResponse(request.name, home)
     }
 
