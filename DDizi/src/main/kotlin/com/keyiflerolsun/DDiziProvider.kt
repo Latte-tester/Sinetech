@@ -200,7 +200,7 @@ class DDiziProvider : MainAPI() {
         val posterImg = document.selectFirst("div.afis img, img.afis, img.img-back, img.img-back-cat")
 
         // Tüm bölümleri toplamak için sayfalama sistemini kullan
-        val episodes = mutableListOf<Episode>()
+        val allEpisodes = mutableListOf<Episode>()
         var currentPage = 0
         var hasMorePages = true
 
@@ -240,7 +240,7 @@ class DDiziProvider : MainAPI() {
             }
 
             if (pageEpisodes.isNotEmpty()) {
-                episodes.addAll(pageEpisodes)
+                allEpisodes.addAll(pageEpisodes)
                 currentPage++
                 // Sonraki sayfa kontrolü
                 hasMorePages = pageDocument.select(".pagination a").any { it.text().contains("Sonraki") }
@@ -250,11 +250,11 @@ class DDiziProvider : MainAPI() {
             }
         }
 
-        Log.d("DDizi:", "Total episodes found: ${episodes.size}")
+        Log.d("DDizi:", "Total episodes found: ${allEpisodes.size}")
 
         // Eğer hiç bölüm bulunamazsa ve şu anki sayfa bir bölüm sayfasıysa, sadece bu bölümü ekle
-        if (episodes.isEmpty() && !url.contains("/dizi/") && !url.contains("/diziler/")) {
-            episodes.add(
+        if (allEpisodes.isEmpty() && !url.contains("/dizi/") && !url.contains("/diziler/")) {
+            allEpisodes.add(
                 Episode(
                     url,
                     fullTitle,
@@ -280,55 +280,56 @@ class DDiziProvider : MainAPI() {
         Log.d("DDizi:", "Loaded title: $title, poster: $poster")
 
         // Eğer dizi ana sayfasındaysak, bölümleri listele
-        val episodes = try {
-            if (url.contains("/dizi/") || url.contains("/diziler/")) {
-                // Dizi ana sayfasındayız, tüm bölümleri listele
-                val eps = document.select("div.bolumler a, div.sezonlar a, div.dizi-arsiv a, div.dizi-boxpost-cat a").map { ep ->
-                    val name = ep.text().trim()
-                    val href = fixUrl(ep.attr("href"))
+        if (allEpisodes.isEmpty()) {
+            try {
+                if (url.contains("/dizi/") || url.contains("/diziler/")) {
+                    // Dizi ana sayfasındayız, tüm bölümleri listele
+                    val eps = document.select("div.bolumler a, div.sezonlar a, div.dizi-arsiv a, div.dizi-boxpost-cat a").map { ep ->
+                        val name = ep.text().trim()
+                        val href = fixUrl(ep.attr("href"))
+                        
+                        // Bölüm adından bilgileri çıkar
+                        val epSeasonMatch = seasonRegex.find(name)
+                        val epEpisodeMatch = episodeRegex.find(name)
+                        val epIsSeasonFinal = finalRegex.find(name) != null
+                        
+                        // Sezon bilgisi yoksa varsayılan olarak 1. sezon kabul et
+                        val epSeasonNumber = epSeasonMatch?.groupValues?.get(1)?.toIntOrNull() ?: 1
+                        val epEpisodeNumber = epEpisodeMatch?.groupValues?.get(1)?.toIntOrNull()
+                        
+                        // Açıklama ve yorum sayısını al
+                        val epDescription = ep.parent()?.selectFirst("p")?.text()
+                        val epCommentCount = ep.parent()?.selectFirst("span.comments-ss")?.text()?.replace(Regex("[^0-9]"), "")?.toIntOrNull()
+                        
+                        Log.d("DDizi:", "Episode: $name, Season: $epSeasonNumber (default: 1), Episode: $episodeNumber, Final: $epIsSeasonFinal, Comments: $epCommentCount")
+                        
+                        Episode(
+                            href,
+                            name,
+                            epSeasonNumber,
+                            epEpisodeNumber,
+                            description = epDescription
+                        )
+                    }
+                    Log.d("DDizi:", "Found ${eps.size} episodes")
+                    allEpisodes.addAll(eps)
+                } else {
+                    // Bölüm sayfasındayız, sadece bu bölümü ekle
+                    Log.d("DDizi:", "Single episode page, adding current episode with Season: $seasonNumber (default: 1)")
                     
-                    // Bölüm adından bilgileri çıkar
-                    val epSeasonMatch = seasonRegex.find(name)
-                    val epEpisodeMatch = episodeRegex.find(name)
-                    val epIsSeasonFinal = finalRegex.find(name) != null
-                    
-                    // Sezon bilgisi yoksa varsayılan olarak 1. sezon kabul et
-                    val epSeasonNumber = epSeasonMatch?.groupValues?.get(1)?.toIntOrNull() ?: 1
-                    val epEpisodeNumber = epEpisodeMatch?.groupValues?.get(1)?.toIntOrNull()
-                    
-                    // Açıklama ve yorum sayısını al
-                    val epDescription = ep.parent()?.selectFirst("p")?.text()
-                    val epCommentCount = ep.parent()?.selectFirst("span.comments-ss")?.text()?.replace(Regex("[^0-9]"), "")?.toIntOrNull()
-                    
-                    Log.d("DDizi:", "Episode: $name, Season: $epSeasonNumber (default: 1), Episode: $episodeNumber, Final: $epIsSeasonFinal, Comments: $epCommentCount")
-                    
-                    Episode(
-                        href,
-                        name,
-                        epSeasonNumber,
-                        epEpisodeNumber,
-                        description = epDescription
+                    allEpisodes.add(
+                        Episode(
+                            url,
+                            fullTitle,
+                            seasonNumber,
+                            episodeNumber,
+                            description = plot
+                        )
                     )
                 }
-                Log.d("DDizi:", "Found ${eps.size} episodes")
-                eps
-            } else {
-                // Bölüm sayfasındayız, sadece bu bölümü ekle
-                Log.d("DDizi:", "Single episode page, adding current episode with Season: $seasonNumber (default: 1)")
-                
-                listOf(
-                    Episode(
-                        url,
-                        fullTitle,
-                        seasonNumber,
-                        episodeNumber,
-                        description = plot
-                    )
-                )
+            } catch (e: Exception) {
+                Log.d("DDizi:", "Error parsing episodes: ${e.message}")
             }
-        } catch (e: Exception) {
-            Log.d("DDizi:", "Error parsing episodes: ${e.message}")
-            emptyList()
         }
 
         return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
