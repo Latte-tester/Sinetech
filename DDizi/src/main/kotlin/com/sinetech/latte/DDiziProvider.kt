@@ -419,7 +419,7 @@ class DDiziProvider : MainAPI() {
                                 
                                 // ExtractorLink oluştur
                                 callback.invoke(
-                                    ExtractorLink(
+                                    newExtractorLink(
                                         name,
                                         "$name - $quality",
                                         fileUrl,
@@ -467,7 +467,7 @@ class DDiziProvider : MainAPI() {
                                                     }
                                                     
                                                                     callback.invoke(
-                                                        ExtractorLink(
+                                                        newExtractorLink(
                                                             name,
                                                             "$name - $m3u8Quality (Direct)",
                                                             m3u8Url,
