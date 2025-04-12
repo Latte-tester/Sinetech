@@ -112,7 +112,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                 }
             }
             if (searchResponses.isNotEmpty()) {
-                homePageLists.add(HomePageList("0-9 Sayıyla Başlayanlar", searchResponses, isHorizontalImages = true))
+                homePageLists.add(HomePageList("0-9 rakam olarak başlayan DİZİLER", searchResponses, isHorizontalImages = true))
             }
         }
 
@@ -135,7 +135,7 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
                     }
                 }
                 if (searchResponses.isNotEmpty()) {
-                    homePageLists.add(HomePageList("$letter ile Başlayanlar", searchResponses, isHorizontalImages = true))
+                    homePageLists.add(HomePageList("$letter ile başlayanlar DİZİLER", searchResponses, isHorizontalImages = true))
                 }
             }
         }
