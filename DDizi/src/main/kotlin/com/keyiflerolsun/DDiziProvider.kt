@@ -24,8 +24,12 @@ class DDiziProvider : MainAPI() {
     )
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        val url = request.data
-        Log.d("DDizi:", "Request for $url")
+        val url = if (page > 1) {
+            "${request.data}/$page"
+        } else {
+            request.data
+        }
+        Log.d("DDizi:", "Request for $url with page $page")
         val document = app.get(url, headers = getHeaders(mainUrl)).document
         
         val home = mutableListOf<SearchResponse>()
@@ -52,8 +56,11 @@ class DDiziProvider : MainAPI() {
             Log.d("DDizi:", "Error parsing box results: ${e.message}")
         }
         
-        Log.d("DDizi:", "Added ${home.size} total episodes")
-        return newHomePageResponse(request.name, home)
+        // Sonraki sayfa kontrolü
+        val hasNextPage = document.select(".pagination a").any { it.text().contains("Sonraki") }
+        
+        Log.d("DDizi:", "Added ${home.size} total episodes, hasNext: $hasNextPage")
+        return newHomePageResponse(request.name, home, hasNextPage)
     }
 
     // Element sınıfı için extension fonksiyonu
