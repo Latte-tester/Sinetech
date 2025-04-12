@@ -5,6 +5,7 @@ import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
 import com.lagradost.cloudstream3.LoadResponse.Companion.addTrailer
 import com.lagradost.cloudstream3.utils.ExtractorLink
+import com.lagradost.cloudstream3.utils.newExtractorLink
 import org.jsoup.nodes.Element
 
 class DDiziProvider : MainAPI() {
@@ -322,7 +323,7 @@ class DDiziProvider : MainAPI() {
                                 
                                 // ExtractorLink oluştur
                                 callback.invoke(
-                                    ExtractorLink(
+                                    newExtractorLink(
                                         name,
                                         "$name - $quality",
                                         fileUrl,
@@ -371,7 +372,7 @@ class DDiziProvider : MainAPI() {
                                                     }
                                                     
                                                     callback.invoke(
-                                                        ExtractorLink(
+                                                        newExtractorLink(
                                                             name,
                                                             "$name - $m3u8Quality (Direct)",
                                                             m3u8Url,
