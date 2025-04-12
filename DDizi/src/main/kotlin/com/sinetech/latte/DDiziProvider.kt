@@ -340,6 +340,13 @@ class DDiziProvider : MainAPI() {
         }
     }
 
+    private fun getHeaders(referer: String): Map<String, String> {
+        return mapOf(
+            "User-Agent" to USER_AGENT,
+            "Referer" to referer
+        )
+    }
+
     override suspend fun loadLinks(
         data: String,
         isCasting: Boolean,
@@ -422,55 +429,54 @@ class DDiziProvider : MainAPI() {
                                 
                                 // M3U8 Helper ile alternatif kaliteleri işle
                                 try {
-                                        Log.d("DDizi:", "Generating M3u8 for: $fileUrl")
-                                        M3u8Helper.generateM3u8(
-                                            name,
-                                            fileUrl,
-                                            mainUrl, // Referrer olarak ana URL'yi kullan
-                                            headers = videoHeaders
-                                        ).forEach(callback)
-                                    } catch (e: Exception) {
-                                        Log.d("DDizi:", "Error generating M3u8: ${e.message}")
-                                        
-                                        // Doğrudan bağlantıyı dene
-                                        if (fileUrl.contains("master.txt")) {
-                                            try {
-                                                Log.d("DDizi:", "Trying to get master.txt content directly")
-                                                val masterContent = app.get(fileUrl, headers = videoHeaders).text
-                                                Log.d("DDizi:", "Master.txt content length: ${masterContent.length}")
+                                    Log.d("DDizi:", "Generating M3u8 for: $fileUrl")
+                                    M3u8Helper.generateM3u8(
+                                        name,
+                                        fileUrl,
+                                        mainUrl, // Referrer olarak ana URL'yi kullan
+                                        headers = videoHeaders
+                                    ).forEach(callback)
+                                } catch (e: Exception) {
+                                    Log.d("DDizi:", "Error generating M3u8: ${e.message}")
+                                    
+                                    // Doğrudan bağlantıyı dene
+                                    if (fileUrl.contains("master.txt")) {
+                                        try {
+                                            Log.d("DDizi:", "Trying to get master.txt content directly")
+                                            val masterContent = app.get(fileUrl, headers = videoHeaders).text
+                                            Log.d("DDizi:", "Master.txt content length: ${masterContent.length}")
+                                            
+                                            // m3u8 bağlantılarını bul
+                                            val m3u8Regex = Regex("""(https?://.*?\.m3u8[^"\s]*)""")
+                                            val m3u8Matches = m3u8Regex.findAll(masterContent)
+                                            
+                                            m3u8Matches.forEach { m3u8Match ->
+                                                val m3u8Url = m3u8Match.groupValues[1]
+                                                Log.d("DDizi:", "Found m3u8 in master.txt: $m3u8Url")
                                                 
-                                                // m3u8 bağlantılarını bul
-                                                val m3u8Regex = Regex("""(https?://.*?\.m3u8[^"\s]*)""")
-                                                val m3u8Matches = m3u8Regex.findAll(masterContent)
-                                                
-                                                m3u8Matches.forEach { m3u8Match ->
-                                                    val m3u8Url = m3u8Match.groupValues[1]
-                                                    Log.d("DDizi:", "Found m3u8 in master.txt: $m3u8Url")
-                                                    
-                                                    // Kalite bilgisini çıkar
-                                                    val m3u8Quality = when {
-                                                        m3u8Url.contains("1080") -> "1080p"
-                                                        m3u8Url.contains("720") -> "720p"
-                                                        m3u8Url.contains("480") -> "480p"
-                                                        m3u8Url.contains("360") -> "360p"
-                                                        else -> "Auto"
-                                                    }
-                                                    
-                                                    callback.invoke(
-                                                        ExtractorLink(
-                                                            source = name,
-                                                            name = "$name - $m3u8Quality",
-                                                            url = m3u8Url,
-                                                            referer = ogVideo,
-                                                            quality = getQualityFromName(m3u8Quality),
-                                                            headers = videoHeaders,
-                                                            type = ExtractorLinkType.M3U8
-                                                        )
-                                                    )
+                                                // Kalite bilgisini çıkar
+                                                val m3u8Quality = when {
+                                                    m3u8Url.contains("1080") -> "1080p"
+                                                    m3u8Url.contains("720") -> "720p"
+                                                    m3u8Url.contains("480") -> "480p"
+                                                    m3u8Url.contains("360") -> "360p"
+                                                    else -> "Auto"
                                                 }
-                                            } catch (e2: Exception) {
-                                                Log.d("DDizi:", "Error parsing master.txt: ${e2.message}")
+                                                
+                                                callback.invoke(
+                                                    ExtractorLink(
+                                                        source = name,
+                                                        name = "$name - $m3u8Quality",
+                                                        url = m3u8Url,
+                                                        referer = ogVideo,
+                                                        quality = getQualityFromName(m3u8Quality),
+                                                        headers = videoHeaders,
+                                                        type = ExtractorLinkType.M3U8
+                                                    )
+                                                )
                                             }
+                                        } catch (e2: Exception) {
+                                            Log.d("DDizi:", "Error parsing master.txt: ${e2.message}")
                                         }
                                     }
                                 }
@@ -488,6 +494,17 @@ class DDiziProvider : MainAPI() {
         
 
         return true
+    }
+
+    private fun getQualityFromName(quality: String): Int {
+        return when (quality.lowercase()) {
+            "auto" -> Qualities.Unknown.value
+            "1080p" -> Qualities.P1080.value
+            "720p" -> Qualities.P720.value
+            "480p" -> Qualities.P480.value
+            "360p" -> Qualities.P360.value
+            else -> Qualities.Unknown.value
+        }
     }
 
     companion object {
