@@ -332,7 +332,7 @@ class DDiziProvider : MainAPI() {
             }
         }
 
-        return newTvSeriesLoadResponse(title, url, TvType.TvSeries, episodes) {
+        return newTvSeriesLoadResponse(title, url, TvType.TvSeries, allEpisodes) {
             this.posterUrl = poster
             this.plot = plot
             this.year = null
