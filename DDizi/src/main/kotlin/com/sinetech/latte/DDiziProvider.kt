@@ -429,10 +429,10 @@ class DDiziProvider : MainAPI() {
                                 
                                 // M3U8 Helper ile alternatif kaliteleri işle
                                 try {
-                                    Log.d("DDizi:", "Generating M3u8 for: $fileUrl")
+                                    Log.d("DDizi:", "Generating M3u8 for: $m3u8Url")
                                     M3u8Helper.generateM3u8(
                                         name,
-                                        fileUrl,
+                                        m3u8Url,
                                         mainUrl, // Referrer olarak ana URL'yi kullan
                                         headers = videoHeaders
                                     ).forEach(callback)
@@ -440,10 +440,10 @@ class DDiziProvider : MainAPI() {
                                     Log.d("DDizi:", "Error generating M3u8: ${e.message}")
                                     
                                     // Doğrudan bağlantıyı dene
-                                    if (fileUrl.contains("master.txt")) {
+                                    if (m3u8Url.contains("master.txt")) {
                                         try {
                                             Log.d("DDizi:", "Trying to get master.txt content directly")
-                                            val masterContent = app.get(fileUrl, headers = videoHeaders).text
+                                            val masterContent = app.get(m3u8Url, headers = videoHeaders).text
                                             Log.d("DDizi:", "Master.txt content length: ${masterContent.length}")
                                             
                                             // m3u8 bağlantılarını bul
