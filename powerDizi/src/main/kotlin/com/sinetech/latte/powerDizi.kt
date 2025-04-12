@@ -377,39 +377,56 @@ class powerDizi(private val sharedPref: SharedPreferences?) : MainAPI() {
 
         val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
         val episodeRegex = Regex("""(.*?)[^\w\d]+(\d+)\.\s*Sezon\s*(\d+)\.\s*Bölüm.*""")
-        val groupEpisodes = kanallar.items
-            .filter { it.attributes["group-title"]?.toString() ?: "" == loadData.group }
-            .mapNotNull { kanal ->
-                val title = kanal.title.toString()
-                val match = episodeRegex.find(title)
-                if (match != null) {
-                    val (_, season, episode) = match.destructured
-                    Episode(
-                        episode = episode.toInt(),
-                        season = season.toInt(),
-                        data = LoadData(
-                            kanal.url.toString(),
-                            title,
-                            kanal.attributes["tvg-logo"].toString(),
-                            kanal.attributes["group-title"].toString(),
-                            kanal.attributes["tvg-country"]?.toString() ?: "TR",
-                            season.toInt(),
-                            episode.toInt()
-                        ).toJson()
-                    )
-                } else null
+        
+        // Önce tüm dizileri grupla
+        val allShows = kanallar.items.groupBy { item ->
+            val title = item.title.toString()
+            val match = episodeRegex.find(title)
+            if (match != null) {
+                val (showName, _, _) = match.destructured
+                showName.trim()
+            } else {
+                title.trim()
             }
+        }
+
+        // Mevcut diziyi bul ve bölümlerini topla
+        val currentShowTitle = loadData.title.replace(Regex("""\s*\d+\.\s*Sezon\s*\d+\.\s*Bölüm.*"""), "").trim()
+        val currentShowEpisodes = allShows[currentShowTitle]?.mapNotNull { kanal ->
+            val title = kanal.title.toString()
+            val match = episodeRegex.find(title)
+            if (match != null) {
+                val (_, season, episode) = match.destructured
+                Episode(
+                    episode = episode.toInt(),
+                    season = season.toInt(),
+                    name = title,  // Bölüm başlığını ekle
+                    data = LoadData(
+                        kanal.url.toString(),
+                        title,
+                        kanal.attributes["tvg-logo"].toString(),
+                        kanal.attributes["group-title"].toString(),
+                        kanal.attributes["tvg-country"]?.toString() ?: "TR",
+                        season.toInt(),
+                        episode.toInt()
+                    ).toJson()
+                )
+            } else null
+        }?.sortedWith(compareBy({ it.season }, { it.episode })) ?: emptyList()
 
         return newTvSeriesLoadResponse(
-            loadData.title,
+            currentShowTitle,
             url,
             TvType.TvSeries,
-            groupEpisodes.map { episode ->
-                val epWatchKey = "watch_${episode.data.hashCode()}"
-                val epProgressKey = "progress_${episode.data.hashCode()}"
+            currentShowEpisodes.map { episode ->
+                val loadData = parseJson<LoadData>(episode.data)
+                val epWatchKey = "watch_${loadData.url.hashCode()}"
+                val epProgressKey = "progress_${loadData.url.hashCode()}"
                 val epIsWatched = sharedPref?.getBoolean(epWatchKey, false) ?: false
                 val epWatchProgress = sharedPref?.getLong(epProgressKey, 0L) ?: 0L
-                episode
+                episode.apply {
+                    this.posterUrl = loadData.poster
+                }
             }
         ) {
             this.posterUrl = loadData.poster
