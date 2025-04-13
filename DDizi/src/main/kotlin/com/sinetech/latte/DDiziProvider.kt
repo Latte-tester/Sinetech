@@ -371,6 +371,101 @@ class DDiziProvider : MainAPI() {
                         
                         if (sourcesMatch != null) {
                             // file parametresini bul
+                            val fileRegex = Regex("""file:\s*["'](.*?)["']""", RegexOption.IGNORE_CASE)
+                            val fileMatch = fileRegex.find(sourcesMatch.groupValues[1])
+                            
+                            if (fileMatch != null) {
+                                val fileUrl = fileMatch.groupValues[1]
+                                Log.d("DDizi:", "Found video source: $fileUrl")
+                                
+                                // Dosya türünü belirle
+                                val fileType = when {
+                                    fileUrl.contains(".m3u8") || fileUrl.contains("hls") -> "hls"
+                                    fileUrl.contains(".mp4") -> "mp4"
+                                    else -> "hls" // Varsayılan olarak hls kabul et
+                                }
+                                
+                                // Kalite bilgisini belirle
+                                val qualityRegex = Regex("""label:\s*["'](.*?)["']""", RegexOption.IGNORE_CASE)
+                                val qualityMatch = qualityRegex.find(sourcesMatch.groupValues[1])
+                                val quality = qualityMatch?.groupValues?.get(1) ?: "Auto"
+                                
+                                Log.d("DDizi:", "Video type: $fileType, quality: $quality")
+                                
+                                // master.txt dosyası için özel başlıklar
+                                val videoHeaders = if (fileUrl.contains("master.txt")) {
+                                    mapOf(
+                                        "accept" to "*/*",
+                                        "accept-language" to "tr-TR,tr;q=0.5",
+                                        "cache-control" to "no-cache",
+                                        "pragma" to "no-cache",
+                                        "sec-ch-ua" to "\"Chromium\";v=\"134\", \"Not:A-Brand\";v=\"24\"",
+                                        "sec-ch-ua-mobile" to "?0",
+                                        "sec-ch-ua-platform" to "\"Windows\"",
+                                        "sec-fetch-dest" to "empty",
+                                        "sec-fetch-mode" to "cors",
+                                        "sec-fetch-site" to "cross-site",
+                                        "user-agent" to USER_AGENT,
+                                        "referer" to ogVideo // Player URL'sini referrer olarak kullan
+                                    )
+                                } else {
+                                    getHeaders(ogVideo)
+                                }
+                                
+                                Log.d("DDizi:", "Using headers for video source: ${videoHeaders.keys.joinToString()}")
+                                
+                                // ExtractorLink oluştur
+                                callback.invoke(
+                                    ExtractorLink(
+                                        source = name,
+                                        name = "$name - $quality",
+                                        url = fileUrl,
+                                        referer = ogVideo,
+                                        quality = getQualityFromName(quality),
+                                        headers = videoHeaders,
+                                        type = if (fileType == "hls") ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
+                                    )
+                                )
+                                
+                                return true
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (e: Exception) {
+            Log.e("DDizi:", "Error loading video: ${e.message}")
+        }
+        
+        return false
+        Log.d("DDizi:", "Loading links for $data")
+        val document = app.get(data, headers = getHeaders(mainUrl)).document
+        
+        // Meta og:video etiketini kontrol et
+        try {
+            val ogVideo = document.selectFirst("meta[property=og:video]")?.attr("content")
+            if (!ogVideo.isNullOrEmpty()) {
+                Log.d("DDizi:", "Found og:video meta tag: $ogVideo")
+                
+                // Video bağlantısına istek at ve jwplayer yapılandırmasını bul
+                val playerDoc = app.get(
+                    ogVideo, 
+                    headers = getHeaders(data)
+                ).document
+                val scripts = playerDoc.select("script")
+                
+                // jwplayer yapılandırmasını içeren script'i bul
+                scripts.forEach { script ->
+                    val content = script.html()
+                    if (content.contains("jwplayer") && content.contains("sources")) {
+                        Log.d("DDizi:", "Found jwplayer configuration")
+                        
+                        // sources kısmını regex ile çıkar
+                        val sourcesRegex = Regex("""sources:\s*\[\s*\{(.*?)\}\s*,?\s*\]""", RegexOption.DOT_MATCHES_ALL)
+                        val sourcesMatch = sourcesRegex.find(content)
+                        
+                        if (sourcesMatch != null) {
+                            // file parametresini bul
                             val fileRegex = Regex("""file:\s*["'](.*?)["']""")
                             val fileMatch = fileRegex.find(sourcesMatch.groupValues[1])
                             
