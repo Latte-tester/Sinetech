@@ -353,7 +353,7 @@ class DDiziProvider : MainAPI() {
                 
                 // Video bağlantısına istek at ve jwplayer yapılandırmasını bul
                 val playerDoc = app.get(
-                    ogVideo, 
+                    ogVideo.trim(), 
                     headers = getHeaders(data)
                 ).document
                 val scripts = playerDoc.select("script")
