@@ -344,20 +344,20 @@ class DDiziProvider : MainAPI() {
         callback: (ExtractorLink) -> Unit
     ): Boolean {
         Log.d("DDizi:", "Loading links for $data")
-        val document = app.get(data, headers = getHeaders(mainUrl)).document
+        val mainDocument = app.get(data, headers = getHeaders(mainUrl)).document
         
         // Meta og:video etiketini kontrol et
         try {
-            val ogVideo = document.selectFirst("meta[property=og:video]")?.attr("content")
+            val ogVideo = mainDocument.selectFirst("meta[property=og:video]")?.attr("content")
             if (!ogVideo.isNullOrEmpty()) {
                 Log.d("DDizi:", "Found og:video meta tag: $ogVideo")
                 
                 // Video bağlantısına istek at ve jwplayer yapılandırmasını bul
-                val playerDoc = app.get(
+                val playerDocument = app.get(
                     ogVideo, 
                     headers = getHeaders(data)
                 ).document
-                val scripts = playerDoc.select("script")
+                val scripts = playerDocument.select("script")
                 
                 // jwplayer yapılandırmasını içeren script'i bul
                 scripts.forEach { script ->
@@ -439,20 +439,20 @@ class DDiziProvider : MainAPI() {
         
         return false
         Log.d("DDizi:", "Loading links for $data")
-        val document = app.get(data, headers = getHeaders(mainUrl)).document
+        val mainDocument = app.get(data, headers = getHeaders(mainUrl)).document
         
         // Meta og:video etiketini kontrol et
         try {
-            val ogVideo = document.selectFirst("meta[property=og:video]")?.attr("content")
+            val ogVideo = mainDocument.selectFirst("meta[property=og:video]")?.attr("content")
             if (!ogVideo.isNullOrEmpty()) {
                 Log.d("DDizi:", "Found og:video meta tag: $ogVideo")
                 
                 // Video bağlantısına istek at ve jwplayer yapılandırmasını bul
-                val playerDoc = app.get(
+                val playerDocument = app.get(
                     ogVideo, 
                     headers = getHeaders(data)
                 ).document
-                val scripts = playerDoc.select("script")
+                val scripts = playerDocument.select("script")
                 
                 // jwplayer yapılandırmasını içeren script'i bul
                 scripts.forEach { script ->
