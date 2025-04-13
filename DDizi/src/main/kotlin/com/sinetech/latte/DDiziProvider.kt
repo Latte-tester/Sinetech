@@ -230,13 +230,12 @@ class DDiziProvider : MainAPI() {
                 
                 Log.d("DDizi:", "Found episode: $name, Season: $epSeasonNumber, Episode: $epEpisodeNumber, Final: $epIsSeasonFinal, Comments: $epCommentCount")
                 
-                Episode(
-                    href,
-                    name,
-                    epSeasonNumber,
-                    epEpisodeNumber,
-                    description = epDescription
-                )
+                newEpisode(href) {
+                    this.name = name
+                    this.season = epSeasonNumber
+                    this.episode = epEpisodeNumber
+                    this.description = epDescription
+                }
             }
 
             if (pageEpisodes.isNotEmpty()) {
@@ -255,13 +254,12 @@ class DDiziProvider : MainAPI() {
         // Eğer hiç bölüm bulunamazsa ve şu anki sayfa bir bölüm sayfasıysa, sadece bu bölümü ekle
         if (allEpisodes.isEmpty() && !url.contains("/dizi/") && !url.contains("/diziler/")) {
             allEpisodes.add(
-                Episode(
-                    url,
-                    fullTitle,
-                    seasonNumber,
-                    episodeNumber,
-                    description = document.selectFirst("div.dizi-aciklama, div.aciklama, p")?.text()?.trim()
-                )
+                newEpisode(url) {
+                    this.name = fullTitle
+                    this.season = seasonNumber
+                    this.episode = episodeNumber
+                    this.description = document.selectFirst("div.dizi-aciklama, div.aciklama, p")?.text()?.trim()
+                }
             )
         }
         val poster = when {
@@ -303,13 +301,12 @@ class DDiziProvider : MainAPI() {
                         
                         Log.d("DDizi:", "Episode: $name, Season: $epSeasonNumber (default: 1), Episode: $episodeNumber, Final: $epIsSeasonFinal, Comments: $epCommentCount")
                         
-                        Episode(
-                            href,
-                            name,
-                            epSeasonNumber,
-                            epEpisodeNumber,
-                            description = epDescription
-                        )
+                        newEpisode(href) {
+                            this.name = name
+                            this.season = epSeasonNumber
+                            this.episode = epEpisodeNumber
+                            this.description = epDescription
+                        }
                     }
                     Log.d("DDizi:", "Found ${eps.size} episodes")
                     allEpisodes.addAll(eps)
@@ -318,13 +315,12 @@ class DDiziProvider : MainAPI() {
                     Log.d("DDizi:", "Single episode page, adding current episode with Season: $seasonNumber (default: 1)")
                     
                     allEpisodes.add(
-                        Episode(
-                            url,
-                            fullTitle,
-                            seasonNumber,
-                            episodeNumber,
-                            description = plot
-                        )
+                        newEpisode(url) {
+                            this.name = fullTitle
+                            this.season = seasonNumber
+                            this.episode = episodeNumber
+                            this.description = plot
+                        }
                     )
                 }
             } catch (e: Exception) {
