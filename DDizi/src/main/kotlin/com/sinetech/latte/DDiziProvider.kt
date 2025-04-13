@@ -348,12 +348,12 @@ class DDiziProvider : MainAPI() {
         
         // Meta og:video etiketini kontrol et
         try {
-            val ogVideo = videoDocument.selectFirst("meta[property=og:video]")?.attr("content")
+            val ogVideo = playerDocument.selectFirst("meta[property=og:video]")?.attr("content")
             if (!ogVideo.isNullOrEmpty()) {
                 Log.d("DDizi:", "Found og:video meta tag: $ogVideo")
                 
                 // Video bağlantısına istek at ve jwplayer yapılandırmasını bul
-                val playerDocument = app.get(
+                val videoPlayerDocument = app.get(
                     ogVideo, 
                     headers = getHeaders(data)
                 ).document
@@ -438,17 +438,18 @@ class DDiziProvider : MainAPI() {
         }
         
         return false
-        Log.d("DDizi:", "Loading links for $data")
-        val videoDocument = app.get(data, headers = getHeaders(mainUrl)).document
+        // İkinci bir kontrol mekanizması olarak alternatif yöntem
+        Log.d("DDizi:", "Trying alternative method for loading links for $data")
+        val playerDocument = app.get(data, headers = getHeaders(mainUrl)).document
         
         // Meta og:video etiketini kontrol et
         try {
-            val ogVideo = videoDocument.selectFirst("meta[property=og:video]")?.attr("content")
+            val ogVideo = playerDocument.selectFirst("meta[property=og:video]")?.attr("content")
             if (!ogVideo.isNullOrEmpty()) {
                 Log.d("DDizi:", "Found og:video meta tag: $ogVideo")
                 
                 // Video bağlantısına istek at ve jwplayer yapılandırmasını bul
-                val playerDocument = app.get(
+                val videoPlayerDocument = app.get(
                     ogVideo, 
                     headers = getHeaders(data)
                 ).document
