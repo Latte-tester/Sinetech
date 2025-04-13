@@ -344,11 +344,11 @@ class DDiziProvider : MainAPI() {
         callback: (ExtractorLink) -> Unit
     ): Boolean {
         Log.d("DDizi:", "Loading links for $data")
-        val mainDocument = app.get(data, headers = getHeaders(mainUrl)).document
+        val videoDocument = app.get(data, headers = getHeaders(mainUrl)).document
         
         // Meta og:video etiketini kontrol et
         try {
-            val ogVideo = mainDocument.selectFirst("meta[property=og:video]")?.attr("content")
+            val ogVideo = videoDocument.selectFirst("meta[property=og:video]")?.attr("content")
             if (!ogVideo.isNullOrEmpty()) {
                 Log.d("DDizi:", "Found og:video meta tag: $ogVideo")
                 
@@ -439,11 +439,11 @@ class DDiziProvider : MainAPI() {
         
         return false
         Log.d("DDizi:", "Loading links for $data")
-        val mainDocument = app.get(data, headers = getHeaders(mainUrl)).document
+        val videoDocument = app.get(data, headers = getHeaders(mainUrl)).document
         
         // Meta og:video etiketini kontrol et
         try {
-            val ogVideo = mainDocument.selectFirst("meta[property=og:video]")?.attr("content")
+            val ogVideo = videoDocument.selectFirst("meta[property=og:video]")?.attr("content")
             if (!ogVideo.isNullOrEmpty()) {
                 Log.d("DDizi:", "Found og:video meta tag: $ogVideo")
                 
