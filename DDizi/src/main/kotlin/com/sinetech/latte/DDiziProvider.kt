@@ -31,7 +31,7 @@ class DDiziProvider : MainAPI() {
             request.data
         }
         Log.d("DDizi:", "Request for $url with page $page")
-        val document = app.get(url, headers = getHeaders(mainUrl)).document
+        val loadDocument = app.get(url, headers = getHeaders(mainUrl)).document
         
         val home = mutableListOf<SearchResponse>()
         
@@ -96,7 +96,7 @@ class DDiziProvider : MainAPI() {
         val formData = mapOf("arama" to query)
         
         // POST isteği gönder
-        val document = app.post(
+        val searchDocument = app.post(
             "$mainUrl/arama/", 
             data = formData, 
             headers = getHeaders(mainUrl)
@@ -105,7 +105,7 @@ class DDiziProvider : MainAPI() {
         
         // dizi-boxpost-cat sınıfını kontrol et (arama sonuçları)
         try {
-            val boxCatResults = document.select("div.dizi-boxpost-cat").mapNotNull { it.toSearchResult() }
+            val boxCatResults = searchDocument.select("div.dizi-boxpost-cat").mapNotNull { it.toSearchResult() }
             if (boxCatResults.isNotEmpty()) {
                 Log.d("DDizi:", "Found ${boxCatResults.size} box-cat results")
                 results.addAll(boxCatResults)
@@ -117,7 +117,7 @@ class DDiziProvider : MainAPI() {
         // Alternatif olarak dizi-boxpost sınıfını kontrol et
         if (results.isEmpty()) {
             try {
-                val boxResults = document.select("div.dizi-boxpost").mapNotNull { it.toSearchResult() }
+                val boxResults = searchDocument.select("div.dizi-boxpost").mapNotNull { it.toSearchResult() }
                 if (boxResults.isNotEmpty()) {
                     Log.d("DDizi:", "Found ${boxResults.size} box results")
                     results.addAll(boxResults)
@@ -154,10 +154,10 @@ class DDiziProvider : MainAPI() {
 
     override suspend fun load(url: String): LoadResponse {
         Log.d("DDizi:", "Loading $url")
-        val document = app.get(url, headers = getHeaders(mainUrl)).document
+        val loadDocument = app.get(url, headers = getHeaders(mainUrl)).document
 
         // Başlık ve sezon/bölüm bilgilerini al
-        val fullTitle = document.selectFirst("h1, h2, div.dizi-boxpost-cat a")?.text()?.trim() ?: ""
+        val fullTitle = loadDocument.selectFirst("h1, h2, div.dizi-boxpost-cat a")?.text()?.trim() ?: ""
         Log.d("DDizi:", "Full title: $fullTitle")
         
         // Regex tanımlamaları
@@ -198,7 +198,7 @@ class DDiziProvider : MainAPI() {
         Log.d("DDizi:", "Parsed title: $title, Season: $seasonNumber (default: 1), Episode: $episodeNumber, Final: $isSeasonFinal")
         
         // Poster URL'yi doğru şekilde al
-        val posterImg = document.selectFirst("div.afis img, img.afis, img.img-back, img.img-back-cat")
+        val posterImg = loadDocument.selectFirst("div.afis img, img.afis, img.img-back, img.img-back-cat")
 
         // Tüm bölümleri toplamak için sayfalama sistemini kullan
         val allEpisodes = mutableListOf<Episode>()
@@ -212,7 +212,7 @@ class DDiziProvider : MainAPI() {
                 url
             }
 
-            val pageDocument = if (currentPage == 0) document else app.get(pageUrl, headers = getHeaders(mainUrl)).document
+            val pageDocument = if (currentPage == 0) loadDocument else app.get(pageUrl, headers = getHeaders(mainUrl)).document
             Log.d("DDizi:", "Loading page: $pageUrl")
 
             val pageEpisodes = pageDocument.select("div.bolumler a, div.sezonlar a, div.dizi-arsiv a, div.dizi-boxpost-cat a").map { ep ->
@@ -270,10 +270,10 @@ class DDiziProvider : MainAPI() {
         }
         
         // Açıklama bilgisini al
-        val plot = document.selectFirst("div.dizi-aciklama, div.aciklama, p")?.text()?.trim()
+        val plot = loadDocument.selectFirst("div.dizi-aciklama, div.aciklama, p")?.text()?.trim()
         
         // Yorum sayısını al
-        val commentCount = document.selectFirst("span.comments-ss")?.text()?.replace(Regex("[^0-9]"), "")?.toIntOrNull()
+        val commentCount = loadDocument.selectFirst("span.comments-ss")?.text()?.replace(Regex("[^0-9]"), "")?.toIntOrNull()
         Log.d("DDizi:", "Comment count: $commentCount")
 
         Log.d("DDizi:", "Loaded title: $title, poster: $poster")
