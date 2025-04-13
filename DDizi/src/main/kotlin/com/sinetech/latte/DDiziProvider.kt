@@ -4,6 +4,8 @@ import android.util.Log
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.utils.*
 import com.lagradost.cloudstream3.utils.M3u8Helper
+import com.lagradost.cloudstream3.utils.AppUtils.tryParseJson
+import com.lagradost.cloudstream3.utils.ExtractorApi
 import com.lagradost.cloudstream3.LoadResponse.Companion.addTrailer
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.newExtractorLink
@@ -31,13 +33,13 @@ class DDiziProvider : MainAPI() {
             request.data
         }
         Log.d("DDizi:", "Request for $url with page $page")
-        val loadDocument = app.get(url, headers = getHeaders(mainUrl)).document
+        val document = app.get(url, headers = getHeaders(mainUrl)).document
         
         val home = mutableListOf<SearchResponse>()
         
         // dizi-boxpost-cat div'lerini kontrol et
         try {
-            val boxCatResults = loadDocument.select("div.dizi-boxpost-cat").mapNotNull { it.toSearchResult() }
+            val boxCatResults = document.select("div.dizi-boxpost-cat").mapNotNull { it.toSearchResult() }
             if (boxCatResults.isNotEmpty()) {
                 Log.d("DDizi:", "Found ${boxCatResults.size} box-cat results")
                 home.addAll(boxCatResults)
@@ -48,7 +50,7 @@ class DDiziProvider : MainAPI() {
         
         // dizi-boxpost div'lerini kontrol et
         try {
-            val boxResults = loadDocument.select("div.dizi-boxpost").mapNotNull { it.toSearchResult() }
+            val boxResults = document.select("div.dizi-boxpost").mapNotNull { it.toSearchResult() }
             if (boxResults.isNotEmpty()) {
                 Log.d("DDizi:", "Found ${boxResults.size} box results")
                 home.addAll(boxResults)
@@ -58,7 +60,7 @@ class DDiziProvider : MainAPI() {
         }
         
         // Sonraki sayfa kontrolü
-        val hasNextPage = loadDocument.select(".pagination a").any { it.text().contains("Sonraki") }
+        val hasNextPage = document.select(".pagination a").any { it.text().contains("Sonraki") }
         
         Log.d("DDizi:", "Added ${home.size} total episodes, hasNext: $hasNextPage")
         return newHomePageResponse(request.name, home, hasNextPage)
@@ -96,7 +98,7 @@ class DDiziProvider : MainAPI() {
         val formData = mapOf("arama" to query)
         
         // POST isteği gönder
-        val searchDocument = app.post(
+        val document = app.post(
             "$mainUrl/arama/", 
             data = formData, 
             headers = getHeaders(mainUrl)
@@ -105,7 +107,7 @@ class DDiziProvider : MainAPI() {
         
         // dizi-boxpost-cat sınıfını kontrol et (arama sonuçları)
         try {
-            val boxCatResults = searchDocument.select("div.dizi-boxpost-cat").mapNotNull { it.toSearchResult() }
+            val boxCatResults = document.select("div.dizi-boxpost-cat").mapNotNull { it.toSearchResult() }
             if (boxCatResults.isNotEmpty()) {
                 Log.d("DDizi:", "Found ${boxCatResults.size} box-cat results")
                 results.addAll(boxCatResults)
@@ -117,7 +119,7 @@ class DDiziProvider : MainAPI() {
         // Alternatif olarak dizi-boxpost sınıfını kontrol et
         if (results.isEmpty()) {
             try {
-                val boxResults = searchDocument.select("div.dizi-boxpost").mapNotNull { it.toSearchResult() }
+                val boxResults = document.select("div.dizi-boxpost").mapNotNull { it.toSearchResult() }
                 if (boxResults.isNotEmpty()) {
                     Log.d("DDizi:", "Found ${boxResults.size} box results")
                     results.addAll(boxResults)
@@ -130,7 +132,7 @@ class DDiziProvider : MainAPI() {
         // Alternatif seçiciler
         if (results.isEmpty()) {
             try {
-                val altResults = searchDocument.select("div.dizi-listesi a, div.yerli-diziler li a, div.yabanci-diziler li a").mapNotNull { 
+                val altResults = document.select("div.dizi-listesi a, div.yerli-diziler li a, div.yabanci-diziler li a").mapNotNull { 
                     val title = it.text()?.trim() ?: return@mapNotNull null
                     val href = fixUrl(it.attr("href") ?: return@mapNotNull null)
                     
@@ -154,10 +156,10 @@ class DDiziProvider : MainAPI() {
 
     override suspend fun load(url: String): LoadResponse {
         Log.d("DDizi:", "Loading $url")
-        val loadDocument = app.get(url, headers = getHeaders(mainUrl)).document
+        val document = app.get(url, headers = getHeaders(mainUrl)).document
 
         // Başlık ve sezon/bölüm bilgilerini al
-        val fullTitle = loadDocument.selectFirst("h1, h2, div.dizi-boxpost-cat a")?.text()?.trim() ?: ""
+        val fullTitle = document.selectFirst("h1, h2, div.dizi-boxpost-cat a")?.text()?.trim() ?: ""
         Log.d("DDizi:", "Full title: $fullTitle")
         
         // Regex tanımlamaları
@@ -198,7 +200,7 @@ class DDiziProvider : MainAPI() {
         Log.d("DDizi:", "Parsed title: $title, Season: $seasonNumber (default: 1), Episode: $episodeNumber, Final: $isSeasonFinal")
         
         // Poster URL'yi doğru şekilde al
-        val posterImg = loadDocument.selectFirst("div.afis img, img.afis, img.img-back, img.img-back-cat")
+        val posterImg = document.selectFirst("div.afis img, img.afis, img.img-back, img.img-back-cat")
 
         // Tüm bölümleri toplamak için sayfalama sistemini kullan
         val allEpisodes = mutableListOf<Episode>()
@@ -212,7 +214,7 @@ class DDiziProvider : MainAPI() {
                 url
             }
 
-            val pageDocument = if (currentPage == 0) loadDocument else app.get(pageUrl, headers = getHeaders(mainUrl)).document
+            val pageDocument = if (currentPage == 0) document else app.get(pageUrl, headers = getHeaders(mainUrl)).document
             Log.d("DDizi:", "Loading page: $pageUrl")
 
             val pageEpisodes = pageDocument.select("div.bolumler a, div.sezonlar a, div.dizi-arsiv a, div.dizi-boxpost-cat a").map { ep ->
@@ -259,7 +261,7 @@ class DDiziProvider : MainAPI() {
                     this.name = fullTitle
                     this.season = seasonNumber
                     this.episode = episodeNumber
-                    this.description = loadDocument.selectFirst("div.dizi-aciklama, div.aciklama, p")?.text()?.trim()
+                    this.description = document.selectFirst("div.dizi-aciklama, div.aciklama, p")?.text()?.trim()
                 }
             )
         }
@@ -270,10 +272,10 @@ class DDiziProvider : MainAPI() {
         }
         
         // Açıklama bilgisini al
-        val plot = loadDocument.selectFirst("div.dizi-aciklama, div.aciklama, p")?.text()?.trim()
+        val plot = document.selectFirst("div.dizi-aciklama, div.aciklama, p")?.text()?.trim()
         
         // Yorum sayısını al
-        val commentCount = loadDocument.selectFirst("span.comments-ss")?.text()?.replace(Regex("[^0-9]"), "")?.toIntOrNull()
+        val commentCount = document.selectFirst("span.comments-ss")?.text()?.replace(Regex("[^0-9]"), "")?.toIntOrNull()
         Log.d("DDizi:", "Comment count: $commentCount")
 
         Log.d("DDizi:", "Loaded title: $title, poster: $poster")
@@ -283,7 +285,7 @@ class DDiziProvider : MainAPI() {
             try {
                 if (url.contains("/dizi/") || url.contains("/diziler/")) {
                     // Dizi ana sayfasındayız, tüm bölümleri listele
-                    val eps = loadDocument.select("div.bolumler a, div.sezonlar a, div.dizi-arsiv a, div.dizi-boxpost-cat a").map { ep ->
+                    val eps = document.select("div.bolumler a, div.sezonlar a, div.dizi-arsiv a, div.dizi-boxpost-cat a").map { ep ->
                         val name = ep.text().trim()
                         val href = fixUrl(ep.attr("href"))
                         
@@ -344,116 +346,20 @@ class DDiziProvider : MainAPI() {
         callback: (ExtractorLink) -> Unit
     ): Boolean {
         Log.d("DDizi:", "Loading links for $data")
-        val videoDocument = app.get(data, headers = getHeaders(mainUrl)).document
+        val document = app.get(data, headers = getHeaders(mainUrl)).document
         
         // Meta og:video etiketini kontrol et
         try {
-            val ogVideo = playerDocument.selectFirst("meta[property=og:video]")?.attr("content")
+            val ogVideo = document.selectFirst("meta[property=og:video]")?.attr("content")
             if (!ogVideo.isNullOrEmpty()) {
                 Log.d("DDizi:", "Found og:video meta tag: $ogVideo")
                 
                 // Video bağlantısına istek at ve jwplayer yapılandırmasını bul
-                val videoPlayerDocument = app.get(
+                val playerDoc = app.get(
                     ogVideo, 
                     headers = getHeaders(data)
                 ).document
-                val scripts = playerDocument.select("script")
-                
-                // jwplayer yapılandırmasını içeren script'i bul
-                scripts.forEach { script ->
-                    val content = script.html()
-                    if (content.contains("jwplayer") && content.contains("sources")) {
-                        Log.d("DDizi:", "Found jwplayer configuration")
-                        
-                        // sources kısmını regex ile çıkar
-                        val sourcesRegex = Regex("""sources:\s*\[\s*\{(.*?)\}\s*,?\s*\]""", RegexOption.DOT_MATCHES_ALL)
-                        val sourcesMatch = sourcesRegex.find(content)
-                        
-                        if (sourcesMatch != null) {
-                            // file parametresini bul
-                            val fileRegex = Regex("""file:\s*["'](.*?)["']""", RegexOption.IGNORE_CASE)
-                            val fileMatch = fileRegex.find(sourcesMatch.groupValues[1])
-                            
-                            if (fileMatch != null) {
-                                val fileUrl = fileMatch.groupValues[1]
-                                Log.d("DDizi:", "Found video source: $fileUrl")
-                                
-                                // Dosya türünü belirle
-                                val fileType = when {
-                                    fileUrl.contains(".m3u8") || fileUrl.contains("hls") -> "hls"
-                                    fileUrl.contains(".mp4") -> "mp4"
-                                    else -> "hls" // Varsayılan olarak hls kabul et
-                                }
-                                
-                                // Kalite bilgisini belirle
-                                val qualityRegex = Regex("""label:\s*["'](.*?)["']""", RegexOption.IGNORE_CASE)
-                                val qualityMatch = qualityRegex.find(sourcesMatch.groupValues[1])
-                                val quality = qualityMatch?.groupValues?.get(1) ?: "Auto"
-                                
-                                Log.d("DDizi:", "Video type: $fileType, quality: $quality")
-                                
-                                // master.txt dosyası için özel başlıklar
-                                val videoHeaders = if (fileUrl.contains("master.txt")) {
-                                    mapOf(
-                                        "accept" to "*/*",
-                                        "accept-language" to "tr-TR,tr;q=0.5",
-                                        "cache-control" to "no-cache",
-                                        "pragma" to "no-cache",
-                                        "sec-ch-ua" to "\"Chromium\";v=\"134\", \"Not:A-Brand\";v=\"24\"",
-                                        "sec-ch-ua-mobile" to "?0",
-                                        "sec-ch-ua-platform" to "\"Windows\"",
-                                        "sec-fetch-dest" to "empty",
-                                        "sec-fetch-mode" to "cors",
-                                        "sec-fetch-site" to "cross-site",
-                                        "user-agent" to USER_AGENT,
-                                        "referer" to ogVideo // Player URL'sini referrer olarak kullan
-                                    )
-                                } else {
-                                    getHeaders(ogVideo)
-                                }
-                                
-                                Log.d("DDizi:", "Using headers for video source: ${videoHeaders.keys.joinToString()}")
-                                
-                                // ExtractorLink oluştur
-                                callback.invoke(
-                                    ExtractorLink(
-                                        source = name,
-                                        name = "$name - $quality",
-                                        url = fileUrl,
-                                        referer = ogVideo,
-                                        quality = getQualityFromName(quality),
-                                        headers = videoHeaders,
-                                        type = if (fileType == "hls") ExtractorLinkType.M3U8 else ExtractorLinkType.VIDEO
-                                    )
-                                )
-                                
-                                return true
-                            }
-                        }
-                    }
-                }
-            }
-        } catch (e: Exception) {
-            Log.e("DDizi:", "Error loading video: ${e.message}")
-        }
-        
-        return false
-        // İkinci bir kontrol mekanizması olarak alternatif yöntem
-        Log.d("DDizi:", "Trying alternative method for loading links for $data")
-        val playerDocument = app.get(data, headers = getHeaders(mainUrl)).document
-        
-        // Meta og:video etiketini kontrol et
-        try {
-            val ogVideo = playerDocument.selectFirst("meta[property=og:video]")?.attr("content")
-            if (!ogVideo.isNullOrEmpty()) {
-                Log.d("DDizi:", "Found og:video meta tag: $ogVideo")
-                
-                // Video bağlantısına istek at ve jwplayer yapılandırmasını bul
-                val videoPlayerDocument = app.get(
-                    ogVideo, 
-                    headers = getHeaders(data)
-                ).document
-                val scripts = playerDocument.select("script")
+                val scripts = playerDoc.select("script")
                 
                 // jwplayer yapılandırmasını içeren script'i bul
                 scripts.forEach { script ->
