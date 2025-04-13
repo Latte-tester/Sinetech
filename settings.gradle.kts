@@ -8,6 +8,6 @@ include(
     "TvBahcesi",
     "KoolTO",
     "DaddyLive",
-    "HuhuTO",
-    "DDizi"
+    "HuhuTO"
+   /* "DDizi" */
 )
