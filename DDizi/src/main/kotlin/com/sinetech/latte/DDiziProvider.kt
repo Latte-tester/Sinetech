@@ -37,7 +37,7 @@ class DDiziProvider : MainAPI() {
         
         // dizi-boxpost-cat div'lerini kontrol et
         try {
-            val boxCatResults = document.select("div.dizi-boxpost-cat").mapNotNull { it.toSearchResult() }
+            val boxCatResults = loadDocument.select("div.dizi-boxpost-cat").mapNotNull { it.toSearchResult() }
             if (boxCatResults.isNotEmpty()) {
                 Log.d("DDizi:", "Found ${boxCatResults.size} box-cat results")
                 home.addAll(boxCatResults)
@@ -48,7 +48,7 @@ class DDiziProvider : MainAPI() {
         
         // dizi-boxpost div'lerini kontrol et
         try {
-            val boxResults = document.select("div.dizi-boxpost").mapNotNull { it.toSearchResult() }
+            val boxResults = loadDocument.select("div.dizi-boxpost").mapNotNull { it.toSearchResult() }
             if (boxResults.isNotEmpty()) {
                 Log.d("DDizi:", "Found ${boxResults.size} box results")
                 home.addAll(boxResults)
@@ -58,7 +58,7 @@ class DDiziProvider : MainAPI() {
         }
         
         // Sonraki sayfa kontrolü
-        val hasNextPage = document.select(".pagination a").any { it.text().contains("Sonraki") }
+        val hasNextPage = loadDocument.select(".pagination a").any { it.text().contains("Sonraki") }
         
         Log.d("DDizi:", "Added ${home.size} total episodes, hasNext: $hasNextPage")
         return newHomePageResponse(request.name, home, hasNextPage)
@@ -130,7 +130,7 @@ class DDiziProvider : MainAPI() {
         // Alternatif seçiciler
         if (results.isEmpty()) {
             try {
-                val altResults = document.select("div.dizi-listesi a, div.yerli-diziler li a, div.yabanci-diziler li a").mapNotNull { 
+                val altResults = searchDocument.select("div.dizi-listesi a, div.yerli-diziler li a, div.yabanci-diziler li a").mapNotNull { 
                     val title = it.text()?.trim() ?: return@mapNotNull null
                     val href = fixUrl(it.attr("href") ?: return@mapNotNull null)
                     
@@ -259,7 +259,7 @@ class DDiziProvider : MainAPI() {
                     this.name = fullTitle
                     this.season = seasonNumber
                     this.episode = episodeNumber
-                    this.description = document.selectFirst("div.dizi-aciklama, div.aciklama, p")?.text()?.trim()
+                    this.description = loadDocument.selectFirst("div.dizi-aciklama, div.aciklama, p")?.text()?.trim()
                 }
             )
         }
@@ -283,7 +283,7 @@ class DDiziProvider : MainAPI() {
             try {
                 if (url.contains("/dizi/") || url.contains("/diziler/")) {
                     // Dizi ana sayfasındayız, tüm bölümleri listele
-                    val eps = document.select("div.bolumler a, div.sezonlar a, div.dizi-arsiv a, div.dizi-boxpost-cat a").map { ep ->
+                    val eps = loadDocument.select("div.bolumler a, div.sezonlar a, div.dizi-arsiv a, div.dizi-boxpost-cat a").map { ep ->
                         val name = ep.text().trim()
                         val href = fixUrl(ep.attr("href"))
                         
