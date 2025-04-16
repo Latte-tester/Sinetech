@@ -38,8 +38,8 @@ class TOGrup : MainAPI() {
         }
 
         return newHomePageResponse(
-            allChannels.groupBy { it.attributes["group-title"]?.toString() ?: "" }.map { group ->
-                val title = group.key
+            allChannels.groupBy { it.attributes["group-title"] }.map { group ->
+                val title = group.key ?: ""
                 val show  = group.value.map { kanal ->
                     val streamurl   = kanal.url.toString()
                     val channelname = kanal.title.toString()
@@ -326,16 +326,30 @@ class IptvPlaylistParser {
     }
 
     private fun String.getAttributes(): Map<String, String> {
+        // Find the position of the last comma
+        val lastCommaIndex = this.lastIndexOf(',')
+        if (lastCommaIndex == -1) {
+            // Handle cases where there might not be a comma (though unlikely for valid #EXTINF)
+            return emptyMap() 
+        }
+
+        // Extract the part before the last comma (contains #EXTINF and attributes)
+        val lineBeforeTitle = this.substring(0, lastCommaIndex)
+
+        // Regex to remove the #EXTINF part
         val extInfRegex = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
-        val attributesString = replace(extInfRegex, "").replaceQuotesAndTrim()
-        val attributeRegex = Regex("([\\w-]+)=\"([^\"]*)\"|([\\w-]+)=([^\\s\"]+)")
-        
+        val attributesString = lineBeforeTitle.replace(extInfRegex, "").replaceQuotesAndTrim()
+
+        // Regex to parse attributes (handles quoted and unquoted values)
+        val attributeRegex = Regex("([\\w-]+)=\"([^\"]*)\"|([\\w-]+)=([^\\s\"]+)") 
+
         return attributeRegex.findAll(attributesString)
             .map { matchResult ->
                 val (key1, value1, key2, value2) = matchResult.destructured
                 val key = key1.ifEmpty { key2 }
-                val value = value1.ifEmpty { value2 }
-                key to value.replaceQuotesAndTrim()
+                // Use value1 if quoted, otherwise value2 (unquoted)
+                val value = value1.ifEmpty { value2 } 
+                key to value.replaceQuotesAndTrim() // Trim again just in case
             }
             .toMap()
     }
