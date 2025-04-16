@@ -12,9 +12,9 @@ import java.io.InputStream
 class TOGrup : MainAPI() {
     private val mainUrls = listOf(
         "https://raw.githubusercontent.com/patr0nq/link/refs/heads/main/kekik-vavoo/vavoo-sadecespor.m3u",
-        "https://raw.githubusercontent.com/patr0nq/link-patr0nq/refs/heads/main/huhu/patr0nhuhu.m3u",
-        "https://raw.githubusercontent.com/patr0nq/link-patr0nq/refs/heads/main/kool/patr0nkool.m3u",
-        "https://raw.githubusercontent.com/patr0nq/link-patr0nq/refs/heads/main/oha/patr0noha.m3u",
+        "https://raw.githubusercontent.com/patr0nq/link/refs/heads/main/huhu/patr0nhuhu.m3u",
+        "https://raw.githubusercontent.com/patr0nq/link/refs/heads/main/kool/patr0nkool.m3u",
+        "https://raw.githubusercontent.com/patr0nq/link/refs/heads/main/oha/patr0noha.m3u",
         // Buraya yeni m3u adreslerini eklenebilir
     )
     private val defaultPosterUrl      = "https://raw.githubusercontent.com/GitLatte/m3ueditor/refs/heads/site/images/kanal-gorselleri/referans/isimsizkanal.png"
