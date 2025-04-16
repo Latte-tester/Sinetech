@@ -62,9 +62,18 @@ class DaddyLive : MainAPI() {
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
+        val allChannels = mutableListOf<PlaylistItem>()
+        
+        mainUrls.forEach { url ->
+            try {
+                val kanallar = IptvPlaylistParser().parseM3U(app.get(url).text)
+                allChannels.addAll(kanallar.items)
+            } catch (e: Exception) {
+                Log.e("DaddyLive", "Error loading M3U from $url: ${e.message}")
+            }
+        }
 
-        return kanallar.items.filter { it.title.toString().lowercase().contains(query.lowercase()) }.map { kanal ->
+        return allChannels.filter { it.title.toString().lowercase().contains(query.lowercase()) }.map { kanal ->
             val streamurl   = kanal.url.toString()
             val channelname = kanal.title.toString()
             val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
@@ -93,10 +102,18 @@ class DaddyLive : MainAPI() {
             "» ${loadData.group} | ${loadData.nation} «"
         }
 
-        val kanallar        = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
+        val allChannels = mutableListOf<PlaylistItem>()
+        mainUrls.forEach { url ->
+            try {
+                val kanallar = IptvPlaylistParser().parseM3U(app.get(url).text)
+                allChannels.addAll(kanallar.items)
+            } catch (e: Exception) {
+                Log.e("DaddyLive", "Error loading M3U from $url: ${e.message}")
+            }
+        }
+        
         val recommendations = mutableListOf<LiveSearchResponse>()
-
-        for (kanal in kanallar.items) {
+        for (kanal in allChannels) {
             if (kanal.attributes["group-title"].toString() == loadData.group) {
                 val rcStreamUrl   = kanal.url.toString()
                 val rcChannelName = kanal.title.toString()
@@ -169,8 +186,16 @@ class DaddyLive : MainAPI() {
         if (data.startsWith("{")) {
             return parseJson<LoadData>(data)
         } else {
-            val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-            val kanal    = kanallar.items.first { it.url == data }
+            val allChannels = mutableListOf<PlaylistItem>()
+            mainUrls.forEach { url ->
+                try {
+                    val kanallar = IptvPlaylistParser().parseM3U(app.get(url).text)
+                    allChannels.addAll(kanallar.items)
+                } catch (e: Exception) {
+                    Log.e("DaddyLive", "Error loading M3U from $url: ${e.message}")
+                }
+            }
+            val kanal = allChannels.first { it.url == data }
 
             val streamurl   = kanal.url.toString()
             val channelname = kanal.title.toString()
