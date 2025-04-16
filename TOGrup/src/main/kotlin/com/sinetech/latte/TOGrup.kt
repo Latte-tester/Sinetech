@@ -38,29 +38,27 @@ class TOGrup : MainAPI() {
         }
 
         val groupedChannels = allChannels.groupBy { it.attributes["group-title"]?.trim() ?: "" }
-        return newHomePageResponse(
-            groupedChannels.map { (groupTitle, channels) ->
-                val show = channels.map { kanal ->
-                    val streamurl   = kanal.url.toString()
-                    val channelname = kanal.title.toString()
-                    val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
-                    val chGroup     = kanal.attributes["group-title"].toString()
-                    val nation      = kanal.attributes["tvg-country"].toString()
+        val homePageLists = groupedChannels.filter { it.key.isNotEmpty() }.map { (groupTitle, channels) ->
+            val show = channels.map { kanal ->
+                val streamurl   = kanal.url.toString()
+                val channelname = kanal.title.toString()
+                val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
+                val chGroup     = kanal.attributes["group-title"]?.toString() ?: ""
+                val nation      = kanal.attributes["tvg-country"]?.toString() ?: ""
 
-                    newLiveSearchResponse(
-                        channelname,
-                        LoadData(streamurl, channelname, posterurl, chGroup, nation).toJson(),
-                        type = TvType.Live
-                    ) {
-                        this.posterUrl = posterurl
-                        this.lang = nation
-                    }
+                newLiveSearchResponse(
+                    channelname,
+                    LoadData(streamurl, channelname, posterurl, chGroup, nation).toJson(),
+                    type = TvType.Live
+                ) {
+                    this.posterUrl = posterurl
+                    this.lang = nation
                 }
+            }
 
-                HomePageList(groupTitle, show, isHorizontalImages = true)
-            },
-            hasNext = false
-        )
+            HomePageList(groupTitle, show, isHorizontalImages = true)
+        }
+        return newHomePageResponse(homePageLists, hasNext = false)
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
