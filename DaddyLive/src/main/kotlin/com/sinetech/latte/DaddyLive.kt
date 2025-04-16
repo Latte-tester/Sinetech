@@ -148,8 +148,16 @@ class DaddyLive : MainAPI() {
             val loadData = fetchDataFromUrlOrJson(data)
             Log.d("IPTV", "loadData » $loadData")
 
-            val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-            val kanal = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
+            val allChannels = mutableListOf<PlaylistItem>()
+            mainUrls.forEach { url ->
+                try {
+                    val kanallar = IptvPlaylistParser().parseM3U(app.get(url).text)
+                    allChannels.addAll(kanallar.items)
+                } catch (e: Exception) {
+                    Log.e("DaddyLive", "Error loading M3U from $url: ${e.message}")
+                }
+            }
+            val kanal = allChannels.firstOrNull { it.url == loadData.url } ?: return false
             Log.d("IPTV", "kanal » $kanal")
 
             val videoUrl = loadData.url
