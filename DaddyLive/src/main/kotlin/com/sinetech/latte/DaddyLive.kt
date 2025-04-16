@@ -10,7 +10,11 @@ import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import java.io.InputStream
 
 class DaddyLive : MainAPI() {
-    override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/temporarylists/refs/heads/main/dl/dl-daddyliveall.m3u"
+    private val mainUrls = listOf(
+        "https://raw.githubusercontent.com/GitLatte/temporarylists/refs/heads/main/dl/dl-daddyliveall.m3u",
+        "https://raw.githubusercontent.com/GitLatte/patr0n/refs/heads/site/lists/mor-alternatifler.m3u",
+        // Buraya yeni m3u adreslerini eklenebilir
+    )
     private val defaultPosterUrl      = "https://raw.githubusercontent.com/GitLatte/m3ueditor/refs/heads/site/images/kanal-gorselleri/referans/isimsizkanal.png"
     override var name                 = "📺 DaddyLive Mor Spor ve Events"
     override val hasMainPage          = true
@@ -20,10 +24,19 @@ class DaddyLive : MainAPI() {
     override val supportedTypes       = setOf(TvType.Live)
 
     override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
+        val allChannels = mutableListOf<PlaylistItem>()
+        
+        mainUrls.forEach { url ->
+            try {
+                val kanallar = IptvPlaylistParser().parseM3U(app.get(url).text)
+                allChannels.addAll(kanallar.items)
+            } catch (e: Exception) {
+                Log.e("DaddyLive", "Error loading M3U from $url: ${e.message}")
+            }
+        }
 
         return newHomePageResponse(
-            kanallar.items.groupBy { it.attributes["group-title"] }.map { group ->
+            allChannels.groupBy { it.attributes["group-title"] }.map { group ->
                 val title = group.key ?: ""
                 val show  = group.value.map { kanal ->
                     val streamurl   = kanal.url.toString()
@@ -41,7 +54,6 @@ class DaddyLive : MainAPI() {
                         this.lang = nation
                     }
                 }
-
 
                 HomePageList(title, show, isHorizontalImages = true)
             },
