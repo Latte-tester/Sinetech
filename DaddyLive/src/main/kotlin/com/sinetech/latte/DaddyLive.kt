@@ -127,26 +127,40 @@ class DaddyLive : MainAPI() {
     }
 
     override suspend fun loadLinks(data: String, isCasting: Boolean, subtitleCallback: (SubtitleFile) -> Unit, callback: (ExtractorLink) -> Unit): Boolean {
-        val loadData = fetchDataFromUrlOrJson(data)
-        Log.d("IPTV", "loadData » $loadData")
+        try {
+            val loadData = fetchDataFromUrlOrJson(data)
+            Log.d("IPTV", "loadData » $loadData")
 
-        val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
-        val kanal    = kanallar.items.first { it.url == loadData.url }
-        Log.d("IPTV", "kanal » $kanal")
+            val kanallar = IptvPlaylistParser().parseM3U(app.get(mainUrl).text)
+            val kanal = kanallar.items.firstOrNull { it.url == loadData.url } ?: return false
+            Log.d("IPTV", "kanal » $kanal")
 
-        callback.invoke(
-            ExtractorLink(
-                source  = this.name,
-                name    = this.name,
-                url     = loadData.url,
-                headers = kanal.headers,
-                referer = kanal.headers["referrer"] ?: "",
-                quality = Qualities.Unknown.value,
-                type    = ExtractorLinkType.M3U8
+            val videoUrl = loadData.url
+            val videoType = when {
+                videoUrl.endsWith(".m3u8", ignoreCase = true) -> ExtractorLinkType.M3U8
+                videoUrl.endsWith(".mp4", ignoreCase = true) -> ExtractorLinkType.VIDEO
+                else -> ExtractorLinkType.M3U8
+            }
+
+            callback.invoke(
+                ExtractorLink(
+                    source = this.name,
+                    name = loadData.title,
+                    url = videoUrl,
+                    headers = kanal.headers + mapOf(
+                        "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+                    ),
+                    referer = kanal.headers["referrer"] ?: "",
+                    quality = Qualities.Unknown.value,
+                    type = videoType
+                )
             )
-        )
 
-        return true
+            return true
+        } catch (e: Exception) {
+            Log.e("IPTV", "Error in loadLinks: ${e.message}", e)
+            return false
+        }
     }
 
     data class LoadData(val url: String, val title: String, val poster: String, val group: String, val nation: String)
