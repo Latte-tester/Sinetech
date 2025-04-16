@@ -39,7 +39,7 @@ class TOGrup : MainAPI() {
 
         return newHomePageResponse(
             allChannels.groupBy { it.attributes["group-title"] }.map { group ->
-                val title = group.key ?: ""
+                val title = group.key?.trim() ?: ""
                 val show  = group.value.map { kanal ->
                     val streamurl   = kanal.url.toString()
                     val channelname = kanal.title.toString()
