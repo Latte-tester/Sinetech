@@ -57,7 +57,7 @@ class TOGrup : MainAPI() {
                     }
                 }
 
-                HomePageList(title, show, isHorizontalImages = true)
+                HomePageList(groupTitle, show, isHorizontalImages = true)
             },
             hasNext = false
         )
