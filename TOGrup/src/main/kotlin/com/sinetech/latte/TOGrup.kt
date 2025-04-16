@@ -329,27 +329,27 @@ class IptvPlaylistParser {
         val extInfRegex = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
         val attributesString = replace(extInfRegex, "").replaceQuotesAndTrim()
         
-        // Önce group-title özel olarak işlenir
-        val groupTitleRegex = Regex("group-title=\"([^\"]*)\"|group-title=([^\\s]+)")
+        val attributes = mutableMapOf<String, String>()
+        
+        // Önce group-title özel olarak işlenir - tırnak içindeki tüm içeriği alacak şekilde düzeltildi
+        val groupTitleRegex = Regex("group-title=\"([^\"]*)\"|group-title=([^\s;,]+)")
         val groupTitleMatch = groupTitleRegex.find(attributesString)
-        
-        // Diğer tüm öznitelikler için normal regex
-        val attributeRegex = Regex("([\\w-]+)=\"([^\"]*)\"|([\\w-]+)=([^\\s\"]+)")
-        
-        val attributes = attributeRegex.findAll(attributesString)
-            .map { matchResult ->
-                val (key1, value1, key2, value2) = matchResult.destructured
-                val key = key1.ifEmpty { key2 }
-                val value = value1.ifEmpty { value2 }
-                key to value.replaceQuotesAndTrim()
-            }
-            .toMap().toMutableMap()
-        
-        // Eğer group-title bulunduysa, tam değerini ekle
         if (groupTitleMatch != null) {
             val groupTitle = groupTitleMatch.groupValues[1].ifEmpty { groupTitleMatch.groupValues[2] }
             if (groupTitle.isNotEmpty()) {
                 attributes["group-title"] = groupTitle.replaceQuotesAndTrim()
+            }
+        }
+        
+        // Diğer tüm öznitelikler için regex
+        val attributeRegex = Regex("([\\w-]+)=\"([^\"]*)\"|([\\w-]+)=([^\s;,\"]+)")
+        attributeRegex.findAll(attributesString).forEach { matchResult ->
+            val (key1, value1, key2, value2) = matchResult.destructured
+            val key = key1.ifEmpty { key2 }
+            // group-title dışındaki diğer öznitelikleri ekle
+            if (key != "group-title" && (value1.isNotEmpty() || value2.isNotEmpty())) {
+                val value = value1.ifEmpty { value2 }
+                attributes[key] = value.replaceQuotesAndTrim()
             }
         }
         
