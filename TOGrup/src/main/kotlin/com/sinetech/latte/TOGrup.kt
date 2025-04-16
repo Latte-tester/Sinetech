@@ -326,34 +326,18 @@ class IptvPlaylistParser {
     }
 
     private fun String.getAttributes(): Map<String, String> {
-        val extInfRegex = Regex("(#EXTINF:-?[0-9]+)", RegexOption.IGNORE_CASE)
+        val extInfRegex = Regex("(#EXTINF:.?[0-9]+)", RegexOption.IGNORE_CASE)
         val attributesString = replace(extInfRegex, "").replaceQuotesAndTrim()
+        val attributeRegex = Regex("([\\w-]+)=\"([^\"]*)\"|([\\w-]+)=([^\\s\"]+)")
         
-        val attributes = mutableMapOf<String, String>()
-        
-        // Önce group-title özel olarak işlenir - tırnak içindeki tüm içeriği alacak şekilde düzeltildi
-        val groupTitleRegex = Regex("group-title=\"([^\"]*)\"|group-title=([^\\s;,]+)")
-        val groupTitleMatch = groupTitleRegex.find(attributesString)
-        if (groupTitleMatch != null) {
-            val groupTitle = groupTitleMatch.groupValues[1].ifEmpty { groupTitleMatch.groupValues[2] }
-            if (groupTitle.isNotEmpty()) {
-                attributes["group-title"] = groupTitle.replaceQuotesAndTrim()
-            }
-        }
-        
-        // Diğer tüm öznitelikler için regex
-        val attributeRegex = Regex("([\\w-]+)=\"([^\"]*)\"|([\\w-]+)=([^\\s;,\"]+)")
-        attributeRegex.findAll(attributesString).forEach { matchResult ->
-            val (key1, value1, key2, value2) = matchResult.destructured
-            val key = key1.ifEmpty { key2 }
-            // group-title dışındaki diğer öznitelikleri ekle
-            if (key != "group-title" && (value1.isNotEmpty() || value2.isNotEmpty())) {
+        return attributeRegex.findAll(attributesString)
+            .map { matchResult ->
+                val (key1, value1, key2, value2) = matchResult.destructured
+                val key = key1.ifEmpty { key2 }
                 val value = value1.ifEmpty { value2 }
-                attributes[key] = value.replaceQuotesAndTrim()
+                key to value.replaceQuotesAndTrim()
             }
-        }
-        
-        return attributes
+            .toMap()
     }
 
     private fun String.getTagValue(key: String): String? {
