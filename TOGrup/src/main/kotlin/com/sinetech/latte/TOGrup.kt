@@ -37,10 +37,10 @@ class TOGrup : MainAPI() {
             }
         }
 
+        val groupedChannels = allChannels.groupBy { it.attributes["group-title"]?.trim() ?: "" }
         return newHomePageResponse(
-            allChannels.groupBy { it.attributes["group-title"] }.map { group ->
-                val title = group.key?.trim() ?: ""
-                val show  = group.value.map { kanal ->
+            groupedChannels.map { (groupTitle, channels) ->
+                val show = channels.map { kanal ->
                     val streamurl   = kanal.url.toString()
                     val channelname = kanal.title.toString()
                     val posterurl   = kanal.attributes["tvg-logo"]?.toString() ?: defaultPosterUrl
