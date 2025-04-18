@@ -1,4 +1,4 @@
-version = 1
+version = 2
 
 dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
@@ -13,7 +13,7 @@ android {
 cloudstream {
     authors     = listOf("GitLatte", "patr0nq")
     language    = "tr"
-    description = "TO Grubu spor kanallarını içerir. Vavoo, Huhu, Kool, Oha"
+    description = "TO Grubu spor kanallarını içerir: Vavoo.to, Huhu.to, Kool.to, Oha.to"
 
     /**
      * Status int as the following:
