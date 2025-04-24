@@ -13,7 +13,7 @@ import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
 class SinetechYoutube : MainAPI() {
-    override var mainUrl = "https://iv.ggtyler.dev" // Hiç açılmazsa https://redirect.invidious.io/ bu adrese girip durumlarını kontrol ettikten sonra  url değiştirebiliriz.
+    override var mainUrl = "https://iv.ggtyler.dev" // Hiç açılmazsa https://redirect.invidious.io/ bu adrese girip durumlarını kontrol ettikten sonra url değiştirebiliriz. Yani oradaki sunucuları deneyip hangileri çalışıyorsa bu ana adresi sorunu çözülene kadar onlardan birisiyle değiştirerek kullanabiliriz. Kullanılabilecekler genelde şöyle, DE: https://yewtu.be CL: https://inv.nadeko.net UA: https://invidious.nerdvpn.de DE: https://id.420129.xyz
     override var name = "(▷) Sinetech Youtube"
     override var lang = "tr"
     override val hasMainPage = true
