@@ -130,7 +130,7 @@ class SinetechYoutube : MainAPI() {
                     true
                 ),
                 HomePageList(
-                    "En son paylaşılan @SinetechONE Youtube Videoları",
+                    "Son paylaşılan @SinetechONE Youtube Videoları",
                     newestVideos,
                     true
                 ),
