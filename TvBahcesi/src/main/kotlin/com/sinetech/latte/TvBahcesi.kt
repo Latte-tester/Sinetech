@@ -10,9 +10,9 @@ import com.lagradost.cloudstream3.utils.AppUtils.toJson
 import java.io.InputStream
 
 class TvBahcesi : MainAPI() {
-    override var mainUrl              = "https://raw.githubusercontent.com/Latte-tester/Sinetech/refs/heads/main/TvBahcesi/src/main/resources/m3u/tvbahcesi.m3u"
+    override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/Sinetech/refs/heads/main/TvBahcesi/src/main/resources/m3u/tvbahcesi.m3u"
     private val defaultPosterUrl      = "https://raw.githubusercontent.com/GitLatte/m3ueditor/refs/heads/site/images/kanal-gorselleri/referans/isimsizkanal.png"
-    override var name                 = "📺 Tv Bahçesi"
+    override var name                 = "Tv Bahçesi「📺」"
     override val hasMainPage          = true
     override var lang                 = "tr"
     override val hasQuickSearch       = true

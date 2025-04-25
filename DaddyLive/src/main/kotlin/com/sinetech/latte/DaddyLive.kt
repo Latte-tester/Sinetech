@@ -16,7 +16,7 @@ class DaddyLive : MainAPI() {
         // Buraya yeni m3u adreslerini eklenebilir
     )
     private val defaultPosterUrl      = "https://raw.githubusercontent.com/GitLatte/m3ueditor/refs/heads/site/images/kanal-gorselleri/referans/isimsizkanal.png"
-    override var name                 = "📺 DaddyLive Mor Spor ve Events"
+    override var name                 = "DaddyLive Mor Spor ve Events「📺」"
     override val hasMainPage          = true
     override var lang                 = "tr"
     override val hasQuickSearch       = true

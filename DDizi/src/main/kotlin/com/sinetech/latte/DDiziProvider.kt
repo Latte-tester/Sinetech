@@ -13,7 +13,7 @@ import org.jsoup.nodes.Element
 
 class DDiziProvider : MainAPI() {
     override var mainUrl              = "https://www.ddizi.im"
-    override var name                 = "DDizi"
+    override var name                 = "DDizi「🍿🎥」"
     override var lang                 = "tr"
     override val hasMainPage         = true
     override val hasChromecastSupport = true

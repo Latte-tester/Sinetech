@@ -6,5 +6,8 @@ include(
     "TvBahcesi",
     "DaddyLive",
     "DDizi",
+    "WebDramaTurkey",
+    "YTEglence",
+    "YTCanliTV",
     "TOGrup"
 )

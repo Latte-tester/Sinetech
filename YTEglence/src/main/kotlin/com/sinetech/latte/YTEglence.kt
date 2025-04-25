@@ -1,3 +1,10 @@
+// Farklı bir youtube end-point kullanarak youtube içeriklerini çekmek için kullandığım eklenti
+// Birden fazla youtube kanalının içeriklerini tek bir eklentide toplamak için kullanıyorum.
+// Kullanımı:
+// 1. Kanal ID'lerini "channels" listesine ekleyin.
+// 2. Eklentiyi projenize ekleyin.
+// 3. Eklentiyi kullanın.
+
 package com.sinetech.latte
 
 import com.lagradost.cloudstream3.*
@@ -12,22 +19,65 @@ import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.time.temporal.ChronoUnit
 
-class SinetechYoutube : MainAPI() {
-    override var mainUrl = "https://iv.ggtyler.dev" // Hiç açılmazsa https://redirect.invidious.io/ bu adrese girip durumlarını kontrol ettikten sonra url değiştirebiliriz. Yani oradaki sunucuları deneyip hangileri çalışıyorsa bu ana adresi sorunu çözülene kadar onlardan birisiyle değiştirerek kullanabiliriz. Kullanılabilecekler genelde şöyle, DE: https://yewtu.be CL: https://inv.nadeko.net UA: https://invidious.nerdvpn.de DE: https://id.420129.xyz
-    override var name = "(▷) Sinetech Youtube"
+class YTEglence : MainAPI() {
+    override var mainUrl = "https://iv.ggtyler.dev"
+    override var name = "Youtube Eğlence İçerikleri「🎭」"
     override var lang = "tr"
     override val hasMainPage = true
     override val hasChromecastSupport = true
     override val hasDownloadSupport = false
-    override val supportedTypes = setOf(TvType.Others, TvType.Podcast)
+    override val supportedTypes = setOf(TvType.Others, TvType.Podcast, TvType.Live)
 
-    override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        val channelId = "UC3JhJrIYm9blzw5bsedENrg"
-        android.util.Log.d("SinetechYoutube", "getMainPage başladı - channelId: $channelId")
-        
+    private val channels = listOf(
+        Channel("UCdlEXiVLTEvA280oyMvr8Kw", "🎭 Güldür Güldür"),
+        Channel("UCJhEfZoLs5P_idxX--yhWOA", "🎭 Çok Güzel Hareketler Bunlar"),
+        Channel("UCOYerJedhQqSyhXkev8QRFA", "🎭 Arkadaşım Hoşgeldin"),
+        Channel("UCJh9qWsZFjdO-Qn0LnZSXhA", "🎭 Olacak O kadar")
+        // Genel olarak herkesin isteyebileceği kanallar sırayla eklenebilir.
+    )
+
+    private data class Channel(val id: String, val name: String)
+
+    private suspend fun getChannelContent(channel: Channel): List<HomePageList> {
+        val homePageLists = mutableListOf<HomePageList>()
+
+        // Canlı yayınları al
+        val streamsUrl = "$mainUrl/channel/${channel.id}/streams?sort_by=popular"
+        try {
+            val streamsDocument = app.get(streamsUrl).document
+            val liveStreams = streamsDocument.select(".pure-u-1.pure-u-md-1-4").mapNotNull { streamElement ->
+                val titleElement = streamElement.selectFirst(".video-card-row a p")
+                val title = titleElement?.text() ?: return@mapNotNull null
+                
+                val streamUrl = streamElement.selectFirst(".thumbnail a")?.attr("href") ?: return@mapNotNull null
+                val videoId = streamUrl.substringAfter("watch?v=")
+                
+                val thumbnailUrl = streamElement.selectFirst(".thumbnail img")?.attr("src")
+                
+                newMovieSearchResponse(
+                    title,
+                    "$mainUrl/watch?v=$videoId",
+                    TvType.Live
+                ) {
+                    this.posterUrl = if (thumbnailUrl != null) "$mainUrl$thumbnailUrl" else "$mainUrl/vi/$videoId/maxres.jpg"
+                    this.posterHeaders = mapOf()
+                    this.quality = SearchQuality.HD
+                }
+            }
+
+            if (liveStreams.isNotEmpty()) {
+                homePageLists.add(HomePageList(
+                    "🔴 ${channel.name} Canlı Yayınlar",
+                    liveStreams,
+                    true
+                ))
+            }
+        } catch (e: Exception) {
+            android.util.Log.e("YTEglence", "Error loading streams for ${channel.name}: ${e.message}")
+        }
+
         // En yeni videoları al
-        val newestUrl = "$mainUrl/channel/$channelId?sort_by=newest"
-        
+        val newestUrl = "$mainUrl/channel/${channel.id}?sort_by=newest"
         val newestDocument = app.get(newestUrl).document
         val newestVideos = newestDocument.select(".pure-u-1.pure-u-md-1-4").mapNotNull { videoElement ->
             val titleElement = videoElement.selectFirst(".video-card-row a p")
@@ -49,36 +99,16 @@ class SinetechYoutube : MainAPI() {
             }
         }
 
-        // En son paylaşılan videoyu al (sadece ilk sayfada göster)
-        val latestVideo = if (page == 1 && newestVideos.isNotEmpty()) listOf(newestVideos[0]) else emptyList()
-        
-        // Popüler videoları al
-        val popularUrl = "$mainUrl/channel/$channelId?sort_by=popular"
-        
-        val popularDocument = app.get(popularUrl).document
-        val popularVideos = popularDocument.select(".pure-u-1.pure-u-md-1-4").mapNotNull { videoElement ->
-            val titleElement = videoElement.selectFirst(".video-card-row a p")
-            val title = titleElement?.text() ?: return@mapNotNull null
-            
-            val videoUrl = videoElement.selectFirst(".thumbnail a")?.attr("href") ?: return@mapNotNull null
-            val videoId = videoUrl.substringAfter("watch?v=")
-            
-            val thumbnailUrl = videoElement.selectFirst(".thumbnail img")?.attr("src")
-            
-            newMovieSearchResponse(
-                title,
-                "$mainUrl/watch?v=$videoId",
-                TvType.Podcast
-            ) {
-                this.posterUrl = if (thumbnailUrl != null) "$mainUrl$thumbnailUrl" else "$mainUrl/vi/$videoId/maxres.jpg"
-                this.posterHeaders = mapOf()
-                this.quality = SearchQuality.HD
-            }
+        if (newestVideos.isNotEmpty()) {
+            homePageLists.add(HomePageList(
+                "「${channel.name}」Son Youtube Videoları ",
+                newestVideos,
+                true
+            ))
         }
 
         // Oynatma listelerini al
-        val playlistsUrl = "$mainUrl/channel/$channelId/playlists"
-        
+        val playlistsUrl = "$mainUrl/channel/${channel.id}/playlists"
         val playlistsDocument = app.get(playlistsUrl).document
         val playlists = playlistsDocument.select(".pure-u-1.pure-u-md-1-4").mapNotNull { playlistElement ->
             val titleElement = playlistElement.selectFirst(".video-card-row a p")
@@ -98,60 +128,126 @@ class SinetechYoutube : MainAPI() {
             }
         }
 
-        // Shorts videoları al
-        val shortsUrl = "$mainUrl/channel/$channelId/shorts"
-        
-        val shortsDocument = app.get(shortsUrl).document
-        val shorts = shortsDocument.select(".pure-u-1.pure-u-md-1-4").mapNotNull { shortElement ->
-            val titleElement = shortElement.selectFirst(".video-card-row a p")
-            val title = titleElement?.text() ?: return@mapNotNull null
-            
-            val videoUrl = shortElement.selectFirst(".thumbnail a")?.attr("href") ?: return@mapNotNull null
-            val videoId = videoUrl.substringAfter("watch?v=")
-            
-            val thumbnailUrl = shortElement.selectFirst(".thumbnail img")?.attr("src")
-            
-            newMovieSearchResponse(
-                title,
-                "$mainUrl/watch?v=$videoId",
-                TvType.Podcast
-            ) {
-                this.posterUrl = if (thumbnailUrl != null) "$mainUrl$thumbnailUrl" else "$mainUrl/vi/$videoId/maxres.jpg"
-                this.posterHeaders = mapOf()
-                this.quality = SearchQuality.HD
+        if (playlists.isNotEmpty()) {
+            homePageLists.add(HomePageList(
+                "${channel.name} Youtube Oynatma Listeleri",
+                playlists,
+                true
+            ))
+        }
+
+        return homePageLists
+    }
+
+    override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
+        val allContent = mutableListOf<HomePageList>()
+        val allLiveStreams = mutableListOf<SearchResponse>()
+
+        for (channel in channels) {
+            try {
+                val streamsUrl = "$mainUrl/channel/${channel.id}/streams"
+                try {
+                    val streamsDocument = app.get("$mainUrl/channel/${channel.id}/streams?sort_by=popular").document
+                    val firstStream = streamsDocument.selectFirst(".pure-u-1.pure-u-md-1-4")?.let { streamElement ->
+                        val titleElement = streamElement.selectFirst(".video-card-row a p")
+                        val title = titleElement?.text() ?: return@let null
+                        
+                        val streamUrl = streamElement.selectFirst(".thumbnail a")?.attr("href") ?: return@let null
+                        val videoId = streamUrl.substringAfter("watch?v=")
+                        
+                        val thumbnailUrl = streamElement.selectFirst(".thumbnail img")?.attr("src")
+                        
+                        newMovieSearchResponse(
+                            "${channel.name} - $title",
+                            "$mainUrl/watch?v=$videoId",
+                            TvType.Live
+                        ) {
+                            this.posterUrl = if (thumbnailUrl != null) "$mainUrl$thumbnailUrl" else "$mainUrl/vi/$videoId/maxres.jpg"
+                            this.posterHeaders = mapOf()
+                            this.quality = SearchQuality.HD
+                        }
+                    }
+                    if (firstStream != null) {
+                        allLiveStreams.add(firstStream)
+                    }
+                } catch (e: Exception) {
+                    android.util.Log.e("YTEglence", "Error loading streams for ${channel.name}: ${e.message}")
+                }
+
+                // En yeni videoları al
+                val newestUrl = "$mainUrl/channel/${channel.id}?sort_by=newest"
+                val newestDocument = app.get(newestUrl).document
+                val newestVideos = newestDocument.select(".pure-u-1.pure-u-md-1-4").mapNotNull { videoElement ->
+                    val titleElement = videoElement.selectFirst(".video-card-row a p")
+                    val title = titleElement?.text() ?: return@mapNotNull null
+                    
+                    val videoUrl = videoElement.selectFirst(".thumbnail a")?.attr("href") ?: return@mapNotNull null
+                    val videoId = videoUrl.substringAfter("watch?v=")
+                    
+                    val thumbnailUrl = videoElement.selectFirst(".thumbnail img")?.attr("src")
+                    
+                    newMovieSearchResponse(
+                        title,
+                        "$mainUrl/watch?v=$videoId",
+                        TvType.Podcast
+                    ) {
+                        this.posterUrl = if (thumbnailUrl != null) "$mainUrl$thumbnailUrl" else "$mainUrl/vi/$videoId/maxres.jpg"
+                        this.posterHeaders = mapOf()
+                        this.quality = SearchQuality.HD
+                    }
+                }
+
+                if (newestVideos.isNotEmpty()) {
+                    allContent.add(HomePageList(
+                        "「${channel.name}」Son Youtube Videoları ",
+                        newestVideos,
+                        true
+                    ))
+                }
+
+                // Oynatma listelerini al
+                val playlistsUrl = "$mainUrl/channel/${channel.id}/playlists"
+                val playlistsDocument = app.get(playlistsUrl).document
+                val playlists = playlistsDocument.select(".pure-u-1.pure-u-md-1-4").mapNotNull { playlistElement ->
+                    val titleElement = playlistElement.selectFirst(".video-card-row a p")
+                    val title = titleElement?.text() ?: return@mapNotNull null
+                    
+                    val playlistUrl = playlistElement.selectFirst(".thumbnail a")?.attr("href") ?: return@mapNotNull null
+                    val thumbnailUrl = playlistElement.selectFirst(".thumbnail img")?.attr("src")
+                    
+                    newMovieSearchResponse(
+                        title,
+                        "$mainUrl$playlistUrl",
+                        TvType.Podcast
+                    ) {
+                        this.posterUrl = if (thumbnailUrl != null) "$mainUrl$thumbnailUrl" else null
+                        this.posterHeaders = mapOf()
+                        this.quality = SearchQuality.HD
+                    }
+                }
+
+                if (playlists.isNotEmpty()) {
+                    allContent.add(HomePageList(
+                        "${channel.name} Youtube Oynatma Listeleri",
+                        playlists,
+                        true
+                    ))
+                }
+            } catch (e: Exception) {
+                android.util.Log.e("YTEglence", "Error loading channel ${channel.name}: ${e.message}")
             }
         }
-        
-        return newHomePageResponse(
-            listOf(
-                HomePageList(
-                    "En Yeni Youtube Videosu!",
-                    latestVideo,
-                    true
-                ),
-                HomePageList(
-                    "Son paylaşılan @SinetechONE Youtube Videoları",
-                    newestVideos,
-                    true
-                ),
-                HomePageList(
-                    "Popüler @SinetechONE Youtube Videoları",
-                    popularVideos,
-                    true
-                ),
-                HomePageList(
-                    "@SinetechONE Youtube Oynatma Listeleri",
-                    playlists,
-                    true
-                ),
-                HomePageList(
-                    "@SinetechONE Youtube Shorts",
-                    shorts,
-                    true
-                )
-            ),
-            false // Sayfalama özelliği kaldırıldı
-        )
+
+        // Tüm canlı yayınları tek bir kategoride göster
+        if (allLiveStreams.isNotEmpty()) {
+            allContent.add(0, HomePageList(
+                "🔴 Canlı Yayınlanan İçerikler",
+                allLiveStreams,
+                true
+            ))
+        }
+
+        return newHomePageResponse(allContent, false)
     }
 
     override suspend fun search(query: String): List<SearchResponse> {
@@ -176,8 +272,7 @@ class SinetechYoutube : MainAPI() {
                         season = null,
                         episode = index + 1,
                         posterUrl = "$mainUrl/vi/${video.videoId}/maxres.jpg",
-                        rating = null,
-                        description = null
+                        rating = null
                     )
                 }
 
@@ -212,8 +307,8 @@ class SinetechYoutube : MainAPI() {
         val authorId: String,
         val videoThumbnails: List<Thumbnail>
     ) {
-        fun toSearchResponse(provider: SinetechYoutube): SearchResponse {
-            android.util.Log.d("SinetechYoutube", "Video dönüştürülüyor - başlık: $title, id: $videoId")
+        fun toSearchResponse(provider: YTEglence): SearchResponse {
+            android.util.Log.d("YTEglence", "Video dönüştürülüyor - başlık: $title, id: $videoId")
             return provider.newMovieSearchResponse(
                 title,
                 "${provider.mainUrl}/watch?v=$videoId",
@@ -240,7 +335,7 @@ class SinetechYoutube : MainAPI() {
         val genre: String = "",
         val license: String = ""
     ) {
-        suspend fun toLoadResponse(provider: SinetechYoutube): LoadResponse {
+        suspend fun toLoadResponse(provider: YTEglence): LoadResponse {
             return provider.newMovieLoadResponse(
                 title,
                 "${provider.mainUrl}/watch?v=$videoId",
@@ -318,7 +413,7 @@ class SinetechYoutube : MainAPI() {
                 }
 
                 this.plot = buildString {
-                    append("📢 Bilgilendirme: Lütfen videoları @SinetechONE youtube kanalından da izlemeyi unutmayın. Bu eklenti ile izleyeceğiniz videolar size kolaylık sağlaması açısından eklenmiş olsa da youtube kanalı üzerinden de izlemeniz hem kanal içeriklerinin hem de web sitesi hizmetlerinin devam edebilmesi açısından oldukça önem taşıyor. Videoyu beğenmeyi, abone olmayı ve yorum yazmayı lütfen unutmayın ☺️")
+                    append(description)
                     if (detailText.isNotEmpty()) {
                         append("<br><br>")
                         append(detailText)
@@ -368,34 +463,42 @@ class SinetechYoutube : MainAPI() {
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
     ): Boolean {
-        val videoId = data
-        val videoInfo = app.get("$mainUrl/api/v1/videos/$videoId").text
-        val videoDocument = app.get("$mainUrl/watch?v=$videoId").document
-        
-        // HTML'den ek bilgileri al
-        val likeCount = videoDocument.selectFirst("p#likes")?.text()?.replace(Regex("[^0-9]"), "")?.toIntOrNull() ?: 0
-        val genre = videoDocument.selectFirst("p#genre")?.text()?.substringAfter("Tür: ")?.trim() ?: ""
-        val license = videoDocument.selectFirst("p#license")?.text()?.substringAfter("Lisans: ")?.trim() ?: ""
-
-        val videoData = tryParseJson<VideoEntry>(videoInfo)?.copy(
-            likeCount = likeCount,
-            genre = genre,
-            license = license
-        )
-
-        if (videoData != null) {
-            callback.invoke(
-                ExtractorLink(
-                    source = this.name,
-                    name = this.name,
-                    url = "$mainUrl/api/manifest/dash/id/$videoId",
-                    referer = mainUrl,
-                    quality = Qualities.P1080.value,
-                    type = ExtractorLinkType.DASH
+        try {
+            val videoId = data
+            val videoDocument = app.get("$mainUrl/watch?v=$videoId").document
+            val hlsUrl = videoDocument.select("source[type='application/x-mpegURL']").firstOrNull()?.attr("src")
+            if (!hlsUrl.isNullOrEmpty()) {
+                callback.invoke(
+                    ExtractorLink(
+                        source = this.name,
+                        name = "${this.name} (HLS)",
+                        url = "$mainUrl$hlsUrl",
+                        referer = mainUrl,
+                        quality = Qualities.Unknown.value,
+                        type = ExtractorLinkType.M3U8
+                    )
                 )
-            )
-            return true
+                return true
+            }
+            val videoInfo = app.get("$mainUrl/api/v1/videos/$videoId").text
+            val videoData = tryParseJson<VideoEntry>(videoInfo)
+            if (videoData != null) {
+                callback.invoke(
+                    ExtractorLink(
+                        source = this.name,
+                        name = "${name} (DASH)",
+                        url = "$mainUrl/api/manifest/dash/id/$videoId",
+                        referer = mainUrl,
+                        quality = Qualities.P1080.value,
+                        type = ExtractorLinkType.DASH
+                    )
+                )
+                return true
+            }
+            return false
+        } catch (e: Exception) {
+            android.util.Log.e("YTEglence", "loadLinks error: ${e.message}", e)
+            return false
         }
-        return false
     }
 }

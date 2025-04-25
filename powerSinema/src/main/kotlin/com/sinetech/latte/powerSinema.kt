@@ -17,7 +17,7 @@ import java.net.URLEncoder
 class powerSinema(private val context: android.content.Context, private val sharedPref: SharedPreferences?) : MainAPI() {
 
     override var mainUrl              = "https://raw.githubusercontent.com/GitLatte/patr0n/site/lists/power-sinema.m3u"
-    override var name                 = "powerboard Sinema 🎥"
+    override var name                 = "powerboard Sinema「🍿🎥」"
     override val hasMainPage          = true
     override var lang                 = "tr"
     override val hasQuickSearch       = true
