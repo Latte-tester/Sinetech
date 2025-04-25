@@ -32,7 +32,12 @@ class YTEglence : MainAPI() {
         Channel("UCdlEXiVLTEvA280oyMvr8Kw", "🎭 Güldür Güldür"),
         Channel("UCJhEfZoLs5P_idxX--yhWOA", "🎭 Çok Güzel Hareketler Bunlar"),
         Channel("UCOYerJedhQqSyhXkev8QRFA", "🎭 Arkadaşım Hoşgeldin"),
-        Channel("UCJh9qWsZFjdO-Qn0LnZSXhA", "🎭 Olacak O kadar")
+        Channel("UCJh9qWsZFjdO-Qn0LnZSXhA", "🎭 Olacak O kadar"),
+        Channel("UCgc3VJYdM_R8oKGRuXxUbKQ", "🎞️ Avrupa Yakası"),
+        Channel("UCoWj9KzdFJn72NnVKScWfYg", "🥳 Soğuk Savaş"),
+        Channel("UCdakEeTJHMPz9MdejLKDRhg", "🗣️ Çimen Show"),
+        Channel("UCPRWKmegVtLlHA50-JOnDPw", "🗣️ TuzBiber Stand-Up"),
+        Channel("UCbDuXXisCUfUL03VzAYsOwQ", "🎞️ Tatlı Hayat")
         // Genel olarak herkesin isteyebileceği kanallar sırayla eklenebilir.
     )
 
