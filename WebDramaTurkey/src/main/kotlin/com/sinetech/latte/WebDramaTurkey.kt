@@ -115,7 +115,7 @@ class WebDramaTurkey : MainAPI() {
 
     // getMainPage (Boş Kategori Kontrolü Ekledim. Eğer kategori içerisinde içerik olmazsa görsel ve metin göstermek için)
      override suspend fun getMainPage(page: Int, request: MainPageRequest): HomePageResponse {
-        val placeholderImageUrl = "https://raw.githubusercontent.com/GitLatte/Sinetech/refs/heads/main/WebDramaTurkey/src/main/resources/icerik-yok.jpeg/?text=İçerik+Yok" // İçerik olmayan kategoriye görsel ve metin eklemek için
+        val placeholderImageUrl = "https://raw.githubusercontent.com/GitLatte/Sinetech/refs/heads/main/WebDramaTurkey/src/main/resources/icerik-yok.jpeg" // İçerik olmayan kategoriye görsel ve metin eklemek için
 
         val url = if (page > 1) {
             if (request.data.contains("?")) { "${request.data}&page=$page" }
