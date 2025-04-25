@@ -189,8 +189,84 @@ class WebDramaTurkey : MainAPI() {
     */
 
     override suspend fun search(query: String): List<SearchResponse> {
-        val document = app.get("${mainUrl}/?s=${query}").document
-        return document.select("div.result-item article").mapNotNull { it.toSearchResult() }
+        Log.d("WDrama:", "Arama yapılıyor: $query")
+        val searchUrl = "${mainUrl}/?s=${query}"
+        
+        val document = try {
+            app.get(searchUrl, headers = getHeaders(mainUrl)).document
+        } catch (e: Exception) {
+            Log.e("WDrama:", "Arama sayfası yüklenemedi: ${e.message}")
+            return emptyList()
+        }
+
+        val results = mutableListOf<SearchResponse>()
+
+        // Ana arama sonuçlarını kontrol et
+        try {
+            val mainResults = document.select(".list-movie, div.result-item article").mapNotNull { element ->
+                val titleElement = element.selectFirst("a.list-title, .list-caption > a.list-title, div.title a")
+                val title = titleElement?.text()?.trim() ?: return@mapNotNull null
+                val linkElement = element.selectFirst("a.list-media, .list-caption > a.list-title, div.title a")
+                val href = fixUrlNull(linkElement?.attr("href")) ?: return@mapNotNull null
+                
+                val posterElement = element.selectFirst("div.media.media-cover, a.list-media > div.media")
+                val posterStyle = posterElement?.attr("style")
+                var poster = fixUrlNull(extractUrlFromStyle(posterStyle))
+                if (poster == null) {
+                    poster = fixUrlNull(posterElement?.attr("data-src") ?: posterElement?.selectFirst("img")?.attr("src"))
+                }
+
+                val type = when {
+                    href.contains("/dizi/") -> TvType.AsianDrama
+                    href.contains("/anime/") -> TvType.Anime
+                    href.contains("/program/") -> TvType.Podcast
+                    href.contains("/film/") -> TvType.Movie
+                    else -> TvType.Movie
+                }
+
+                if (type == TvType.Movie || type == TvType.Podcast) {
+                    newMovieSearchResponse(title, href, type) { this.posterUrl = poster }
+                } else {
+                    newTvSeriesSearchResponse(title, href, type) { this.posterUrl = poster }
+                }
+            }
+            results.addAll(mainResults)
+            Log.d("WDrama:", "${mainResults.size} arama sonucu bulundu")
+        } catch (e: Exception) {
+            Log.e("WDrama:", "Ana arama sonuçları işlenirken hata oluştu: ${e.message}")
+        }
+
+        // Alternatif arama sonuçlarını kontrol et
+        if (results.isEmpty()) {
+            try {
+                val altResults = document.select(".search-page .item").mapNotNull { element ->
+                    val title = element.selectFirst(".title")?.text()?.trim() ?: return@mapNotNull null
+                    val href = fixUrlNull(element.selectFirst("a")?.attr("href")) ?: return@mapNotNull null
+                    val poster = fixUrlNull(element.selectFirst("img")?.attr("src"))
+
+                    val type = when {
+                        href.contains("/dizi/") -> TvType.AsianDrama
+                        href.contains("/anime/") -> TvType.Anime
+                        href.contains("/program/") -> TvType.Podcast
+                        href.contains("/film/") -> TvType.Movie
+                        else -> TvType.Movie
+                    }
+
+                    if (type == TvType.Movie || type == TvType.Podcast) {
+                        newMovieSearchResponse(title, href, type) { this.posterUrl = poster }
+                    } else {
+                        newTvSeriesSearchResponse(title, href, type) { this.posterUrl = poster }
+                    }
+                }
+                results.addAll(altResults)
+                Log.d("WDrama:", "${altResults.size} alternatif sonuç bulundu")
+            } catch (e: Exception) {
+                Log.e("WDrama:", "Alternatif arama sonuçları işlenirken hata oluştu: ${e.message}")
+            }
+        }
+
+        Log.d("WDrama:", "Toplam ${results.size} sonuç döndürülüyor")
+        return results
     }
 
     private fun Element.toSearchResult(): SearchResponse? {
