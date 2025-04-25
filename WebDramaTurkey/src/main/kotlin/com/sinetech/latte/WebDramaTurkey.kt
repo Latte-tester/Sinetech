@@ -199,15 +199,51 @@ class WebDramaTurkey : MainAPI() {
             return emptyList()
         }
 
-        val results = mutableListOf<SearchResponse>()
+        // Arama terimini küçük harfe çevir ve boşlukları temizle
+        val normalizedQuery = query.lowercase().trim()
+        val queryWords = normalizedQuery.split(" ").filter { it.length > 2 } // 2 karakterden uzun kelimeleri al
 
-        // Ana arama sonuçlarını kontrol et
+        // Arama sonuçlarını ve puanlarını tutacak liste
+        data class SearchItem(val response: SearchResponse, var score: Int)
+        val results = mutableListOf<SearchItem>()
+
+        // Başlık benzerliği için yardımcı fonksiyon
+        fun calculateTitleScore(title: String, query: String): Int {
+            val normalizedTitle = title.lowercase().trim()
+            var score = 0
+
+            // Tam eşleşme kontrolü
+            if (normalizedTitle == normalizedQuery) {
+                score += 100
+            }
+
+            // Başlangıç eşleşmesi kontrolü
+            if (normalizedTitle.startsWith(normalizedQuery)) {
+                score += 50
+            }
+
+            // Kelime bazlı eşleşme kontrolü
+            val titleWords = normalizedTitle.split(" ").filter { it.length > 2 }
+            queryWords.forEach { queryWord ->
+                titleWords.forEach { titleWord ->
+                    when {
+                        titleWord == queryWord -> score += 30
+                        titleWord.startsWith(queryWord) -> score += 20
+                        titleWord.contains(queryWord) -> score += 10
+                    }
+                }
+            }
+
+            return score
+        }
+
+        // Ana arama sonuçlarını kontrol et ve puanla
         try {
-            val mainResults = document.select(".list-movie, div.result-item article").mapNotNull { element ->
+            document.select(".list-movie, div.result-item article").forEach { element ->
                 val titleElement = element.selectFirst("a.list-title, .list-caption > a.list-title, div.title a")
-                val title = titleElement?.text()?.trim() ?: return@mapNotNull null
+                val title = titleElement?.text()?.trim() ?: return@forEach
                 val linkElement = element.selectFirst("a.list-media, .list-caption > a.list-title, div.title a")
-                val href = fixUrlNull(linkElement?.attr("href")) ?: return@mapNotNull null
+                val href = fixUrlNull(linkElement?.attr("href")) ?: return@forEach
                 
                 val posterElement = element.selectFirst("div.media.media-cover, a.list-media > div.media")
                 val posterStyle = posterElement?.attr("style")
@@ -224,24 +260,30 @@ class WebDramaTurkey : MainAPI() {
                     else -> TvType.Movie
                 }
 
-                if (type == TvType.Movie || type == TvType.Podcast) {
-                    newMovieSearchResponse(title, href, type) { this.posterUrl = poster }
-                } else {
-                    newTvSeriesSearchResponse(title, href, type) { this.posterUrl = poster }
+                // Başlık benzerlik puanını hesapla
+                val score = calculateTitleScore(title, query)
+                
+                // Minimum eşleşme puanı kontrolü (en az bir kelime tam eşleşmeli)
+                if (score >= 30) {
+                    val searchResponse = if (type == TvType.Movie || type == TvType.Podcast) {
+                        newMovieSearchResponse(title, href, type) { this.posterUrl = poster }
+                    } else {
+                        newTvSeriesSearchResponse(title, href, type) { this.posterUrl = poster }
+                    }
+                    results.add(SearchItem(searchResponse, score))
                 }
             }
-            results.addAll(mainResults)
-            Log.d("WDrama:", "${mainResults.size} arama sonucu bulundu")
+            Log.d("WDrama:", "${results.size} alakalı arama sonucu bulundu")
         } catch (e: Exception) {
             Log.e("WDrama:", "Ana arama sonuçları işlenirken hata oluştu: ${e.message}")
         }
 
-        // Alternatif arama sonuçlarını kontrol et
+        // Alternatif arama sonuçlarını kontrol et ve puanla
         if (results.isEmpty()) {
             try {
-                val altResults = document.select(".search-page .item").mapNotNull { element ->
-                    val title = element.selectFirst(".title")?.text()?.trim() ?: return@mapNotNull null
-                    val href = fixUrlNull(element.selectFirst("a")?.attr("href")) ?: return@mapNotNull null
+                document.select(".search-page .item").forEach { element ->
+                    val title = element.selectFirst(".title")?.text()?.trim() ?: return@forEach
+                    val href = fixUrlNull(element.selectFirst("a")?.attr("href")) ?: return@forEach
                     val poster = fixUrlNull(element.selectFirst("img")?.attr("src"))
 
                     val type = when {
@@ -252,21 +294,29 @@ class WebDramaTurkey : MainAPI() {
                         else -> TvType.Movie
                     }
 
-                    if (type == TvType.Movie || type == TvType.Podcast) {
-                        newMovieSearchResponse(title, href, type) { this.posterUrl = poster }
-                    } else {
-                        newTvSeriesSearchResponse(title, href, type) { this.posterUrl = poster }
+                    // Başlık benzerlik puanını hesapla
+                    val score = calculateTitleScore(title, query)
+                    
+                    // Minimum eşleşme puanı kontrolü
+                    if (score >= 30) {
+                        val searchResponse = if (type == TvType.Movie || type == TvType.Podcast) {
+                            newMovieSearchResponse(title, href, type) { this.posterUrl = poster }
+                        } else {
+                            newTvSeriesSearchResponse(title, href, type) { this.posterUrl = poster }
+                        }
+                        results.add(SearchItem(searchResponse, score))
                     }
                 }
-                results.addAll(altResults)
-                Log.d("WDrama:", "${altResults.size} alternatif sonuç bulundu")
+                Log.d("WDrama:", "${results.size} alakalı alternatif sonuç bulundu")
             } catch (e: Exception) {
                 Log.e("WDrama:", "Alternatif arama sonuçları işlenirken hata oluştu: ${e.message}")
             }
         }
 
-        Log.d("WDrama:", "Toplam ${results.size} sonuç döndürülüyor")
-        return results
+        // Sonuçları puana göre sırala ve sadece SearchResponse listesini döndür
+        val sortedResults = results.sortedByDescending { it.score }.map { it.response }
+        Log.d("WDrama:", "Toplam ${sortedResults.size} alakalı sonuç döndürülüyor")
+        return sortedResults
     }
 
     private fun Element.toSearchResult(): SearchResponse? {
