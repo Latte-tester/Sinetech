@@ -37,7 +37,8 @@ class YTEglence : MainAPI() {
         Channel("UCoWj9KzdFJn72NnVKScWfYg", "🥳 Soğuk Savaş"),
         Channel("UCdakEeTJHMPz9MdejLKDRhg", "🗣️ Çimen Show"),
         Channel("UCPRWKmegVtLlHA50-JOnDPw", "🗣️ TuzBiber Stand-Up"),
-        Channel("UCbDuXXisCUfUL03VzAYsOwQ", "🎞️ Tatlı Hayat")
+        Channel("UCbDuXXisCUfUL03VzAYsOwQ", "🎞️ Tatlı Hayat"),
+        Channel("UCPpBBr7sbZs1BwHfmR9dEyQ", "🇹🇻 Kanal D Arşiv")
         // Genel olarak herkesin isteyebileceği kanallar sırayla eklenebilir.
     )
 
