@@ -33,6 +33,7 @@ class YTCanliTV : MainAPI() {
         Channel("sF1AgroEr60", "Adanalı - (7/24)", "🎭 Eğlence"),
         Channel("FGL1GwoRRIw", "Film Atölyesi - Kemal Sunal Canlı Yayını 2 (7/24)", "🎭 Eğlence"),
         Channel("BhUr9G4e2s4", "Kurtlar Vadisi - KV Canlı Yayını (7/24)", "🎭 Eğlence"),
+        Channel("XbTmCxei9R8", "Kurtlar Vadisi Pusu -  KVP Canlı Yayını (7/24)", "🎭 Eğlence"),
 
         // 📰 Haber Kanalları
         Channel("ztmY_cCtUl0", "Sözcü TV", "📰 Haber"),
