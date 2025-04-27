@@ -59,15 +59,15 @@ class PremiumVideoExtractor : ExtractorApi() {
             // =================================
 
             callback.invoke(
-                ExtractorLink(
-                    source = this.name,
-                    name = sourceDisplayName, // "PlayAmony"
-                    url = finalUrlForCallback, // Farklılaştırılmış URL
-                    referer = url,
-                    quality = Qualities.Unknown.value,
-                    isM3u8 = true
-                )
-            )
+                             newExtractorLink(
+                                 source = this.name,
+                                 name = displayName,
+                                 url = fullM3u8Url,
+                                 referer = url,
+                                 quality = Qualities.Unknown.value,
+                                 isM3u8 = true
+                             )
+                         )
 
             // Video.js Altyazıları (Script'ten Regex)
             val subtitlePattern = Regex("""player\.addRemoteTextTrack\(\s*\{\s*.*?src:\s*['"]([^'"]+)['"],\s*srclang:\s*['"]([^'"]+)['"],\s*label:\s*['"]([^'"]+)['"].*?\}\s*,\s*false\s*\)""", RegexOption.IGNORE_CASE)
@@ -104,11 +104,11 @@ class PremiumVideoExtractor : ExtractorApi() {
              Log.d(name, "[JW Player] Callback için farklılaştırılmış URL: $finalUrlForCallback")
              // =================================
 
-            callback.invoke(
-                ExtractorLink(
+             callback.invoke(
+                newExtractorLink(
                     source = this.name,
-                    name = sourceDisplayName, // "Playhouse"
-                    url = finalUrlForCallback, // Farklılaştırılmış URL
+                    name = displayName,
+                    url = fullM3u8Url,
                     referer = url,
                     quality = Qualities.Unknown.value,
                     isM3u8 = true
