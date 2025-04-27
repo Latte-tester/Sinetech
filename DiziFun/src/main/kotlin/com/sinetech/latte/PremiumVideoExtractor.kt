@@ -7,7 +7,6 @@ import com.lagradost.cloudstream3.utils.ExtractorApi
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.utils.Qualities
-import com.lagradost.cloudstream3.utils.M3u8Helper.Companion.generateM3u8
 import java.net.URI
 import org.jsoup.Jsoup // HTML ayrıştırma için
 import org.jsoup.nodes.Document // Document tipi için
@@ -36,14 +35,11 @@ class PremiumVideoExtractor : ExtractorApi() {
         }
 
         val baseUri = URI(url)
-        val displayName = when {
-            url.contains("gujan.") -> "Gujan"
-            url.contains("/armony/") -> "PlayAmony"
-            else -> "Playhouse"
-        }
+        var sourceDisplayName = "Playhouse" // Varsayılan
 
         if (url.contains("/armony/")) {
             // === Video.js (/armony/) Mantığı ===
+            sourceDisplayName = "PlayAmony" // İsmi güncelle
             Log.d(name, "Video.js ayrıştırıcı kullanılıyor for: $url")
             val document = Jsoup.parse(embedPageSource)
             val sourceTag = document.selectFirst("video#my-video_html5_api > source[type='application/x-mpegURL'], video > source[src*=.m3u8]")
@@ -63,18 +59,15 @@ class PremiumVideoExtractor : ExtractorApi() {
             // =================================
 
             callback.invoke(
-                newExtractorLink(
+                ExtractorLink(
                     source = this.name,
-                    name = displayName,
-                    url = fullM3u8Url,
-                    ExtractorLinkType.M3U8 // 4. parametre TİP
-                ) {
-                    // Lambda içinde ek ayarlar
-                    this.referer = url
-                    this.quality = Qualities.Unknown.value
-                }
+                    name = sourceDisplayName, // "PlayAmony"
+                    url = finalUrlForCallback, // Farklılaştırılmış URL
+                    referer = url,
+                    quality = Qualities.Unknown.value,
+                    isM3u8 = true
+                )
             )
-            // =========================================================
 
             // Video.js Altyazıları (Script'ten Regex)
             val subtitlePattern = Regex("""player\.addRemoteTextTrack\(\s*\{\s*.*?src:\s*['"]([^'"]+)['"],\s*srclang:\s*['"]([^'"]+)['"],\s*label:\s*['"]([^'"]+)['"].*?\}\s*,\s*false\s*\)""", RegexOption.IGNORE_CASE)
@@ -111,19 +104,16 @@ class PremiumVideoExtractor : ExtractorApi() {
              Log.d(name, "[JW Player] Callback için farklılaştırılmış URL: $finalUrlForCallback")
              // =================================
 
-             callback.invoke(
-                newExtractorLink(
+            callback.invoke(
+                ExtractorLink(
                     source = this.name,
-                    name = displayName,
-                    url = fullM3u8Url,
-                    ExtractorLinkType.M3U8 // 4. parametre TİP
-                ) {
-                    // Lambda içinde ek ayarlar
-                    this.referer = url
-                    this.quality = Qualities.Unknown.value
-                }
+                    name = sourceDisplayName, // "Playhouse"
+                    url = finalUrlForCallback, // Farklılaştırılmış URL
+                    referer = url,
+                    quality = Qualities.Unknown.value,
+                    isM3u8 = true
+                )
             )
-            // =========================================================
 
             // JW Player Altyazıları (Script'ten Regex)
             val tracksPattern = Regex("""tracks:\s*\[(.*?)\]""", RegexOption.DOT_MATCHES_ALL)
