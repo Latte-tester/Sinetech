@@ -63,20 +63,19 @@ class PremiumVideoExtractor : ExtractorApi() {
             Log.d(name, "[Video.js] Callback için farklılaştırılmış URL: $finalUrlForCallback")
             // =================================
 
-            // === newExtractorLink Düzeltmesi (Lambda ile) ===
             callback.invoke(
                 newExtractorLink(
-                    source = this.name, // Zorunlu
-                    name = displayName, // Zorunlu
-                    url = fullM3u8Url   // Zorunlu
+                    source = this.name,
+                    name = displayName,
+                    url = fullM3u8Url,
+                    type = ExtractorLinkType.M3U8 // 4. parametre TİP
                 ) {
-                    // Opsiyonel parametreleri lambda içinde ayarla
-                    this.referer = url // Embed URL'si referer
-                    this.quality = Qualities.Unknown.value // M3U8 için kaliteyi bilmiyoruz
-                    this.isM3u8 = true
+                    // Lambda içinde ek ayarlar
+                    this.referer = url
+                    // this.quality = Qualities.Unknown.value // Genelde gereksiz
                 }
             )
-            // ==============================================
+            // =========================================================
 
             // Video.js Altyazıları (Script'ten Regex)
             val subtitlePattern = Regex("""player\.addRemoteTextTrack\(\s*\{\s*.*?src:\s*['"]([^'"]+)['"],\s*srclang:\s*['"]([^'"]+)['"],\s*label:\s*['"]([^'"]+)['"].*?\}\s*,\s*false\s*\)""", RegexOption.IGNORE_CASE)
@@ -113,20 +112,19 @@ class PremiumVideoExtractor : ExtractorApi() {
              Log.d(name, "[JW Player] Callback için farklılaştırılmış URL: $finalUrlForCallback")
              // =================================
 
-             // === newExtractorLink Düzeltmesi (Lambda ile) ===
              callback.invoke(
                 newExtractorLink(
-                    source = this.name, // Zorunlu
-                    name = displayName, // Zorunlu
-                    url = fullM3u8Url   // Zorunlu
+                    source = this.name,
+                    name = displayName,
+                    url = fullM3u8Url,
+                    type = ExtractorLinkType.M3U8 // 4. parametre TİP
                 ) {
-                    // Opsiyonel parametreleri lambda içinde ayarla
-                    this.referer = url // Embed URL'si referer
-                    this.quality = Qualities.Unknown.value // M3U8 için kaliteyi bilmiyoruz
-                    this.isM3u8 = true
+                    // Lambda içinde ek ayarlar
+                    this.referer = url
+                    // this.quality = Qualities.Unknown.value
                 }
             )
-            // ==============================================
+            // =========================================================
 
             // JW Player Altyazıları (Script'ten Regex)
             val tracksPattern = Regex("""tracks:\s*\[(.*?)\]""", RegexOption.DOT_MATCHES_ALL)

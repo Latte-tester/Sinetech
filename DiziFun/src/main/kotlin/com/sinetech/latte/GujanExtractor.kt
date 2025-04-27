@@ -77,20 +77,19 @@ class GujanExtractor : ExtractorApi() {
                 if (fullM3u8Url != null) {
                     Log.i(name, "[JW Player] >>> Nihai M3U8 URL ($displayName): $fullM3u8Url")
 
-                    // === newExtractorLink Düzeltmesi (Lambda ile) ===
                     callback.invoke(
                         newExtractorLink(
-                            source = this.name, // Zorunlu
-                            name = displayName, // Zorunlu
-                            url = fullM3u8Url   // Zorunlu
+                            source = this.name,
+                            name = displayName,
+                            url = fullM3u8Url,
+                            type = ExtractorLinkType.M3U8 // 4. parametre TİP
                         ) {
-                            // Opsiyonel parametreleri lambda içinde ayarla
-                            this.referer = url // Embed URL'si referer
-                            this.quality = Qualities.Unknown.value // M3U8 için kaliteyi bilmiyoruz
-                            this.isM3u8 = true
+                            // Lambda içinde ek ayarlar
+                            this.referer = url
+                            // this.quality = Qualities.Unknown.value // Genelde gereksiz
                         }
                     )
-                    // ==============================================
+                    // =========================================================
                     successful = true // M3U8 linki başarıyla gönderildi
 
                     // JW Player Altyazıları
@@ -135,20 +134,19 @@ class GujanExtractor : ExtractorApi() {
                     if (fullM3u8Url != null) {
                         Log.i(name, "[Video.js] >>> Nihai M3U8 URL ($displayName): $fullM3u8Url")
 
-                        // === newExtractorLink Düzeltmesi (Lambda ile) ===
-                    callback.invoke(
-                        newExtractorLink(
-                            source = this.name, // Zorunlu
-                            name = displayName, // Zorunlu
-                            url = fullM3u8Url   // Zorunlu
-                        ) {
-                            // Opsiyonel parametreleri lambda içinde ayarla
-                            this.referer = url // Embed URL'si referer
-                            this.quality = Qualities.Unknown.value // M3U8 için kaliteyi bilmiyoruz
-                            this.isM3u8 = true
-                        }
-                    )
-                    // ==============================================
+                        callback.invoke(
+                            newExtractorLink(
+                                source = this.name,
+                                name = displayName,
+                                url = fullM3u8Url,
+                                type = ExtractorLinkType.M3U8 // 4. parametre TİP
+                            ) {
+                                // Lambda içinde ek ayarlar
+                                this.referer = url
+                                // this.quality = Qualities.Unknown.value
+                            }
+                        )
+                        // =========================================================
                         successful = true // M3U8 linki başarıyla gönderildi
 
                         // Video.js Altyazıları (Script'ten Regex)
