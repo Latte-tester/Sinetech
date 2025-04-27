@@ -59,14 +59,15 @@ class PremiumVideoExtractor : ExtractorApi() {
             // =================================
 
             callback.invoke(
-                ExtractorLink(
-                    source = this.name,
-                    name = sourceDisplayName, // "PlayAmony"
-                    url = finalUrlForCallback, // Farklılaştırılmış URL
-                    referer = url,
-                    quality = Qualities.Unknown.value,
-                    ExtractorLinkType.M3U8
-                )
+                newExtractorLink(
+                    source    = this.name,
+                    name      = sourceDisplayName, // "PlayAmony"
+                    url       = finalUrlForCallback, // Farklılaştırılmış URL
+                    type      = ExtractorLinkType.M3U8
+             ) {
+                 this.quality = Qualities.Unknown.value
+                 this.referer = url
+             }
             )
 
             // Video.js Altyazıları (Script'ten Regex)
@@ -104,15 +105,16 @@ class PremiumVideoExtractor : ExtractorApi() {
              Log.d(name, "[JW Player] Callback için farklılaştırılmış URL: $finalUrlForCallback")
              // =================================
 
-            callback.invoke(
-                ExtractorLink(
-                    source = this.name,
-                    name = sourceDisplayName,
-                    url = finalUrlForCallback, 
-                    referer = url,
-                    quality = Qualities.Unknown.value,
-                    ExtractorLinkType.M3U8
-                )
+             callback.invoke(
+                newExtractorLink(
+                    source    = this.name,
+                    name      = sourceDisplayName, // "PlayAmony"
+                    url       = finalUrlForCallback, // Farklılaştırılmış URL
+                    type      = ExtractorLinkType.M3U8
+             ) {
+                 this.quality = Qualities.Unknown.value
+                 this.referer = url
+             }
             )
 
             // JW Player Altyazıları (Script'ten Regex)

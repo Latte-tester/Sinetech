@@ -79,15 +79,16 @@ class GujanExtractor : ExtractorApi() {
                     // URL Farklılaştırma (İsteğe Bağlı Hile - ŞİMDİLİK KULLANMIYORUZ)
                     // val finalUrlForCallback = "$fullM3u8Url?player=jw#ignored"
                     callback.invoke(
-                             newExtractorLink(
-                                 source = this.name,
-                                 name = displayName,
-                                 url = fullM3u8Url,
-                                 referer = url,
-                                 quality = Qualities.Unknown.value,
-                                 ExtractorLinkType.M3U8
-                             )
-                         )
+                          newExtractorLink(
+                            source    = this.name,
+                            name      = sourceDisplayName, // "PlayAmony"
+                            url       = finalUrlForCallback, // Farklılaştırılmış URL
+                            type      = ExtractorLinkType.M3U8
+                        ) {
+                            this.quality = Qualities.Unknown.value
+                            this.referer = url
+                          }
+                       )
                     successful = true // M3U8 linki başarıyla gönderildi
 
                     // JW Player Altyazıları
@@ -135,15 +136,16 @@ class GujanExtractor : ExtractorApi() {
                         // URL Farklılaştırma (İsteğe Bağlı Hile - ŞİMDİLİK KULLANMIYORUZ)
                         // val finalUrlForCallback = "$fullM3u8Url?player=videojs#ignored"
                         callback.invoke(
-                             newExtractorLink(
-                                 source = this.name,
-                                 name = displayName,
-                                 url = fullM3u8Url,
-                                 referer = url,
-                                 quality = Qualities.Unknown.value,
-                                 ExtractorLinkType.M3U8
-                             )
-                         )
+                          newExtractorLink(
+                            source    = this.name,
+                            name      = sourceDisplayName, // "PlayAmony"
+                            url       = finalUrlForCallback, // Farklılaştırılmış URL
+                            type      = ExtractorLinkType.M3U8
+                        ) {
+                            this.quality = Qualities.Unknown.value
+                            this.referer = url
+                          }
+                       )
                         successful = true // M3U8 linki başarıyla gönderildi
 
                         // Video.js Altyazıları (Script'ten Regex)
