@@ -8,6 +8,8 @@ import com.lagradost.cloudstream3.extractors.DoodLaExtractor
 import com.lagradost.cloudstream3.extractors.Voe
 import com.lagradost.cloudstream3.utils.AppUtils.tryParseJson
 import com.lagradost.cloudstream3.utils.ExtractorLink
+import com.lagradost.cloudstream3.utils.ExtractorLinkType 
+import com.lagradost.cloudstream3.utils.newExtractorLink
 import com.lagradost.cloudstream3.utils.loadExtractor
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -128,40 +130,53 @@ open class AniworldMC : MainAPI() {
             val redirectUrl = app.get(fixUrl(it.second)).url
             val lang = it.first.getLanguage(document)
             val name = "${it.third} [${lang}]"
-            if (it.third == "VOE") {
-                Voe().getUrl(redirectUrl, data, subtitleCallback) { link ->
-                    callback.invoke(
-                        ExtractorLink(
-                            name,
-                            name,
-                            link.url,
-                            link.referer,
-                            link.quality,
-                            link.type,
-                            link.headers,
-                            link.extractorData
+            if (hosterName.equals("VOE", ignoreCase = true)) {
+                // Voe extractor'ı doğrudan ExtractorLink döndürmez, callback ile çalışır
+                // Bu yüzden loadExtractor gibi davranıp, gelen linki tekrar paketlememiz lazım
+                try {
+                     Voe().getUrl(redirectUrl, data) { link -> // subtitleCallback buraya verilmez genelde
+                        callback.invoke(
+                            newExtractorLink( // callback içinde newExtractorLink kullan
+                                source = sourceName, // Voe [Dil]
+                                name = link.name, // Voe'dan gelen kendi adı
+                                url = link.url,
+                                type = link.type ?: ExtractorLinkType.VIDEO // Voe tipi belirtmezse VIDEO varsay
+                            ) {
+                                this.referer = link.referer
+                                this.quality = link.quality
+                                this.headers = link.headers
+                                this.extractorData = link.extractorData
+                                // isM3u8 Voe için genelde false olur ama type'dan alınabilir
+                                this.isM3u8 = link.type == ExtractorLinkType.M3U8
+                            }
                         )
-                    )
+                    }
+                } catch (e: Exception) {
+                    Log.e(name, "Voe extractor hatası: $redirectUrl", e)
                 }
             } else {
                 loadExtractor(redirectUrl, data, subtitleCallback) { link ->
+                     // === newExtractorLink Düzeltmesi ===
                     callback.invoke(
-                        ExtractorLink(
-                            name,
-                            name,
-                            link.url,
-                            link.referer,
-                            link.quality,
-                            link.type,
-                            link.headers,
-                            link.extractorData
-                        )
+                        newExtractorLink(
+                            source = sourceName, // Hoster Adı [Dil]
+                            name = link.name, // loadExtractor'dan gelen adı kullan
+                            url = link.url,
+                            type = link.type ?: ExtractorLinkType.VIDEO // Tip belirtilmezse VIDEO varsay
+                        ) {
+                            this.referer = link.referer
+                            this.quality = link.quality
+                            this.isM3u8 = link.isM3u8 // loadExtractor bunu doğru ayarlar
+                            this.headers = link.headers
+                            this.extractorData = link.extractorData
+                        }
                     )
+                    // ===================================
                 }
             }
         }
 
-        return true
+        return true // Genelde link bulunmasa bile true dönmek yaygındır
     }
 
     private fun Element.toSearchResult(): AnimeSearchResponse? {
