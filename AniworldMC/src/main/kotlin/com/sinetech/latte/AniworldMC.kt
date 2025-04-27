@@ -178,11 +178,9 @@ open class AniworldMC : MainAPI() {
                         val voeExtractor = Voe()
                         // Voe().getUrl in getUrl(url, referer) overload'ını kullanalım (varsa)
                         // Bu overload List<ExtractorLink>? döndürebilir ve suspend olabilir
-                        val currentLinks = coroutineScope {
-                            suspendSafeApiCall {
-                                voeExtractor.getUrl(redirectUrl, data) // Sadece url ve referer verelim
-                            } ?: emptyList() // Hata veya null ise boş liste
-                        }
+                        val currentLinks = suspendSafeApiCall {
+                            voeExtractor.getUrl(redirectUrl, data) // Sadece url ve referer verelim
+                        } ?: emptyList() // Hata veya null ise boş liste
 
                         if (currentLinks.isNotEmpty()) {
                             Log.i(name, "Voe extractor ${currentLinks.size} link buldu.")
@@ -190,16 +188,7 @@ open class AniworldMC : MainAPI() {
                                 try {
                                     // Gelen linki doğrudan callback'e gönder (newExtractorLink gerekmez)
                                      linksMutex.withLock { // Callback'e aynı anda erişimi engelle
-                                         callback(ExtractorLink(
-                                             source = sourceName,
-                                             name = link.name,
-                                             url = link.url,
-                                             referer = link.referer,
-                                             quality = link.quality,
-                                             type = link.type,
-                                             headers = link.headers,
-                                             extractorData = link.extractorData
-                                         ))
+                                         callback(link.copy(source = sourceName))
                                      }
                                      taskSuccess = true
                                  } catch (e: Exception) {
