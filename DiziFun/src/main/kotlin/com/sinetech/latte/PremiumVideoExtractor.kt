@@ -36,7 +36,11 @@ class PremiumVideoExtractor : ExtractorApi() {
         }
 
         val baseUri = URI(url)
-        var sourceDisplayName = "Playhouse" // Varsayılan
+        val displayName = when {
+            url.contains("gujan.") -> "Gujan"
+            url.contains("/armony/") -> "PlayAmony"
+            else -> "Playhouse"
+        }
 
         if (url.contains("/armony/")) {
             // === Video.js (/armony/) Mantığı ===
@@ -59,12 +63,21 @@ class PremiumVideoExtractor : ExtractorApi() {
             Log.d(name, "[Video.js] Callback için farklılaştırılmış URL: $finalUrlForCallback")
             // =================================
 
-            generateM3u8(
-                source = this.name,
-                name = sourceDisplayName,
-                url = fullM3u8Url,
-                referer = url
-            ).forEach(callback)
+           // === newExtractorLink Düzeltmesi ===
+           callback.invoke(
+            newExtractorLink(
+                this.name,          // source
+                displayName,       // name
+                fullM3u8Url,       // url
+                url,               // referer (embed URL'si)
+                ExtractorLinkType.M3U8, // type (Enum)
+                // quality ve isM3u8 type'dan otomatik anlaşılır genelde
+                // ama belirtmek istersek:
+                 Qualities.Unknown.value, // quality
+                 true               // isM3u8
+            )
+        )
+        // ==================================
 
             // Video.js Altyazıları (Script'ten Regex)
             val subtitlePattern = Regex("""player\.addRemoteTextTrack\(\s*\{\s*.*?src:\s*['"]([^'"]+)['"],\s*srclang:\s*['"]([^'"]+)['"],\s*label:\s*['"]([^'"]+)['"].*?\}\s*,\s*false\s*\)""", RegexOption.IGNORE_CASE)
@@ -101,12 +114,21 @@ class PremiumVideoExtractor : ExtractorApi() {
              Log.d(name, "[JW Player] Callback için farklılaştırılmış URL: $finalUrlForCallback")
              // =================================
 
-             generateM3u8(
-                source = this.name,
-                name = sourceDisplayName,
-                url = fullM3u8Url,
-                referer = url
-            ).forEach(callback)
+             // === newExtractorLink Düzeltmesi ===
+             callback.invoke(
+                newExtractorLink(
+                    this.name,          // source
+                    displayName,       // name
+                    fullM3u8Url,       // url
+                    url,               // referer (embed URL'si)
+                    ExtractorLinkType.M3U8, // type (Enum)
+                    // quality ve isM3u8 type'dan otomatik anlaşılır genelde
+                    // ama belirtmek istersek:
+                     Qualities.Unknown.value, // quality
+                     true               // isM3u8
+                )
+            )
+            // ==================================
 
             // JW Player Altyazıları (Script'ten Regex)
             val tracksPattern = Regex("""tracks:\s*\[(.*?)\]""", RegexOption.DOT_MATCHES_ALL)

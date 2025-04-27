@@ -79,12 +79,21 @@ class GujanExtractor : ExtractorApi() {
 
                     // URL Farklılaştırma (İsteğe Bağlı Hile - ŞİMDİLİK KULLANMIYORUZ)
                     // val finalUrlForCallback = "$fullM3u8Url?player=jw#ignored"
-                    generateM3u8(
-                        source = this.name,
-                        name = displayName,
-                        url = fullM3u8Url,
-                        referer = url
-                    ).forEach(callback)
+                    // === newExtractorLink Düzeltmesi ===
+                    callback.invoke(
+                        newExtractorLink(
+                            this.name,          // source
+                            displayName,       // name
+                            fullM3u8Url,       // url
+                            url,               // referer (embed URL'si)
+                            ExtractorLinkType.M3U8, // type (Enum)
+                            // quality ve isM3u8 type'dan otomatik anlaşılır genelde
+                            // ama belirtmek istersek:
+                             Qualities.Unknown.value, // quality
+                             true               // isM3u8
+                        )
+                    )
+                    // ==================================
                     successful = true // M3U8 linki başarıyla gönderildi
 
                     // JW Player Altyazıları
@@ -131,12 +140,21 @@ class GujanExtractor : ExtractorApi() {
 
                         // URL Farklılaştırma (İsteğe Bağlı Hile - ŞİMDİLİK KULLANMIYORUZ)
                         // val finalUrlForCallback = "$fullM3u8Url?player=videojs#ignored"
-                        generateM3u8(
-                        source = this.name,
-                        name = displayName,
-                        url = fullM3u8Url,
-                        referer = url
-                    ).forEach(callback)
+                        // === newExtractorLink Düzeltmesi ===
+                    callback.invoke(
+                        newExtractorLink(
+                            this.name,          // source
+                            displayName,       // name
+                            fullM3u8Url,       // url
+                            url,               // referer (embed URL'si)
+                            ExtractorLinkType.M3U8, // type (Enum)
+                            // quality ve isM3u8 type'dan otomatik anlaşılır genelde
+                            // ama belirtmek istersek:
+                             Qualities.Unknown.value, // quality
+                             true               // isM3u8
+                        )
+                    )
+                    // ==================================
                         successful = true // M3U8 linki başarıyla gönderildi
 
                         // Video.js Altyazıları (Script'ten Regex)
