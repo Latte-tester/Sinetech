@@ -81,8 +81,8 @@ class GujanExtractor : ExtractorApi() {
                     callback.invoke(
                           newExtractorLink(
                             source    = this.name,
-                            name      = sourceDisplayName, // "PlayAmony"
-                            url       = finalUrlForCallback, // Farklılaştırılmış URL
+                            name      = displayName, // "PlayAmony"
+                            url       = fullM3u8Url, // Farklılaştırılmış URL
                             type      = ExtractorLinkType.M3U8
                         ) {
                             this.quality = Qualities.Unknown.value
@@ -138,8 +138,8 @@ class GujanExtractor : ExtractorApi() {
                         callback.invoke(
                           newExtractorLink(
                             source    = this.name,
-                            name      = sourceDisplayName, // "PlayAmony"
-                            url       = finalUrlForCallback, // Farklılaştırılmış URL
+                            name      = displayName, // "Gujan"
+                            url       = fullM3u8Url, // Farklılaştırılmış URL
                             type      = ExtractorLinkType.M3U8
                         ) {
                             this.quality = Qualities.Unknown.value
