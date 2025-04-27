@@ -23,7 +23,7 @@ EXCLUDED_FOLDERS = {
     ".git", ".github", "img", "gradle", "build", "__pycache__",
     # Otomatik URL kontrolü gerektirmeyen eklentiler
     "powerDizi", "powerSinema", "YTEglence", "YTCanliTV",
-    "TVBahcesi", "TOGrup", "DDizi", "DaddyLive"
+    "TvBahcesi", "TOGrup", "DDizi", "DaddyLive"
 }
 
 def find_kt_file(plugin_dir):
