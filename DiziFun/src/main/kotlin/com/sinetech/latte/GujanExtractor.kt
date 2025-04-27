@@ -77,23 +77,20 @@ class GujanExtractor : ExtractorApi() {
                 if (fullM3u8Url != null) {
                     Log.i(name, "[JW Player] >>> Nihai M3U8 URL ($displayName): $fullM3u8Url")
 
-                    // URL Farklılaştırma (İsteğe Bağlı Hile - ŞİMDİLİK KULLANMIYORUZ)
-                    // val finalUrlForCallback = "$fullM3u8Url?player=jw#ignored"
-                    // === newExtractorLink Düzeltmesi ===
+                    // === newExtractorLink Düzeltmesi (Lambda ile) ===
                     callback.invoke(
                         newExtractorLink(
-                            this.name,          // source
-                            displayName,       // name
-                            fullM3u8Url,       // url
-                            url,               // referer (embed URL'si)
-                            ExtractorLinkType.M3U8, // type (Enum)
-                            // quality ve isM3u8 type'dan otomatik anlaşılır genelde
-                            // ama belirtmek istersek:
-                             Qualities.Unknown.value, // quality
-                             true               // isM3u8
-                        )
+                            source = this.name, // Zorunlu
+                            name = displayName, // Zorunlu
+                            url = fullM3u8Url   // Zorunlu
+                        ) {
+                            // Opsiyonel parametreleri lambda içinde ayarla
+                            this.referer = url // Embed URL'si referer
+                            this.quality = Qualities.Unknown.value // M3U8 için kaliteyi bilmiyoruz
+                            this.isM3u8 = true
+                        }
                     )
-                    // ==================================
+                    // ==============================================
                     successful = true // M3U8 linki başarıyla gönderildi
 
                     // JW Player Altyazıları
@@ -138,23 +135,20 @@ class GujanExtractor : ExtractorApi() {
                     if (fullM3u8Url != null) {
                         Log.i(name, "[Video.js] >>> Nihai M3U8 URL ($displayName): $fullM3u8Url")
 
-                        // URL Farklılaştırma (İsteğe Bağlı Hile - ŞİMDİLİK KULLANMIYORUZ)
-                        // val finalUrlForCallback = "$fullM3u8Url?player=videojs#ignored"
-                        // === newExtractorLink Düzeltmesi ===
+                        // === newExtractorLink Düzeltmesi (Lambda ile) ===
                     callback.invoke(
                         newExtractorLink(
-                            this.name,          // source
-                            displayName,       // name
-                            fullM3u8Url,       // url
-                            url,               // referer (embed URL'si)
-                            ExtractorLinkType.M3U8, // type (Enum)
-                            // quality ve isM3u8 type'dan otomatik anlaşılır genelde
-                            // ama belirtmek istersek:
-                             Qualities.Unknown.value, // quality
-                             true               // isM3u8
-                        )
+                            source = this.name, // Zorunlu
+                            name = displayName, // Zorunlu
+                            url = fullM3u8Url   // Zorunlu
+                        ) {
+                            // Opsiyonel parametreleri lambda içinde ayarla
+                            this.referer = url // Embed URL'si referer
+                            this.quality = Qualities.Unknown.value // M3U8 için kaliteyi bilmiyoruz
+                            this.isM3u8 = true
+                        }
                     )
-                    // ==================================
+                    // ==============================================
                         successful = true // M3U8 linki başarıyla gönderildi
 
                         // Video.js Altyazıları (Script'ten Regex)

@@ -63,21 +63,20 @@ class PremiumVideoExtractor : ExtractorApi() {
             Log.d(name, "[Video.js] Callback için farklılaştırılmış URL: $finalUrlForCallback")
             // =================================
 
-           // === newExtractorLink Düzeltmesi ===
-           callback.invoke(
-            newExtractorLink(
-                this.name,          // source
-                displayName,       // name
-                fullM3u8Url,       // url
-                url,               // referer (embed URL'si)
-                ExtractorLinkType.M3U8, // type (Enum)
-                // quality ve isM3u8 type'dan otomatik anlaşılır genelde
-                // ama belirtmek istersek:
-                 Qualities.Unknown.value, // quality
-                 true               // isM3u8
+            // === newExtractorLink Düzeltmesi (Lambda ile) ===
+            callback.invoke(
+                newExtractorLink(
+                    source = this.name, // Zorunlu
+                    name = displayName, // Zorunlu
+                    url = fullM3u8Url   // Zorunlu
+                ) {
+                    // Opsiyonel parametreleri lambda içinde ayarla
+                    this.referer = url // Embed URL'si referer
+                    this.quality = Qualities.Unknown.value // M3U8 için kaliteyi bilmiyoruz
+                    this.isM3u8 = true
+                }
             )
-        )
-        // ==================================
+            // ==============================================
 
             // Video.js Altyazıları (Script'ten Regex)
             val subtitlePattern = Regex("""player\.addRemoteTextTrack\(\s*\{\s*.*?src:\s*['"]([^'"]+)['"],\s*srclang:\s*['"]([^'"]+)['"],\s*label:\s*['"]([^'"]+)['"].*?\}\s*,\s*false\s*\)""", RegexOption.IGNORE_CASE)
@@ -114,21 +113,20 @@ class PremiumVideoExtractor : ExtractorApi() {
              Log.d(name, "[JW Player] Callback için farklılaştırılmış URL: $finalUrlForCallback")
              // =================================
 
-             // === newExtractorLink Düzeltmesi ===
+             // === newExtractorLink Düzeltmesi (Lambda ile) ===
              callback.invoke(
                 newExtractorLink(
-                    this.name,          // source
-                    displayName,       // name
-                    fullM3u8Url,       // url
-                    url,               // referer (embed URL'si)
-                    ExtractorLinkType.M3U8, // type (Enum)
-                    // quality ve isM3u8 type'dan otomatik anlaşılır genelde
-                    // ama belirtmek istersek:
-                     Qualities.Unknown.value, // quality
-                     true               // isM3u8
-                )
+                    source = this.name, // Zorunlu
+                    name = displayName, // Zorunlu
+                    url = fullM3u8Url   // Zorunlu
+                ) {
+                    // Opsiyonel parametreleri lambda içinde ayarla
+                    this.referer = url // Embed URL'si referer
+                    this.quality = Qualities.Unknown.value // M3U8 için kaliteyi bilmiyoruz
+                    this.isM3u8 = true
+                }
             )
-            // ==================================
+            // ==============================================
 
             // JW Player Altyazıları (Script'ten Regex)
             val tracksPattern = Regex("""tracks:\s*\[(.*?)\]""", RegexOption.DOT_MATCHES_ALL)
