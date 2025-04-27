@@ -9,5 +9,6 @@ include(
     "WebDramaTurkey",
     "YTEglence",
     "YTCanliTV",
-    "TOGrup"
+    "TOGrup",
+    "DiziFun"
 )
