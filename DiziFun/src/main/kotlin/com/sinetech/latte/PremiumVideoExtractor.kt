@@ -65,7 +65,7 @@ class PremiumVideoExtractor : ExtractorApi() {
                     url = finalUrlForCallback, // Farklılaştırılmış URL
                     referer = url,
                     quality = Qualities.Unknown.value,
-                    isM3u8 = true
+                    ExtractorLinkType.M3U8
                 )
             )
 
@@ -107,11 +107,11 @@ class PremiumVideoExtractor : ExtractorApi() {
             callback.invoke(
                 ExtractorLink(
                     source = this.name,
-                    name = sourceDisplayName, // "Playhouse"
-                    url = finalUrlForCallback, // Farklılaştırılmış URL
+                    name = sourceDisplayName,
+                    url = finalUrlForCallback, 
                     referer = url,
                     quality = Qualities.Unknown.value,
-                    isM3u8 = true
+                    ExtractorLinkType.M3U8
                 )
             )
 
