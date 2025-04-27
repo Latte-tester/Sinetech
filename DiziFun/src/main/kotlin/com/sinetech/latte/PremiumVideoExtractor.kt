@@ -44,7 +44,6 @@ class PremiumVideoExtractor : ExtractorApi() {
 
         if (url.contains("/armony/")) {
             // === Video.js (/armony/) Mantığı ===
-            sourceDisplayName = "PlayAmony" // İsmi güncelle
             Log.d(name, "Video.js ayrıştırıcı kullanılıyor for: $url")
             val document = Jsoup.parse(embedPageSource)
             val sourceTag = document.selectFirst("video#my-video_html5_api > source[type='application/x-mpegURL'], video > source[src*=.m3u8]")
