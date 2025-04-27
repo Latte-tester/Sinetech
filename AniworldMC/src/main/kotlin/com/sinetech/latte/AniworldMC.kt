@@ -13,7 +13,6 @@ import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.Qualities // Qualities importu eklendi
 import com.lagradost.cloudstream3.utils.loadExtractor // loadExtractor importu
 import com.lagradost.cloudstream3.utils.newExtractorLink // newExtractorLink importu
-import com.lagradost.cloudstream3.utils.newEpisode // newEpisode importu
 import com.lagradost.cloudstream3.mvvm.suspendSafeApiCall // suspendSafeApiCall importu
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.async
@@ -179,9 +178,11 @@ open class AniworldMC : MainAPI() {
                         val voeExtractor = Voe()
                         // Voe().getUrl in getUrl(url, referer) overload'ını kullanalım (varsa)
                         // Bu overload List<ExtractorLink>? döndürebilir ve suspend olabilir
-                        val currentLinks = suspendSafeApiCall {
-                            voeExtractor.getUrl(redirectUrl, data) // Sadece url ve referer verelim
-                        } ?: emptyList() // Hata veya null ise boş liste
+                        val currentLinks = coroutineScope {
+                            suspendSafeApiCall {
+                                voeExtractor.getUrl(redirectUrl, data) // Sadece url ve referer verelim
+                            } ?: emptyList() // Hata veya null ise boş liste
+                        }
 
                         if (currentLinks.isNotEmpty()) {
                             Log.i(name, "Voe extractor ${currentLinks.size} link buldu.")
@@ -189,7 +190,16 @@ open class AniworldMC : MainAPI() {
                                 try {
                                     // Gelen linki doğrudan callback'e gönder (newExtractorLink gerekmez)
                                      linksMutex.withLock { // Callback'e aynı anda erişimi engelle
-                                         callback(link.copy(source = sourceName)) // Sadece source adını güncelle
+                                         callback(ExtractorLink(
+                                             source = sourceName,
+                                             name = link.name,
+                                             url = link.url,
+                                             referer = link.referer,
+                                             quality = link.quality,
+                                             type = link.type,
+                                             headers = link.headers,
+                                             extractorData = link.extractorData
+                                         ))
                                      }
                                      taskSuccess = true
                                  } catch (e: Exception) {
