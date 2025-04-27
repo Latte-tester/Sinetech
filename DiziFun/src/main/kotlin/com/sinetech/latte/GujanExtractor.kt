@@ -82,11 +82,11 @@ class GujanExtractor : ExtractorApi() {
                             source = this.name,
                             name = displayName,
                             url = fullM3u8Url,
-                            type = ExtractorLinkType.M3U8 // 4. parametre TİP
+                            ExtractorLinkType.M3U8 // 4. parametre TİP
                         ) {
                             // Lambda içinde ek ayarlar
                             this.referer = url
-                            // this.quality = Qualities.Unknown.value // Genelde gereksiz
+                            this.quality = Qualities.Unknown.value // Genelde gereksiz
                         }
                     )
                     // =========================================================
@@ -139,11 +139,11 @@ class GujanExtractor : ExtractorApi() {
                                 source = this.name,
                                 name = displayName,
                                 url = fullM3u8Url,
-                                type = ExtractorLinkType.M3U8 // 4. parametre TİP
+                                ExtractorLinkType.M3U8 // 4. parametre TİP
                             ) {
                                 // Lambda içinde ek ayarlar
                                 this.referer = url
-                                // this.quality = Qualities.Unknown.value
+                                this.quality = Qualities.Unknown.value
                             }
                         )
                         // =========================================================
