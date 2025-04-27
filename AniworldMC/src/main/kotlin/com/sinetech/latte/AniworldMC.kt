@@ -10,9 +10,9 @@ import com.lagradost.cloudstream3.extractors.Voe
 import com.lagradost.cloudstream3.utils.AppUtils.tryParseJson
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.utils.ExtractorLinkType
+import com.lagradost.cloudstream3.utils.newExtractorLink
 import com.lagradost.cloudstream3.utils.Qualities // Qualities importu eklendi
 import com.lagradost.cloudstream3.utils.loadExtractor // loadExtractor importu
-import com.lagradost.cloudstream3.utils.newExtractorLink // newExtractorLink importu
 import com.lagradost.cloudstream3.mvvm.suspendSafeApiCall // suspendSafeApiCall importu
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.async
@@ -142,32 +142,34 @@ open class AniworldMC : MainAPI() {
             if (it.third == "VOE") {
                 Voe().getUrl(redirectUrl, data, subtitleCallback) { link ->
                     callback.invoke(
-                        ExtractorLink(
-                            name,
-                            name,
-                            link.url,
-                            link.referer,
-                            link.quality,
-                            link.type,
-                            link.headers,
-                            link.extractorData
-                        )
-                    )
+    newExtractorLink(
+        source = name,
+        name = name,
+        url = link.url,
+        referer = link.referer,
+        quality = link.quality,
+        type = link.type,
+        headers = link.headers,
+        extractorData = link.extractorData
+    )
+)
+
                 }
             } else {
                 loadExtractor(redirectUrl, data, subtitleCallback) { link ->
                     callback.invoke(
-                        ExtractorLink(
-                            name,
-                            name,
-                            link.url,
-                            link.referer,
-                            link.quality,
-                            link.type,
-                            link.headers,
-                            link.extractorData
-                        )
-                    )
+    newExtractorLink(
+        source = name,
+        name = name,
+        url = link.url,
+        referer = link.referer,
+        quality = link.quality,
+        type = link.type,
+        headers = link.headers,
+        extractorData = link.extractorData
+    )
+)
+
                 }
             }
         }
