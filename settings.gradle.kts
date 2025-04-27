@@ -10,5 +10,6 @@ include(
     "YTEglence",
     "YTCanliTV",
     "TOGrup",
-    "DiziFun"
+    "DiziFun",
+    "AniworldMC"
 )
