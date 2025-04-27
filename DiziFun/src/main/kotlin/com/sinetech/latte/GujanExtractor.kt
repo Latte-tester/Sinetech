@@ -7,6 +7,7 @@ import com.lagradost.cloudstream3.utils.ExtractorApi
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.utils.Qualities
+import com.lagradost.cloudstream3.utils.M3u8Helper.Companion.generateM3u8
 import java.net.URI
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
@@ -78,16 +79,12 @@ class GujanExtractor : ExtractorApi() {
 
                     // URL Farklılaştırma (İsteğe Bağlı Hile - ŞİMDİLİK KULLANMIYORUZ)
                     // val finalUrlForCallback = "$fullM3u8Url?player=jw#ignored"
-                    callback.invoke(
-                             newExtractorLink(
-                                 source = this.name,
-                                 name = displayName,
-                                 url = fullM3u8Url,
-                                 referer = url,
-                                 quality = Qualities.Unknown.value,
-                                 isM3u8 = true
-                             )
-                         )
+                    generateM3u8(
+                        source = this.name,
+                        name = displayName,
+                        url = fullM3u8Url,
+                        referer = url
+                    ).forEach(callback)
                     successful = true // M3U8 linki başarıyla gönderildi
 
                     // JW Player Altyazıları
@@ -134,16 +131,12 @@ class GujanExtractor : ExtractorApi() {
 
                         // URL Farklılaştırma (İsteğe Bağlı Hile - ŞİMDİLİK KULLANMIYORUZ)
                         // val finalUrlForCallback = "$fullM3u8Url?player=videojs#ignored"
-                        callback.invoke(
-                             newExtractorLink(
-                                 source = this.name,
-                                 name = displayName,
-                                 url = fullM3u8Url,
-                                 referer = url,
-                                 quality = Qualities.Unknown.value,
-                                 isM3u8 = true
-                             )
-                         )
+                        generateM3u8(
+                        source = this.name,
+                        name = displayName,
+                        url = fullM3u8Url,
+                        referer = url
+                    ).forEach(callback)
                         successful = true // M3U8 linki başarıyla gönderildi
 
                         // Video.js Altyazıları (Script'ten Regex)

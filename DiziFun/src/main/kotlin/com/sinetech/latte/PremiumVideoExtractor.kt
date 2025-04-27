@@ -7,6 +7,7 @@ import com.lagradost.cloudstream3.utils.ExtractorApi
 import com.lagradost.cloudstream3.utils.ExtractorLink
 import com.lagradost.cloudstream3.SubtitleFile
 import com.lagradost.cloudstream3.utils.Qualities
+import com.lagradost.cloudstream3.utils.M3u8Helper.Companion.generateM3u8
 import java.net.URI
 import org.jsoup.Jsoup // HTML ayrıştırma için
 import org.jsoup.nodes.Document // Document tipi için
@@ -58,16 +59,12 @@ class PremiumVideoExtractor : ExtractorApi() {
             Log.d(name, "[Video.js] Callback için farklılaştırılmış URL: $finalUrlForCallback")
             // =================================
 
-            callback.invoke(
-                             newExtractorLink(
-                                 source = this.name,
-                                 name = displayName,
-                                 url = fullM3u8Url,
-                                 referer = url,
-                                 quality = Qualities.Unknown.value,
-                                 isM3u8 = true
-                             )
-                         )
+            generateM3u8(
+                source = this.name,
+                name = sourceDisplayName,
+                url = fullM3u8Url,
+                referer = url
+            ).forEach(callback)
 
             // Video.js Altyazıları (Script'ten Regex)
             val subtitlePattern = Regex("""player\.addRemoteTextTrack\(\s*\{\s*.*?src:\s*['"]([^'"]+)['"],\s*srclang:\s*['"]([^'"]+)['"],\s*label:\s*['"]([^'"]+)['"].*?\}\s*,\s*false\s*\)""", RegexOption.IGNORE_CASE)
@@ -104,16 +101,12 @@ class PremiumVideoExtractor : ExtractorApi() {
              Log.d(name, "[JW Player] Callback için farklılaştırılmış URL: $finalUrlForCallback")
              // =================================
 
-             callback.invoke(
-                newExtractorLink(
-                    source = this.name,
-                    name = displayName,
-                    url = fullM3u8Url,
-                    referer = url,
-                    quality = Qualities.Unknown.value,
-                    isM3u8 = true
-                )
-            )
+             generateM3u8(
+                source = this.name,
+                name = sourceDisplayName,
+                url = fullM3u8Url,
+                referer = url
+            ).forEach(callback)
 
             // JW Player Altyazıları (Script'ten Regex)
             val tracksPattern = Regex("""tracks:\s*\[(.*?)\]""", RegexOption.DOT_MATCHES_ALL)
