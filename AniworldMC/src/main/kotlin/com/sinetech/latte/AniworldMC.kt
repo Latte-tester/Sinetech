@@ -102,30 +102,28 @@ open class AniworldMC : MainAPI() {
         isCasting: Boolean,
         subtitleCallback: (SubtitleFile) -> Unit,
         callback: (ExtractorLink) -> Unit
-    ): Boolean = coroutineScope {
+    ): Boolean = coroutineScope { // CoroutineScope kullan
         val document = try { app.get(data).document } catch (e: Exception) {
-             Log.e(name, "loadLinks - Sayfa alınamadı: $data - Hata: ${e.message}") // Log.e düzeltildi
+            Log.e(name, "Ana sayfa alınamadı: $data - Hata: ${e.message}")
             return@coroutineScope false
         }
-        var foundLinks = false
+        var foundLinks = false // Genel başarı durumu
 
         val hosterLinks = document.select("div.hosterSiteVideo ul li").mapNotNull {
-            val langKey = it.attr("data-lang-key")
-            val target = it.attr("data-link-target")
-            val hosterName = it.select("h4").text()
-            if (target.isBlank() || hosterName.equals("Vidoza", ignoreCase = true)) null
-            else Triple(langKey, target, hosterName)
+            // ... (hoster bilgilerini al, Vidoza'yı filtrele) ...
+             val langKey = it.attr("data-lang-key"); val target = it.attr("data-link-target"); val hosterName = it.select("h4").text()
+             if (target.isBlank() || hosterName.equals("Vidoza", true)) null else Triple(langKey, target, hosterName)
         }
 
         Log.d(name, "Bulunan Hosterlar (${hosterLinks.size}): ${hosterLinks.map { it.third }}")
 
-        // Linkleri paralel olarak işle
-        val deferredResults = hosterLinks.map { (langKey, linkTarget, hosterName) ->
-            async { // async görev başlat
+        // Linkleri paralel olarak işle ve sonuçları topla
+        val extractedLinksDeferred = hosterLinks.map { (langKey, linkTarget, hosterName) ->
+            async { // Her biri için async görev başlat
                 val lang = langKey.getLanguage(document) ?: langKey
                 val sourceName = "$hosterName [$lang]"
                 Log.d(name, "İşleniyor: $sourceName - $linkTarget")
-                val foundInThisTask = mutableListOf<Boolean>() // Bu görevde link bulundu mu?
+                val linksFromThisTask = mutableListOf<ExtractorLink>() // Bu görevden gelen linkler
 
                 try {
                     val initialUrl = fixUrl(linkTarget)
@@ -133,90 +131,69 @@ open class AniworldMC : MainAPI() {
                     Log.d(name, "Redirect URL: $redirectUrl for $sourceName")
 
                     if (hosterName.equals("VOE", ignoreCase = true)) {
-                        // Voe linklerini topla
-                        val voeResults = mutableListOf<ExtractorLink>()
-                        // suspendSafeApiCall burada gerekli değil, Voe.getUrl suspend değil gibi
-                        try {
-                             Voe().getUrl(redirectUrl, data) { link -> // subtitleCallback'i Voe'ya verme
-                                 voeResults.add(link)
-                                 Log.d(name, "Voe linki callback ile alındı: ${link.url}")
-                             }
-                         } catch (e: Exception){
-                              Log.e(name, "Voe().getUrl çağrılırken hata: ${e.message}")
-                         }
-
-                        // Toplanan Voe linklerini işle
-                        if(voeResults.isNotEmpty()){
-                             voeResults.forEach { voeLink ->
-                                try {
-                                     callback(
-                                        newExtractorLink( // newExtractorLink kullanımı
-                                            source = sourceName,
-                                            name = voeLink.name,
-                                            url = voeLink.url,
-                                            // type parametresini doğrudan ver
-                                            type = voeLink.type ?: ExtractorLinkType.VIDEO
-                                            // Lambda bloğu olmadan isM3u8 ve quality belirtmeye gerek yok
-                                            // Sadece referer ve headers önemliyse belirtilebilir ama sıraya dikkat!
-                                            // Örnek: type = ..., referer = voeLink.referer gibi
-                                        ).apply { // apply ile referer vb. ayarla (daha güvenli)
-                                             this.referer = voeLink.referer
-                                             this.quality = voeLink.quality
-                                             // isM3u8'e gerek yok, type'dan anlaşılır
-                                             this.headers = voeLink.headers
-                                             this.extractorData = voeLink.extractorData
-                                        }
-                                    )
-                                    foundInThisTask.add(true)
-                                } catch (e: Exception) {
-                                     Log.e(name, "Voe callback işlerken hata: ${e.message}")
-                                }
+                        // Voe extractor'ını çağır ve sonuçları topla
+                        // suspendSafeApiCall burada deneyebiliriz, belki Voe içindeki ağ isteği için?
+                        suspendSafeApiCall {
+                            // Voe().getUrl'in doğru imzasını varsayıyoruz (callback ile)
+                             Voe().getUrl(redirectUrl, data) { voeLink -> // subtitleCallback'i Voe'ya verme
+                                // Gelen linki doğru formatta listeye ekle
+                                linksFromThisTask.add(
+                                    newExtractorLink(
+                                        source = sourceName,
+                                        name = voeLink.name,
+                                        url = voeLink.url,
+                                        type = voeLink.type ?: ExtractorLinkType.VIDEO
+                                    ).apply {
+                                        this.referer = voeLink.referer
+                                        this.quality = voeLink.quality
+                                        // isM3u8'e gerek yok, type yeterli
+                                        this.headers = voeLink.headers
+                                        this.extractorData = voeLink.extractorData
+                                    }
+                                )
                             }
-                        } else {
-                             Log.w(name, "Voe linki bulunamadı: $redirectUrl")
-                        }
+                        } ?: Log.e(name, "Voe().getUrl (suspendSafeApiCall) başarısız oldu.")
+
 
                     } else {
                         // Diğerleri için loadExtractor
-                         suspendSafeApiCall { // loadExtractor suspend olduğu için safe call iyi
-                             var extractorCallbackCalled = false
-                             loadExtractor(redirectUrl, data, subtitleCallback) { link ->
-                                try {
-                                    callback(
-                                        newExtractorLink(
-                                            source = sourceName,
-                                            name = link.name,
-                                            url = link.url,
-                                            type = link.type ?: ExtractorLinkType.VIDEO
-                                        ).apply {
-                                            this.referer = link.referer
-                                            this.quality = link.quality
-                                            this.headers = link.headers
-                                            this.extractorData = link.extractorData
-                                        }
-                                    )
-                                    extractorCallbackCalled = true
-                                 } catch (e: Exception) {
-                                      Log.e(name, "loadExtractor callback işlerken hata: ${e.message}")
-                                 }
+                        suspendSafeApiCall {
+                            loadExtractor(redirectUrl, data, subtitleCallback) { link ->
+                                linksFromThisTask.add(
+                                    newExtractorLink(
+                                        source = sourceName,
+                                        name = link.name,
+                                        url = link.url,
+                                        type = link.type ?: ExtractorLinkType.VIDEO
+                                    ).apply {
+                                        this.referer = link.referer
+                                        this.quality = link.quality
+                                        this.headers = link.headers
+                                        this.extractorData = link.extractorData
+                                    }
+                                )
                             }
-                             if (extractorCallbackCalled) {
-                                 foundInThisTask.add(true)
-                             } else {
-                                 Log.w(name, "loadExtractor link döndürmedi: $sourceName - $redirectUrl")
-                             }
-                        }
+                        } ?: Log.w(name, "loadExtractor (suspendSafeApiCall) link bulamadı: $sourceName - $redirectUrl")
                     }
                 } catch (e: Exception) {
-                    Log.e(name, "Link işlenirken hata: $sourceName - $linkTarget - Hata: ${e.message}") // Log.e düzeltildi
+                     Log.e(name, "Link işlenirken hata: $sourceName - $linkTarget - Hata: ${e.message}")
                 }
-                foundInThisTask.any { it } // Bu görev başarılı mı?
+                linksFromThisTask // async bloğunun dönüş değeri bu liste olacak
             }
-        }.awaitAll() // Tüm async görevlerinin bitmesini bekle
+        } // map sonu
 
-        foundLinks = deferredResults.any { it } // En az bir görev başarılıysa true
+        // Tüm async görevlerinin bitmesini bekle ve sonuç listelerini birleştir
+        val allExtractedLinks = extractedLinksDeferred.awaitAll().flatten()
 
-        Log.d(name, "loadLinks tamamlandı. Link bulundu mu: $foundLinks")
+        // Toplanan tüm linkleri ana callback'e gönder
+        if (allExtractedLinks.isNotEmpty()) {
+            foundLinks = true
+            allExtractedLinks.forEach { callback(it) }
+            Log.i(name, "${allExtractedLinks.size} adet link bulundu ve gönderildi.")
+        } else {
+            Log.w(name, "Hiçbir hoster'dan link bulunamadı.")
+        }
+
         return@coroutineScope foundLinks
     }
 
