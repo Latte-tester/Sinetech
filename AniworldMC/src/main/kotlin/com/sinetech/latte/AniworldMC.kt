@@ -131,7 +131,7 @@ open class AniworldMC : MainAPI() {
             if (it.third == "VOE") {
                 Voe().getUrl(redirectUrl, data, subtitleCallback) { link ->
                     callback.invoke(
-                        extractorLink(
+                        ExtractorLink(
                             source = name,
                             name = name,
                             url = link.url,
@@ -146,7 +146,7 @@ open class AniworldMC : MainAPI() {
             } else {
                 loadExtractor(redirectUrl, data, subtitleCallback) { link ->
                     callback.invoke(
-                        extractorLink(
+                        ExtractorLink(
                             source = name,
                             name = name,
                             url = link.url,
