@@ -1,27 +1,15 @@
 package com.sinetech.latte // Veya com.lagradost.cloudstream3.animeproviders
 
-// === TÜM GEREKLİ IMPORTLAR ===
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.lagradost.api.Log // CloudStream Log (2 argümanlı)
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.LoadResponse.Companion.addActors
 import com.lagradost.cloudstream3.extractors.DoodLaExtractor
 import com.lagradost.cloudstream3.extractors.Voe
 import com.lagradost.cloudstream3.utils.AppUtils.tryParseJson
 import com.lagradost.cloudstream3.utils.ExtractorLink
-import com.lagradost.cloudstream3.utils.ExtractorLinkType
-import com.lagradost.cloudstream3.utils.newExtractorLink
-import com.lagradost.cloudstream3.utils.Qualities // Qualities importu eklendi
-import com.lagradost.cloudstream3.utils.loadExtractor // loadExtractor importu
-import com.lagradost.cloudstream3.mvvm.suspendSafeApiCall // suspendSafeApiCall importu
-import kotlinx.coroutines.coroutineScope
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.sync.Mutex // Mutex için import
-import kotlinx.coroutines.sync.withLock // Mutex için import
+import com.lagradost.cloudstream3.utils.loadExtractor
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
-// ========================
 
 open class AniworldMC : MainAPI() {
     override var mainUrl = "https://aniworld.to"
@@ -127,52 +115,51 @@ open class AniworldMC : MainAPI() {
         callback: (ExtractorLink) -> Unit
     ): Boolean {
         val document = app.get(data).document
-        coroutineScope {
-            document.select("div.hosterSiteVideo ul li").map {
-                Triple(
-                    it.attr("data-lang-key"),
-                    it.attr("data-link-target"),
-                    it.select("h4").text()
-                )
-            }.filter {
-                it.third != "Vidoza"
-            }.apmap {
-                val redirectUrl = app.get(fixUrl(it.second)).url
-                val lang = it.first.getLanguage(document)
-                val name = "${it.third} [${lang}]"
-                if (it.third == "VOE") {
-                    Voe().getUrl(redirectUrl, data, subtitleCallback) { link ->
-                        callback.invoke(
-                            newExtractorLink(
-                                source = name,
-                                name = name,
-                                url = link.url,
-                                referer = link.referer,
-                                quality = link.quality,
-                                type = link.type,
-                                headers = link.headers,
-                                extractorData = link.extractorData
-                            )
+        document.select("div.hosterSiteVideo ul li").map {
+            Triple(
+                it.attr("data-lang-key"),
+                it.attr("data-link-target"),
+                it.select("h4").text()
+            )
+        }.filter {
+            it.third != "Vidoza"
+        }.apmap {
+            val redirectUrl = app.get(fixUrl(it.second)).url
+            val lang = it.first.getLanguage(document)
+            val name = "${it.third} [${lang}]"
+            if (it.third == "VOE") {
+                Voe().getUrl(redirectUrl, data, subtitleCallback) { link ->
+                    callback.invoke(
+                        newExtractorLink(
+                            source = name,
+                            name = name,
+                            url = link.url,
+                            referer = link.referer,
+                            quality = link.quality,
+                            type = link.type,
+                            headers = link.headers,
+                            extractorData = link.extractorData
                         )
-                    }
-                } else {
-                    loadExtractor(redirectUrl, data, subtitleCallback) { link ->
-                        callback.invoke(
-                            newExtractorLink(
-                                source = name,
-                                name = name,
-                                url = link.url,
-                                referer = link.referer,
-                                quality = link.quality,
-                                type = link.type,
-                                headers = link.headers,
-                                extractorData = link.extractorData
-                            )
+                    )
+                }
+            } else {
+                loadExtractor(redirectUrl, data, subtitleCallback) { link ->
+                    callback.invoke(
+                        newExtractorLink(
+                            source = name,
+                            name = name,
+                            url = link.url,
+                            referer = link.referer,
+                            quality = link.quality,
+                            type = link.type,
+                            headers = link.headers,
+                            extractorData = link.extractorData
                         )
-                    }
+                    )
                 }
             }
         }
+
         return true
     }
 
