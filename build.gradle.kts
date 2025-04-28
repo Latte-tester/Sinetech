@@ -1,5 +1,7 @@
 import com.lagradost.cloudstream3.gradle.CloudstreamExtension 
 import com.android.build.gradle.BaseExtension
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinJvmCompile
 
 buildscript {
     repositories {
@@ -62,10 +64,10 @@ subprojects {
     }
 
     dependencies {
-        val apk by configurations
+ //       val apk by configurations
         val implementation by configurations
-
-        apk("com.lagradost:cloudstream3:pre-release")
+        val cloudstream by configurations
+        cloudstream("com.lagradost:cloudstream3:pre-release")
 
         implementation(kotlin("stdlib"))
         implementation("com.github.Blatzar:NiceHttp:0.4.4")
