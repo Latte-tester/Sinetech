@@ -13,7 +13,7 @@ import org.jsoup.nodes.Element
 
 open class AniworldMC : MainAPI() {
     override var mainUrl = "https://aniworld.to"
-    override var name = "AniworldMC"
+    override var name = "AniworldMC「👒⚔🏴‍☠️🌊」"
     override val hasMainPage = true
     override var lang = "de"
 
