@@ -7,6 +7,7 @@ import com.lagradost.cloudstream3.extractors.DoodLaExtractor
 import com.lagradost.cloudstream3.extractors.Voe
 import com.lagradost.cloudstream3.utils.AppUtils.tryParseJson
 import com.lagradost.cloudstream3.utils.ExtractorLink
+import com.lagradost.cloudstream3.utils.newExtratorLink
 import com.lagradost.cloudstream3.utils.loadExtractor
 import org.jsoup.nodes.Document
 import org.jsoup.nodes.Element
@@ -130,7 +131,7 @@ open class AniworldMC : MainAPI() {
             if (it.third == "VOE") {
                 Voe().getUrl(redirectUrl, data, subtitleCallback) { link ->
                     callback.invoke(
-                        newExtractorLink(
+                        extractorLink(
                             source = name,
                             name = name,
                             url = link.url,
@@ -145,7 +146,7 @@ open class AniworldMC : MainAPI() {
             } else {
                 loadExtractor(redirectUrl, data, subtitleCallback) { link ->
                     callback.invoke(
-                        newExtractorLink(
+                        extractorLink(
                             source = name,
                             name = name,
                             url = link.url,
