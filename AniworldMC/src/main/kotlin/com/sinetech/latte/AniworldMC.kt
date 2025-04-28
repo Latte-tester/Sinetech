@@ -127,53 +127,52 @@ open class AniworldMC : MainAPI() {
         callback: (ExtractorLink) -> Unit
     ): Boolean {
         val document = app.get(data).document
-        document.select("div.hosterSiteVideo ul li").map {
-            Triple(
-                it.attr("data-lang-key"),
-                it.attr("data-link-target"),
-                it.select("h4").text()
-            )
-        }.filter {
-            it.third != "Vidoza"
-        }.apmap {
-            val redirectUrl = app.get(fixUrl(it.second)).url
-            val lang = it.first.getLanguage(document)
-            val name = "${it.third} [${lang}]"
-            if (it.third == "VOE") {
-                Voe().getUrl(redirectUrl, data, subtitleCallback) { link ->
-                    callback.invoke(
-    newExtractorLink(
-        source = name,
-        name = name,
-        url = link.url,
-        referer = link.referer,
-        quality = link.quality,
-        type = link.type,
-        headers = link.headers,
-        extractorData = link.extractorData
-    )
-)
-
-                }
-            } else {
-                loadExtractor(redirectUrl, data, subtitleCallback) { link ->
-                    callback.invoke(
-    newExtractorLink(
-        source = name,
-        name = name,
-        url = link.url,
-        referer = link.referer,
-        quality = link.quality,
-        type = link.type,
-        headers = link.headers,
-        extractorData = link.extractorData
-    )
-)
-
+        coroutineScope {
+            document.select("div.hosterSiteVideo ul li").map {
+                Triple(
+                    it.attr("data-lang-key"),
+                    it.attr("data-link-target"),
+                    it.select("h4").text()
+                )
+            }.filter {
+                it.third != "Vidoza"
+            }.apmap {
+                val redirectUrl = app.get(fixUrl(it.second)).url
+                val lang = it.first.getLanguage(document)
+                val name = "${it.third} [${lang}]"
+                if (it.third == "VOE") {
+                    Voe().getUrl(redirectUrl, data, subtitleCallback) { link ->
+                        callback.invoke(
+                            newExtractorLink(
+                                source = name,
+                                name = name,
+                                url = link.url,
+                                referer = link.referer,
+                                quality = link.quality,
+                                type = link.type,
+                                headers = link.headers,
+                                extractorData = link.extractorData
+                            )
+                        )
+                    }
+                } else {
+                    loadExtractor(redirectUrl, data, subtitleCallback) { link ->
+                        callback.invoke(
+                            newExtractorLink(
+                                source = name,
+                                name = name,
+                                url = link.url,
+                                referer = link.referer,
+                                quality = link.quality,
+                                type = link.type,
+                                headers = link.headers,
+                                extractorData = link.extractorData
+                            )
+                        )
+                    }
                 }
             }
         }
-
         return true
     }
 
