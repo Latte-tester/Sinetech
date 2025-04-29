@@ -4185,6 +4185,8 @@ https://live.kh.malimarcdn.com/live/tvk.stream/playlist.m3u8
 https://live.kh.malimarcdn.com/live/tvk2.stream/playlist.m3u8
 #EXTINF:-1 tvg-id="WIKITV" tvg-name="WIKI TV" tvg-country="kh" tvg-language="kh" group-title="Kambodya",WIKI TV
 https://stream.wikitv.asia/live/ngrp:myStream_all/playlist.m3u8
+#EXTINF:-1 tvg-id="ZIZTV" tvg-name="ZIZ TV" tvg-country="kn" tvg-language="kn" group-title="Saint Kitts ve Nevis",ZIZ TV
+https://media.slactech.com:1936/ZIZDirect/ZIZDirect/playlist.m3u8
 #EXTINF:-1 tvg-id="ABNTV" tvg-name="ABN TV" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",ABN TV
 https://vod2.abn.co.kr/IPHONE/abn.m3u8
 #EXTINF:-1 tvg-id="ArirangRadio" tvg-name="Arirang Radio" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",Arirang Radio
@@ -4415,6 +4417,26 @@ https://222103-hls.akamaized.net/668828a00bf80aa436254876/live_2cdb4ef03c1311efa
 https://stream-live.lrt.lt/lituanica/stream03/streamPlaylist.m3u8
 #EXTINF:-1 tvg-id="M1" tvg-name="M-1" tvg-country="lt" tvg-language="lt" group-title="Litvanya",M-1
 https://m-1.data.lt/m-1/smil:m-1.smil/playlist.m3u8
+#EXTINF:-1 tvg-id="apartTV" tvg-name="apart TV" tvg-country="lu" tvg-language="lu" group-title="Luxemburg",apart TV
+https://2-fss-2.streamhoster.com/pl_124/206820-4338160-1/playlist.m3u8
+#EXTINF:-1 tvg-id="ChamberTV" tvg-name="Chamber TV" tvg-country="lu" tvg-language="lu" group-title="Luxemburg",Chamber TV
+https://media02.webtvlive.eu/chd-edge/smil:chamber_tv_hd.smil/playlist.m3u8
+#EXTINF:-1 tvg-id="DudelangeTV" tvg-name="Dudelange TV" tvg-country="lu" tvg-language="lu" group-title="Luxemburg",Dudelange TV
+https://streamer20.multimedia.blue/Eltrona/DudelangeTV/playlist.m3u8
+#EXTINF:-1 tvg-id="eldoTV" tvg-name="eldo.TV" tvg-country="lu" tvg-language="lu" group-title="Luxemburg",eldo.TV
+https://stream.eldo.lu/data/live/tele/eldotv/1080p.m3u8
+#EXTINF:-1 tvg-id="HesperTV" tvg-name="Hesper TV" tvg-country="lu" tvg-language="lu" group-title="Luxemburg",Hesper TV
+https://streamer20.multimedia.blue/Eltrona/HesperangeTV/playlist.m3u8
+#EXTINF:-1 tvg-id="MamerTV" tvg-name="Mamer TV" tvg-country="lu" tvg-language="lu" group-title="Luxemburg",Mamer TV
+https://streamer20.multimedia.blue/Eltrona/MamerTV/playlist.m3u8
+#EXTINF:-1 tvg-id="MierschTV" tvg-name="MierschTV" tvg-country="lu" tvg-language="lu" group-title="Luxemburg",MierschTV
+https://streamer20.multimedia.blue/Eltrona/merschTV/playlist.m3u8
+#EXTINF:-1 tvg-id="PétangeInfoTV" tvg-name="Pétange Info TV" tvg-country="lu" tvg-language="lu" group-title="Luxemburg",Pétange Info TV
+https://streamer20.multimedia.blue/Eltrona/PetangeTV/playlist.m3u8
+#EXTINF:-1 tvg-id="RTLGold" tvg-name="RTL Gold" tvg-country="lu" tvg-language="lu" group-title="Luxemburg",RTL Gold
+https://stream.rtl.lu/data/live/tele/rtlgold/playlist.m3u8
+#EXTINF:-1 tvg-id="RTLTodayRadio" tvg-name="RTL Today Radio" tvg-country="lu" tvg-language="lu" group-title="Luxemburg",RTL Today Radio
+https://stream.rtl.lu/data/live/tele/rtltodayradio/playlist.m3u8
 #EXTINF:-1 tvg-id="LatvijasRadio3Klasika" tvg-name="Latvijas Radio 3 Klasika" tvg-country="lv" tvg-language="lv" group-title="Letonya",Latvijas Radio 3 Klasika
 https://5a44e5b800a41.streamlock.net/liveVLR3/mp4:Klasika/playlist.m3u8
 #EXTINF:-1 tvg-id="ReTV" tvg-name="Re TV" tvg-country="lv" tvg-language="lv" group-title="Letonya",Re TV
@@ -4425,6 +4447,14 @@ https://air.star.lv/TV_Jurmala_multistream/index.m3u8
 https://player.tvnet.lv/stream/amlst:61659/playlist.m3u8
 #EXTINF:-1 tvg-id="VidusdaugavasTelevīzija" tvg-name="Vidusdaugavas Televīzija" tvg-country="lv" tvg-language="lv" group-title="Letonya",Vidusdaugavas Televīzija
 https://straume.vdtv.lv/vdtv2/index.m3u8
+#EXTINF:-1 tvg-id="AlMasarTV" tvg-name="Al Masar TV" tvg-country="ly" tvg-language="ly" group-title="Libya",Al Masar TV
+https://starmenajo.com/hls/almasar/index.m3u8
+#EXTINF:-1 tvg-id="LibyaAlWataniya" tvg-name="Libya Al Wataniya" tvg-country="ly" tvg-language="ly" group-title="Libya",Libya Al Wataniya
+https://cdn-globecast.akamaized.net/live/eds/libya_al_watanya/hls_roku/index.m3u8
+#EXTINF:-1 tvg-id="SalamTV" tvg-name="Salam TV" tvg-country="ly" tvg-language="ly" group-title="Libya",Salam TV
+https://amsart-live.ercdn.net/salamtv/salamtv.m3u8
+#EXTINF:-1 tvg-id="TanasuhTV" tvg-name="Tanasuh TV" tvg-country="ly" tvg-language="ly" group-title="Libya",Tanasuh TV
+https://tip.stream.tanasuh.tv:4434/live/smil:tanasuhtv.smil/playlist.m3u8
 #EXTINF:-1 tvg-id="AlAoulaInternational" tvg-name="Al Aoula International" tvg-country="ma" tvg-language="ma" group-title="Marokko",Al Aoula International
 https://cdn.live.easybroadcast.io/abr_corp/73_aloula_w1dqfwm/playlist_dvr.m3u8
 #EXTINF:-1 tvg-id="AlAoulaLaâyoune" tvg-name="Al Aoula Laâyoune" tvg-country="ma" tvg-language="ma" group-title="Marokko",Al Aoula Laâyoune
@@ -4459,6 +4489,16 @@ https://cdn.live.easybroadcast.io/abr_corp/73_tamazight_tccybxt/playlist_dvr.m3u
 https://webtv.monacoinfo.com/live/prod/index.m3u8
 #EXTINF:-1 tvg-id="SuperyachtTV" tvg-name="Superyacht TV" tvg-country="mc" tvg-language="mc" group-title="Monako",Superyacht TV
 https://sy.wns.live/hls/stream.m3u8
+#EXTINF:-1 tvg-id="Moldova1" tvg-name="Moldova 1" tvg-country="md" tvg-language="md" group-title="Moldova",Moldova 1
+https://v0.trm.md/static/streaming-playlists/hls/9b79338b-1870-4cd7-91d4-0f6ce5cac7ca/master.m3u8
+#EXTINF:-1 tvg-id="Moldova2" tvg-name="Moldova 2" tvg-country="md" tvg-language="md" group-title="Moldova",Moldova 2
+https://v0.trm.md/static/streaming-playlists/hls/d5fafab0-9c37-4746-9e7a-b2d6c0427015/master.m3u8
+#EXTINF:-1 tvg-id="PrivescEuTV" tvg-name="Privesc.Eu TV" tvg-country="md" tvg-language="md" group-title="Moldova",Privesc.Eu TV
+https://cachestar.privesc.eu/liniar/moldova/playlist.m3u8
+#EXTINF:-1 tvg-id="RliveTV" tvg-name="Rlive TV" tvg-country="md" tvg-language="md" group-title="Moldova",Rlive TV
+https://realitatealive.md/tv/rlive.m3u8
+#EXTINF:-1 tvg-id="TVNord" tvg-name="TV-Nord" tvg-country="md" tvg-language="md" group-title="Moldova",TV-Nord
+https://6065d3147e895.streamlock.net:4444/npcl/live/playlist.m3u8
 #EXTINF:-1 tvg-id="TVCG3" tvg-name="TVCG 3" tvg-country="me" tvg-language="me" group-title="Montenegro",TVCG 3
 https://parlament.rtcg.me:1936/pr/smil:parlament.smil/playlist.m3u8
 #EXTINF:-1 tvg-id="NašaTV" tvg-name="Naša TV" tvg-country="mk" tvg-language="mk" group-title="Makedonya",Naša TV
@@ -4951,6 +4991,12 @@ https://digicom.hls.iptvdc.com/motorstv/index.m3u8
 https://frikanalen.no/stream/index.m3u8
 #EXTINF:-1 tvg-id="TVØstfold" tvg-name="TV Østfold" tvg-country="no" tvg-language="no" group-title="Norveç",TV Østfold
 https://streamnorge.com:8088/hls/tvo.m3u8
+#EXTINF:-1 tvg-id="CapitalTV" tvg-name="Capital TV" tvg-country="np" tvg-language="np" group-title="Nepal",Capital TV
+https://streaming.tvnepal.com:19360/capitaltv/capitaltv.m3u8
+#EXTINF:-1 tvg-id="IndigenousTelevision" tvg-name="Indigenous Television" tvg-country="np" tvg-language="np" group-title="Nepal",Indigenous Television
+https://np.truestreamz.com/broadcaster/INDIGENOUSmob.stream/playlist.m3u8
+#EXTINF:-1 tvg-id="ParyawaranTV" tvg-name="Paryawaran TV" tvg-country="np" tvg-language="np" group-title="Nepal",Paryawaran TV
+https://webtv-stream.nettv.com.np/broadcaster/Paryawaran.stream/playlist.m3u8
 #EXTINF:-1 tvg-id="ActionHollywoodMovies" tvg-name="Action Hollywood Movies" tvg-country="nz" tvg-language="nz" group-title="Yeni Zelanda",Action Hollywood Movies
 https://cdn-apse1-prod.tsv2.amagi.tv/linear/amg01076-lightningintern-actionhollywood-samsungnz/playlist.m3u8
 #EXTINF:-1 tvg-id="CineView" tvg-name="CineView" tvg-country="nz" tvg-language="nz" group-title="Yeni Zelanda",CineView
