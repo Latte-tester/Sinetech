@@ -473,6 +473,26 @@ https://dpp-live-events.medialaancdn.be/events/hls/aes/webstream1.m3u8
 https://dpp-live-events.medialaancdn.be/events/hls/aes/webstream3.m3u8
 #EXTINF:-1 tvg-id="RTB" tvg-name="RTB" tvg-country="bf" tvg-language="bf" group-title="Burkina Faso",RTB
 https://edge12.vedge.infomaniak.com/livecast/ik:rtblive1_8/manifest.m3u8
+#EXTINF:-1 tvg-id="AgroTV" tvg-name="Agro TV" tvg-country="bg" tvg-language="bg" group-title="Bulgaristan",Agro TV
+https://restr2.bgtv.bg/agro/hls/agro.m3u8
+#EXTINF:-1 tvg-id="CityTV" tvg-name="City TV" tvg-country="bg" tvg-language="bg" group-title="Bulgaristan",City TV
+https://tv.city.bg/play/tshls/citytv/index.m3u8
+#EXTINF:-1 tvg-id="Evrokom" tvg-name="Evrokom" tvg-country="bg" tvg-language="bg" group-title="Bulgaristan",Evrokom
+https://live.ecomservice.bg/hls/stream.m3u8
+#EXTINF:-1 tvg-id="HopeChannelBulgaria" tvg-name="Hope Channel Bulgaria" tvg-country="bg" tvg-language="bg" group-title="Bulgaristan",Hope Channel Bulgaria
+https://hc1.hopetv.bg/live/hopetv_all.smil/playlist.m3u8
+#EXTINF:-1 tvg-id="LightChannel" tvg-name="Light Channel" tvg-country="bg" tvg-language="bg" group-title="Bulgaristan",Light Channel
+https://streamer1.streamhost.org/salive/GMIlcbgM/playlist.m3u8
+#EXTINF:-1 tvg-id="PIKTV" tvg-name="PIK TV" tvg-country="bg" tvg-language="bg" group-title="Bulgaristan",PIK TV
+https://s.piktv.bg/l/live/index.m3u8
+#EXTINF:-1 tvg-id="ThisisBulgariaHD" tvg-name="This is Bulgaria HD" tvg-country="bg" tvg-language="bg" group-title="Bulgaristan",This is Bulgaria HD
+https://streamer103.neterra.tv/thisisbulgaria/live.m3u8
+#EXTINF:-1 tvg-id="TiankovFolk" tvg-name="Tiankov Folk" tvg-country="bg" tvg-language="bg" group-title="Bulgaristan",Tiankov Folk
+https://streamer103.neterra.tv/tiankov-folk/live.m3u8
+#EXTINF:-1 tvg-id="TiankovOrientFolk" tvg-name="Tiankov Orient Folk" tvg-country="bg" tvg-language="bg" group-title="Bulgaristan",Tiankov Orient Folk
+https://streamer103.neterra.tv/tiankov-orient/live.m3u8
+#EXTINF:-1 tvg-id="TravelTV" tvg-name="Travel TV" tvg-country="bg" tvg-language="bg" group-title="Bulgaristan",Travel TV
+https://streamer103.neterra.tv/travel/live.m3u8
 #EXTINF:-1 tvg-id="BahrainInternational" tvg-name="Bahrain International" tvg-country="bh" tvg-language="bh" group-title="Bahreyn",Bahrain International
 https://5c7b683162943.streamlock.net/live/ngrp:bahraininternational_all/playlist.m3u8
 #EXTINF:-1 tvg-id="BahrainQuran" tvg-name="Bahrain Quran" tvg-country="bh" tvg-language="bh" group-title="Bahreyn",Bahrain Quran
@@ -2111,6 +2131,14 @@ https://cnn.essastream.com:3387/live/xtratvlive.m3u8
 https://627bb251f23c7.streamlock.net:444/ExtremaKids/ExtremaKids/playlist.m3u8
 #EXTINF:-1 tvg-id="Yunavisión" tvg-name="Yunavisión" tvg-country="do" tvg-language="do" group-title="Dominik Cumhuriyeti",Yunavisión
 https://ss9.domint.net:3036/yv_str/yunavision/playlist.m3u8
+#EXTINF:-1 tvg-id="AL24News" tvg-name="AL24 News" tvg-country="dz" tvg-language="dz" group-title="Cezayir",AL24 News
+https://cdn.live.easybroadcast.io/abr_corp/66_al24_u4yga6h/playlist.m3u8
+#EXTINF:-1 tvg-id="TV2" tvg-name="TV2" tvg-country="dz" tvg-language="dz" group-title="Cezayir",TV2
+https://tgn.bozztv.com/dvrfl05/gin-canalalgerie/tracks-v1a1/mono.m3u8
+#EXTINF:-1 tvg-id="TV4" tvg-name="TV4" tvg-country="dz" tvg-language="dz" group-title="Cezayir",TV4
+https://tgn.bozztv.com/dvrfl05/ga-algeria4/index.m3u8
+#EXTINF:-1 tvg-id="TV6" tvg-name="TV6" tvg-country="dz" tvg-language="dz" group-title="Cezayir",TV6
+https://tgn.bozztv.com/dvrfl05/ga-algeria6/index.m3u8
 #EXTINF:-1 tvg-id="AméricaEstéreoGuayaquil" tvg-name="América Estéreo Guayaquil" tvg-country="ec" tvg-language="ec" group-title="Ekvador",América Estéreo Guayaquil
 https://video.makrodigital.com/americaestereoguayaquil/americaestereoguayaquil/playlist.m3u8
 #EXTINF:-1 tvg-id="AméricaEstéreoIbarra" tvg-name="América Estéreo Ibarra" tvg-country="ec" tvg-language="ec" group-title="Ekvador",América Estéreo Ibarra
@@ -9783,6 +9811,82 @@ https://d3p8ecnk6t4t73.cloudfront.net/scheduler/scheduleMaster/316.m3u8
 https://livedelta.cdn.antel.net.uy/out/u/url_canalu.m3u8
 #EXTINF:-1 tvg-id="VIVOTV" tvg-name="VIVO TV" tvg-country="uy" tvg-language="uy" group-title="Uruguay",VIVO TV
 https://stream.vivotv.uy/hls/stream.m3u8
+#EXTINF:-1 tvg-id="AguacateTV" tvg-name="Aguacate TV" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Aguacate TV
+https://streamtv.intervenhosting.net:3040/hybrid/play.m3u8
+#EXTINF:-1 tvg-id="AlcanceTV" tvg-name="Alcance TV" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Alcance TV
+https://videolatam.com:3516/live/tjjqdqurlive.m3u8
+#EXTINF:-1 tvg-id="AnzoáteguiTV" tvg-name="Anzoátegui TV" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Anzoátegui TV
+https://vcp2.myplaytv.com/anzoateguitv/anzoateguitv/playlist.m3u8
+#EXTINF:-1 tvg-id="BTATV" tvg-name="BTA TV" tvg-country="ve" tvg-language="ve" group-title="Venezuela",BTA TV
+https://cloud.fastchannel.es/manifiest/hls/prog9/btatv.m3u8
+#EXTINF:-1 tvg-id="Canal21Táchira" tvg-name="Canal 21 Táchira" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Canal 21 Táchira
+https://stmv2.voxtvhd.com.br/canal21/canal21/playlist.m3u8
+#EXTINF:-1 tvg-id="CanalDiplomático" tvg-name="Canal Diplomático" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Canal Diplomático
+https://vcp.myplaytv.com/canaldiplomatico/canaldiplomatico/playlist.m3u8
+#EXTINF:-1 tvg-id="CanalNubehTV" tvg-name="Canal Nubeh TV" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Canal Nubeh TV
+https://vcp.myplaytv.com/nubehtv/nubehtv/playlist.m3u8
+#EXTINF:-1 tvg-id="CantinaTV" tvg-name="Cantina TV" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Cantina TV
+https://vcp.myplaytv.com/cantinatv/cantinatv/playlist.m3u8
+#EXTINF:-1 tvg-id="CatatumboTV" tvg-name="Catatumbo TV" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Catatumbo TV
+https://cloud.fastchannel.es/manifiest/hls/prog9/catatumbotv.m3u8
+#EXTINF:-1 tvg-id="GlobalTV" tvg-name="GlobalTV" tvg-country="ve" tvg-language="ve" group-title="Venezuela",GlobalTV
+https://streamtv.intervenhosting.net:3179/live/globaltvlive.m3u8
+#EXTINF:-1 tvg-id="IslaTV" tvg-name="Isla TV" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Isla TV
+https://59d39900ebfb8.streamlock.net/islatv/islatv/playlist.m3u8
+#EXTINF:-1 tvg-id="Italianissimo" tvg-name="Italianissimo" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Italianissimo
+https://vcp.myplaytv.com/italianissimo/italianissimo/playlist.m3u8
+#EXTINF:-1 tvg-id="KandelaTV" tvg-name="KandelaTV" tvg-country="ve" tvg-language="ve" group-title="Venezuela",KandelaTV
+https://streamtv.intervenhosting.net:3718/live/kandelamedioslive.m3u8
+#EXTINF:-1 tvg-id="LatinaTV" tvg-name="Latina TV" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Latina TV
+https://streamtv.intervenhosting.net:3639/live/latinatvlive.m3u8
+#EXTINF:-1 tvg-id="MonagasVisión" tvg-name="Monagas Visión" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Monagas Visión
+https://cloud2.streaminglivehd.com:1936/monagasvision-2/monagasvision-2/playlist.m3u8
+#EXTINF:-1 tvg-id="OnzaTV" tvg-name="Onza TV" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Onza TV
+https://stmv1.srvstm.com/gproducciones/gproducciones/playlist.m3u8
+#EXTINF:-1 tvg-id="OxigenoTV" tvg-name="Oxigeno TV" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Oxigeno TV
+https://vcp.myplaytv.com/oxigenotv/oxigenotv/playlist.m3u8
+#EXTINF:-1 tvg-id="Panavisión" tvg-name="Panavisión" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Panavisión
+https://vcp.myplaytv.com/panavision/panavision/playlist.m3u8
+#EXTINF:-1 tvg-id="PlousTV" tvg-name="Plous TV" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Plous TV
+https://vcp.myplaytv.com/glowtv/glowtv/playlist.m3u8
+#EXTINF:-1 tvg-id="PortuTV" tvg-name="PortuTV" tvg-country="ve" tvg-language="ve" group-title="Venezuela",PortuTV
+https://streamtv.intervenhosting.net:3789/live/portutvlive.m3u8
+#EXTINF:-1 tvg-id="ReformaTV" tvg-name="Reforma TV" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Reforma TV
+https://5bf8041cb3fed.streamlock.net/ReformaTV/ReformaTV/playlist.m3u8
+#EXTINF:-1 tvg-id="SiembraTV" tvg-name="Siembra TV" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Siembra TV
+https://cloud2.streaminglivehd.com:1936/siembratv/siembratv/playlist.m3u8
+#EXTINF:-1 tvg-id="SomosTV" tvg-name="Somos TV" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Somos TV
+https://vcp3.myplaytv.com/somostv/somostv/playlist.m3u8
+#EXTINF:-1 tvg-id="TAMTV" tvg-name="TAM TV" tvg-country="ve" tvg-language="ve" group-title="Venezuela",TAM TV
+https://tv.webtuya.com:3726/live/tammeridalive.m3u8
+#EXTINF:-1 tvg-id="Teleboconó" tvg-name="Teleboconó" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Teleboconó
+https://ssh101stream.ssh101.com/akamaissh101/ssh101/tcbstreaming/playlist.m3u8
+#EXTINF:-1 tvg-id="Telecolor" tvg-name="Telecolor" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Telecolor
+https://cloud.livescast.com:19360/telecolor/telecolor.m3u8
+#EXTINF:-1 tvg-id="TelevenAsia" tvg-name="Televen Asia" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Televen Asia
+https://d39cdj6x0ssnqk.cloudfront.net/out/v1/95fe709c8bde490f92bea36203ec91d2/index.m3u8
+#EXTINF:-1 tvg-id="TelevenEuropa" tvg-name="Televen Europa" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Televen Europa
+https://d39cdj6x0ssnqk.cloudfront.net/out/v1/ae3f5ad3ac9d4bcfbedc1894a62782b4/index.m3u8
+#EXTINF:-1 tvg-id="TelevisoradeOriente" tvg-name="Televisora de Oriente" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Televisora de Oriente
+https://cloud.fastchannel.es/manifiest/hls/prog9/tvo.m3u8
+#EXTINF:-1 tvg-id="TNORadio" tvg-name="TNO Radio" tvg-country="ve" tvg-language="ve" group-title="Venezuela",TNO Radio
+https://stmv1.srvstm.com/tnovideo1/tnovideo1/playlist.m3u8
+#EXTINF:-1 tvg-id="TorococoTV" tvg-name="Torococo TV" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Torococo TV
+https://us.streaminghd.cl/torococotelevision/video.m3u8
+#EXTINF:-1 tvg-id="TRV" tvg-name="TRV" tvg-country="ve" tvg-language="ve" group-title="Venezuela",TRV
+https://vcp3.myplaytv.com/trv/trv/playlist.m3u8
+#EXTINF:-1 tvg-id="TVFANB" tvg-name="TV FANB" tvg-country="ve" tvg-language="ve" group-title="Venezuela",TV FANB
+https://vcp2.myplaytv.com/tvfanb/tvfanb/playlist.m3u8
+#EXTINF:-1 tvg-id="TVS" tvg-name="TVS" tvg-country="ve" tvg-language="ve" group-title="Venezuela",TVS
+https://vcp10.myplaytv.com/tvs/tvs/playlist.m3u8
+#EXTINF:-1 tvg-id="UniTV" tvg-name="UniTV" tvg-country="ve" tvg-language="ve" group-title="Venezuela",UniTV
+https://vcp6.myplaytv.com/unitv/unitv/playlist.m3u8
+#EXTINF:-1 tvg-id="ValeTV(1)" tvg-name="Vale TV (1)" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Vale TV (1)
+https://59d39900ebfb8.streamlock.net/valetv_480/valetv_480/playlist.m3u8
+#EXTINF:-1 tvg-id="ValeTV(2)" tvg-name="Vale TV (2)" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Vale TV (2)
+https://vcp2.myplaytv.com/valetv/valetv/playlist.m3u8
+#EXTINF:-1 tvg-id="VenevisiónInternacional" tvg-name="Venevisión Internacional" tvg-country="ve" tvg-language="ve" group-title="Venezuela",Venevisión Internacional
+https://vod2live.univtec.com/manifest/4c41c0d8-e2e4-43cc-bd43-79afe715e1b3.m3u8
 #EXTINF:-1 tvg-id="CBNGospel" tvg-name="CBN Gospel" tvg-country="vg" tvg-language="vg" group-title="Virgin Adaları Britanya",CBN Gospel
 https://59d39900ebfb8.streamlock.net/ccbn/ccbn/playlist.m3u8
 #EXTINF:-1 tvg-id="CBNTV" tvg-name="CBN TV" tvg-country="vg" tvg-language="vg" group-title="Virgin Adaları Britanya",CBN TV
