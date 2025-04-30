@@ -2279,8 +2279,6 @@ https://weyyak-live.akamaized.net/weyyak_ten_tv/index.m3u8
 https://bcovlive-a.akamaihd.net/0e524e1838ed411dad0a674d18e07914/eu-central-1/6415808954001/playlist_dvr.m3u8
 #EXTINF:-1 tvg-id="WatanTV" tvg-name="Watan TV" tvg-country="eg" tvg-language="eg" group-title="Mısır",Watan TV
 https://rp.tactivemedia.com/watantv_source/live/playlist.m3u8
-#EXTINF:-1 tvg-id="RASDTV(2)" tvg-name="RASD TV (2)" tvg-country="eh" tvg-language="eh" group-title="Batı Sahra",RASD TV (2)
-https://cloud.streamingconnect.tv/hls/rasdtv/rasdtv.m3u8
 #EXTINF:-1 tvg-id="3/24" tvg-name="3/24" tvg-country="es" tvg-language="es" group-title="İspanya",3/24
 https://directes-tv-int.3catdirectes.cat/live-origin/canal324-hls/master.m3u8
 #EXTINF:-1 tvg-id="7TelevisiónRegióndeMurcia" tvg-name="7 Televisión Región de Murcia" tvg-country="es" tvg-language="es" group-title="İspanya",7 Televisión Región de Murcia
@@ -2855,8 +2853,6 @@ https://stream-server9-jupiter.muxlive.com/hls/ghlifetv/index.m3u8
 https://livestream.anojed.com/ablazetv/f7b44cfafd5c52223d5498196c8a2e7b.sdp/playlist.m3u8
 #EXTINF:-1 tvg-id="ResurrectionTV" tvg-name="Resurrection TV" tvg-country="gh" tvg-language="gh" group-title="Gana",Resurrection TV
 https://1681360479.rsc.cdn77.org/1681360479/index.m3u8
-#EXTINF:-1 tvg-id="QTVGambia" tvg-name="QTV Gambia" tvg-country="gm" tvg-language="gm" group-title="Gambiya",QTV Gambia
-https://player.qtv.gm/hls/live.stream.m3u8
 #EXTINF:-1 tvg-id="EspaceTV" tvg-name="Espace TV" tvg-country="gn" tvg-language="gn" group-title="Guinea",Espace TV
 https://edge11.vedge.infomaniak.com/livecast/ik:espacetv/manifest.m3u8
 #EXTINF:-1 tvg-id="ETV" tvg-name="ETV" tvg-country="gp" tvg-language="gp" group-title="Guadeloupe",ETV
@@ -3169,122 +3165,6 @@ https://cloudfront44.lexanetwork.com:1344/relay01/HDE051.sdp/playlist.m3u8
 https://cloudfront44.lexanetwork.com:1344/freerelay/zegtv.sdp/playlist.m3u8
 #EXTINF:-1 tvg-id="ZugloTV" tvg-name="Zuglo TV" tvg-country="hu" tvg-language="hu" group-title="Macaristan",Zuglo TV
 https://cloudfront44.lexanetwork.com:1344/freerelay/zuglotv.sdp/playlist.m3u8
-#EXTINF:-1 tvg-id="AKTV" tvg-name="AKTV" tvg-country="id" tvg-language="id" group-title="Endonezya",AKTV
-https://e.siar.us/live/aktv.m3u8
-#EXTINF:-1 tvg-id="AlImanTV" tvg-name="Al-Iman TV" tvg-country="id" tvg-language="id" group-title="Endonezya",Al-Iman TV
-https://tv.aliman.id/aliman/live.m3u8
-#EXTINF:-1 tvg-id="AlwafaTarimTV(AmMedia)" tvg-name="Alwafa Tarim TV (Am Media)" tvg-country="id" tvg-language="id" group-title="Endonezya",Alwafa Tarim TV (Am Media)
-https://ammedia.siar.us/ammedia/live/playlist.m3u8
-#EXTINF:-1 tvg-id="BalikpapanTV" tvg-name="Balikpapan TV" tvg-country="id" tvg-language="id" group-title="Endonezya",Balikpapan TV
-https://5bf7b725107e5.streamlock.net/btv/btv/playlist.m3u8
-#EXTINF:-1 tvg-id="BantenTV" tvg-name="Banten TV" tvg-country="id" tvg-language="id" group-title="Endonezya",Banten TV
-https://5bf7b725107e5.streamlock.net/bantentv/bantentv/playlist.m3u8
-#EXTINF:-1 tvg-id="BTV" tvg-name="BTV" tvg-country="id" tvg-language="id" group-title="Endonezya",BTV
-https://b1news.beritasatumedia.com/Beritasatu/B1News_manifest.m3u8
-#EXTINF:-1 tvg-id="BungoTV" tvg-name="Bungo TV" tvg-country="id" tvg-language="id" group-title="Endonezya",Bungo TV
-https://5bf7b725107e5.streamlock.net/bungotv/bungotv/playlist.m3u8
-#EXTINF:-1 tvg-id="CelebesTV" tvg-name="Celebes TV" tvg-country="id" tvg-language="id" group-title="Endonezya",Celebes TV
-https://ams.juraganstreaming.com:5443/LiveApp/streams/celebesmedia.m3u8
-#EXTINF:-1 tvg-id="DhammaTV" tvg-name="Dhamma TV" tvg-country="id" tvg-language="id" group-title="Endonezya",Dhamma TV
-https://b.webcache.maxindo.net.id/dhamma/dhamma.m3u8
-#EXTINF:-1 tvg-id="DhohoTV" tvg-name="Dhoho TV" tvg-country="id" tvg-language="id" group-title="Endonezya",Dhoho TV
-https://dhohotv.siar.us/dhohotv/live/playlist.m3u8
-#EXTINF:-1 tvg-id="DutaTV" tvg-name="Duta TV" tvg-country="id" tvg-language="id" group-title="Endonezya",Duta TV
-https://dutatv.siar.us/dutatv/live/playlist.m3u8
-#EXTINF:-1 tvg-id="FicomChannel" tvg-name="Ficom Channel" tvg-country="id" tvg-language="id" group-title="Endonezya",Ficom Channel
-https://v3.siar.us/ficomchannel/live/playlist.m3u8
-#EXTINF:-1 tvg-id="HumaBetangTV" tvg-name="Huma Betang TV" tvg-country="id" tvg-language="id" group-title="Endonezya",Huma Betang TV
-https://v3.siar.us/humabetangtv/live/playlist.m3u8
-#EXTINF:-1 tvg-id="IDTV" tvg-name="IDTV" tvg-country="id" tvg-language="id" group-title="Endonezya",IDTV
-https://b1world.beritasatumedia.com/Beritasatu/B1World_manifest.m3u8
-#EXTINF:-1 tvg-id="InspiraTV" tvg-name="Inspira TV" tvg-country="id" tvg-language="id" group-title="Endonezya",Inspira TV
-https://inspiratv.siar.us/inspiratv/live/playlist.m3u8
-#EXTINF:-1 tvg-id="JawaPosTV" tvg-name="Jawa Pos TV" tvg-country="id" tvg-language="id" group-title="Endonezya",Jawa Pos TV
-https://jawapostv.siar.us/jawapostv/live/playlist.m3u8
-#EXTINF:-1 tvg-id="JogjaTV" tvg-name="Jogja TV" tvg-country="id" tvg-language="id" group-title="Endonezya",Jogja TV
-https://stream.jogjatv.co.id/jtvlive/stream/index.m3u8
-#EXTINF:-1 tvg-id="LingkarTV" tvg-name="Lingkar TV" tvg-country="id" tvg-language="id" group-title="Endonezya",Lingkar TV
-https://lingkartv.my.id/hls/lingkartv.m3u8
-#EXTINF:-1 tvg-id="MaduTV" tvg-name="Madu TV" tvg-country="id" tvg-language="id" group-title="Endonezya",Madu TV
-https://re1.siar.us/madutv/hd720/playlist.m3u8
-#EXTINF:-1 tvg-id="MagnaChannel" tvg-name="Magna Channel" tvg-country="id" tvg-language="id" group-title="Endonezya",Magna Channel
-https://edge.medcom.id/live-edge/smil:magna.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="MGSTV" tvg-name="MGS TV" tvg-country="id" tvg-language="id" group-title="Endonezya",MGS TV
-https://cdn.gunadarma.ac.id/streams/mgstv/ingestmgstv.m3u8
-#EXTINF:-1 tvg-id="MQTV" tvg-name="MQTV" tvg-country="id" tvg-language="id" group-title="Endonezya",MQTV
-https://5bf7b725107e5.streamlock.net/mqtv/mqtv/playlist.m3u8
-#EXTINF:-1 tvg-id="RCTV" tvg-name="RCTV" tvg-country="id" tvg-language="id" group-title="Endonezya",RCTV
-https://v10.siar.us/rctv/live/playlist.m3u8
-#EXTINF:-1 tvg-id="RodjaTV" tvg-name="Rodja TV" tvg-country="id" tvg-language="id" group-title="Endonezya",Rodja TV
-https://rodjatv.com/rodjatv/live.m3u8
-#EXTINF:-1 tvg-id="SaktiTV" tvg-name="Sakti TV" tvg-country="id" tvg-language="id" group-title="Endonezya",Sakti TV
-https://saktitv.siar.us/saktitv/live/playlist.m3u8
-#EXTINF:-1 tvg-id="SangajiTV" tvg-name="Sangaji TV" tvg-country="id" tvg-language="id" group-title="Endonezya",Sangaji TV
-https://cdn.gunadarma.ac.id/streams/sangajitv/ingestsangajitv.m3u8
-#EXTINF:-1 tvg-id="TVKesehatan" tvg-name="TV Kesehatan" tvg-country="id" tvg-language="id" group-title="Endonezya",TV Kesehatan
-https://5bf7b725107e5.streamlock.net/tvkesehatan/tvkesehatan/playlist.m3u8
-#EXTINF:-1 tvg-id="TVMu" tvg-name="TV Mu" tvg-country="id" tvg-language="id" group-title="Endonezya",TV Mu
-https://e.siar.us/live/tvmu.m3u8
-#EXTINF:-1 tvg-id="TVTabalong" tvg-name="TV Tabalong" tvg-country="id" tvg-language="id" group-title="Endonezya",TV Tabalong
-https://5bf7b725107e5.streamlock.net/tvtabalong/tvtabalong/playlist.m3u8
-#EXTINF:-1 tvg-id="TV9Nusantara" tvg-name="TV9 Nusantara" tvg-country="id" tvg-language="id" group-title="Endonezya",TV9 Nusantara
-https://5bf7b725107e5.streamlock.net/tv9/tv9/playlist.m3u8
-#EXTINF:-1 tvg-id="TVRIAceh" tvg-name="TVRI Aceh" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI Aceh
-https://ott-balancer.tvri.go.id/live/eds/Aceh/hls/Aceh.m3u8
-#EXTINF:-1 tvg-id="TVRIBali" tvg-name="TVRI Bali" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI Bali
-https://ott-balancer.tvri.go.id/live/eds/Bali/hls/Bali.m3u8
-#EXTINF:-1 tvg-id="TVRIBangkaBelitung" tvg-name="TVRI Bangka Belitung" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI Bangka Belitung
-https://ott-balancer.tvri.go.id/live/eds/Babel/hls/Babel.m3u8
-#EXTINF:-1 tvg-id="TVRIBengkulu" tvg-name="TVRI Bengkulu" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI Bengkulu
-https://ott-balancer.tvri.go.id/live/eds/Bengkulu/hls/Bengkulu.m3u8
-#EXTINF:-1 tvg-id="TVRIDKIJakarta" tvg-name="TVRI DKI Jakarta" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI DKI Jakarta
-https://ott-balancer.tvri.go.id/live/eds/DKI/hls/DKI.m3u8
-#EXTINF:-1 tvg-id="TVRIJambi" tvg-name="TVRI Jambi" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI Jambi
-https://ott-balancer.tvri.go.id/live/eds/Jambi/hls/Jambi.m3u8
-#EXTINF:-1 tvg-id="TVRIJawaTengah" tvg-name="TVRI Jawa Tengah" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI Jawa Tengah
-https://ott-balancer.tvri.go.id/live/eds/Jateng/hls/Jateng.m3u8
-#EXTINF:-1 tvg-id="TVRIKalimantanBarat" tvg-name="TVRI Kalimantan Barat" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI Kalimantan Barat
-https://ott-balancer.tvri.go.id/live/eds/Kalbar/hls/Kalbar.m3u8
-#EXTINF:-1 tvg-id="TVRIKalimantanSelatan" tvg-name="TVRI Kalimantan Selatan" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI Kalimantan Selatan
-https://ott-balancer.tvri.go.id/live/eds/Kalsel/hls/Kalsel.m3u8
-#EXTINF:-1 tvg-id="TVRIKalimantanTimur" tvg-name="TVRI Kalimantan Timur" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI Kalimantan Timur
-https://ott-balancer.tvri.go.id/live/eds/Kaltim/hls/Kaltim.m3u8
-#EXTINF:-1 tvg-id="TVRILampung" tvg-name="TVRI Lampung" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI Lampung
-https://ott-balancer.tvri.go.id/live/eds/Lampung/hls/Lampung.m3u8
-#EXTINF:-1 tvg-id="TVRIMaluku" tvg-name="TVRI Maluku" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI Maluku
-https://ott-balancer.tvri.go.id/live/eds/Ambon/hls/Ambon.m3u8
-#EXTINF:-1 tvg-id="TVRINasional" tvg-name="TVRI Nasional" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI Nasional
-https://ott-balancer.tvri.go.id/live/eds/Nasional/hls/Nasional.m3u8
-#EXTINF:-1 tvg-id="TVRINusaTenggaraBarat" tvg-name="TVRI Nusa Tenggara Barat" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI Nusa Tenggara Barat
-https://ott-balancer.tvri.go.id/live/eds/NTB/hls/NTB.m3u8
-#EXTINF:-1 tvg-id="TVRINusaTenggaraTimur" tvg-name="TVRI Nusa Tenggara Timur" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI Nusa Tenggara Timur
-https://ott-balancer.tvri.go.id/live/eds/NTT/hls/NTT.m3u8
-#EXTINF:-1 tvg-id="TVRIPapua" tvg-name="TVRI Papua" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI Papua
-https://ott-balancer.tvri.go.id/live/eds/Papua/hls/Papua.m3u8
-#EXTINF:-1 tvg-id="TVRIRiau" tvg-name="TVRI Riau" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI Riau
-https://ott-balancer.tvri.go.id/live/eds/Riau/hls/Riau.m3u8
-#EXTINF:-1 tvg-id="TVRISport" tvg-name="TVRI Sport" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI Sport
-https://ott-balancer.tvri.go.id/live/eds/SportHD/hls/SportHD.m3u8
-#EXTINF:-1 tvg-id="TVRISulawesiBarat" tvg-name="TVRI Sulawesi Barat" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI Sulawesi Barat
-https://ott-balancer.tvri.go.id/live/eds/Sulbar/hls/Sulbar.m3u8
-#EXTINF:-1 tvg-id="TVRISulawesiSelatan" tvg-name="TVRI Sulawesi Selatan" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI Sulawesi Selatan
-https://ott-balancer.tvri.go.id/live/eds/Sulsel/hls/Sulsel.m3u8
-#EXTINF:-1 tvg-id="TVRISulawesiTengah" tvg-name="TVRI Sulawesi Tengah" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI Sulawesi Tengah
-https://ott-balancer.tvri.go.id/live/eds/Sulteng/hls/Sulteng.m3u8
-#EXTINF:-1 tvg-id="TVRISulawesiTenggara" tvg-name="TVRI Sulawesi Tenggara" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI Sulawesi Tenggara
-https://ott-balancer.tvri.go.id/live/eds/Sultra/hls/Sultra.m3u8
-#EXTINF:-1 tvg-id="TVRISumateraBarat" tvg-name="TVRI Sumatera Barat" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI Sumatera Barat
-https://ott-balancer.tvri.go.id/live/eds/Sumbar/hls/Sumbar.m3u8
-#EXTINF:-1 tvg-id="TVRISumateraSelatan" tvg-name="TVRI Sumatera Selatan" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI Sumatera Selatan
-https://ott-balancer.tvri.go.id/live/eds/Sumsel/hls/Sumsel.m3u8
-#EXTINF:-1 tvg-id="TVRIWorld" tvg-name="TVRI World" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI World
-https://ott-balancer.tvri.go.id/live/eds/TVRIWorld/hls/TVRIWorld.m3u8
-#EXTINF:-1 tvg-id="TVRIYogyakarta" tvg-name="TVRI Yogyakarta" tvg-country="id" tvg-language="id" group-title="Endonezya",TVRI Yogyakarta
-https://ott-balancer.tvri.go.id/live/eds/Jogjakarta/hls/Jogjakarta.m3u8
-#EXTINF:-1 tvg-id="UGTV" tvg-name="UGTV" tvg-country="id" tvg-language="id" group-title="Endonezya",UGTV
-https://cdn.gunadarma.ac.id/streams/ugtv/ingestugtv.m3u8
-#EXTINF:-1 tvg-id="WesalTV" tvg-name="Wesal TV" tvg-country="id" tvg-language="id" group-title="Endonezya",Wesal TV
-https://ams.juraganstreaming.com:5443/LiveApp/streams/wesaltv.m3u8
 #EXTINF:-1 tvg-id="Cúla4" tvg-name="Cúla4" tvg-country="ie" tvg-language="ie" group-title="İrlanda",Cúla4
 https://d3eq0jseza7fm5.cloudfront.net/tg4_vod_3.m3u8
 #EXTINF:-1 tvg-id="OireachtasTV" tvg-name="Oireachtas TV" tvg-country="ie" tvg-language="ie" group-title="İrlanda",Oireachtas TV
@@ -4537,52 +4417,6 @@ https://5a13fe32ef748.streamlock.net/mmplay/mrtv-4/playlist.m3u8
 https://5a13fe32ef748.streamlock.net/mmplay/mrtv-entertainment/playlist.m3u8
 #EXTINF:-1 tvg-id="MRTVParliament" tvg-name="MRTV Parliament" tvg-country="mm" tvg-language="mm" group-title="Myanmar",MRTV Parliament
 https://5a13fe32ef748.streamlock.net/mmplay/hluttaw/playlist.m3u8
-#EXTINF:-1 tvg-id="BloombergTVMongoliaHD" tvg-name="Bloomberg TV Mongolia HD" tvg-country="mn" tvg-language="mn" group-title="Mongolya",Bloomberg TV Mongolia HD
-https://cdn3.skygo.mn/live/disk1/BloombergMon/HLS-FTA/BloombergMon.m3u8
-#EXTINF:-1 tvg-id="C1" tvg-name="C1" tvg-country="mn" tvg-language="mn" group-title="Mongolya",C1
-https://cdn2.skygo.mn/live/disk1/C1/HLS-FTA/C1.m3u8
-#EXTINF:-1 tvg-id="CentralTV" tvg-name="Central TV" tvg-country="mn" tvg-language="mn" group-title="Mongolya",Central TV
-https://cdn3.skygo.mn/live/disk1/Ekh_Oron/HLS-FTA/Ekh_Oron.m3u8
-#EXTINF:-1 tvg-id="DreamTV" tvg-name="Dream TV" tvg-country="mn" tvg-language="mn" group-title="Mongolya",Dream TV
-https://cdn3.skygo.mn/live/disk1/Dreambox/HLS-FTA/Dreambox.m3u8
-#EXTINF:-1 tvg-id="EagleNewsHD" tvg-name="Eagle News HD" tvg-country="mn" tvg-language="mn" group-title="Mongolya",Eagle News HD
-https://cdn2.skygo.mn/live/disk1/Eagle/HLS-FTA/Eagle.m3u8
-#EXTINF:-1 tvg-id="Education" tvg-name="Education" tvg-country="mn" tvg-language="mn" group-title="Mongolya",Education
-https://cdn3.skygo.mn/live/disk1/Education/HLS-FTA/Education.m3u8
-#EXTINF:-1 tvg-id="ETV" tvg-name="ETV" tvg-country="mn" tvg-language="mn" group-title="Mongolya",ETV
-https://cdn3.skygo.mn/live/disk1/ETV/HLS-FTA/ETV.m3u8
-#EXTINF:-1 tvg-id="MN25" tvg-name="MN25" tvg-country="mn" tvg-language="mn" group-title="Mongolya",MN25
-https://cdn2.skygo.mn/live/disk1/MN25/HLS-FTA/MN25.m3u8
-#EXTINF:-1 tvg-id="MNB" tvg-name="MNB" tvg-country="mn" tvg-language="mn" group-title="Mongolya",MNB
-https://live.mnb.mn/hls/mnb.stream.m3u8
-#EXTINF:-1 tvg-id="MNBSport" tvg-name="MNB Sport" tvg-country="mn" tvg-language="mn" group-title="Mongolya",MNB Sport
-https://live.mnb.mn/hls/mnb_sport.stream.m3u8
-#EXTINF:-1 tvg-id="MNBWorld" tvg-name="MNB World" tvg-country="mn" tvg-language="mn" group-title="Mongolya",MNB World
-https://live.mnb.mn/hls/mnb_world.stream.m3u8
-#EXTINF:-1 tvg-id="MNBГэрбүл" tvg-name="MNB Гэр бүл" tvg-country="mn" tvg-language="mn" group-title="Mongolya",MNB Гэр бүл
-https://live.mnb.mn/hls/mnb_family.stream.m3u8
-#EXTINF:-1 tvg-id="MNBМонголынМэдээ" tvg-name="MNB Монголын Мэдээ" tvg-country="mn" tvg-language="mn" group-title="Mongolya",MNB Монголын Мэдээ
-https://live.mnb.mn/hls/mn2.stream.m3u8
-#EXTINF:-1 tvg-id="MovieBox" tvg-name="MovieBox" tvg-country="mn" tvg-language="mn" group-title="Mongolya",MovieBox
-https://cdn3.skygo.mn/live/disk1/Moviebox/HLS-FTA/Moviebox.m3u8
-#EXTINF:-1 tvg-id="NTV" tvg-name="NTV" tvg-country="mn" tvg-language="mn" group-title="Mongolya",NTV
-https://cdn2.skygo.mn/live/disk1/NTVHD/HLS-FTA/NTVHD.m3u8
-#EXTINF:-1 tvg-id="ONTV" tvg-name="ONTV" tvg-country="mn" tvg-language="mn" group-title="Mongolya",ONTV
-https://cdn3.skygo.mn/live/disk1/ONTV/HLS-FTA/ONTV.m3u8
-#EXTINF:-1 tvg-id="SBN" tvg-name="SBN" tvg-country="mn" tvg-language="mn" group-title="Mongolya",SBN
-https://cdn2.skygo.mn/live/disk1/SBN/HLS-FTA/SBN.m3u8
-#EXTINF:-1 tvg-id="StarTV" tvg-name="Star TV" tvg-country="mn" tvg-language="mn" group-title="Mongolya",Star TV
-https://cdn2.skygo.mn/live/disk1/Star/HLS-FTA/Star.m3u8
-#EXTINF:-1 tvg-id="TV5(1)" tvg-name="TV5 (1)" tvg-country="mn" tvg-language="mn" group-title="Mongolya",TV5 (1)
-https://10st.vcast.im/MYASIATV/TV5/playlist.m3u8
-#EXTINF:-1 tvg-id="TV5(2)" tvg-name="TV5 (2)" tvg-country="mn" tvg-language="mn" group-title="Mongolya",TV5 (2)
-https://cdn2.skygo.mn/live/disk1/TV5HD/HLS-FTA/TV5HD.m3u8
-#EXTINF:-1 tvg-id="TV8" tvg-name="TV8" tvg-country="mn" tvg-language="mn" group-title="Mongolya",TV8
-https://cdn3.skygo.mn/live/disk1/TV8HD/HLS-FTA/TV8HD.m3u8
-#EXTINF:-1 tvg-id="TV9" tvg-name="TV9" tvg-country="mn" tvg-language="mn" group-title="Mongolya",TV9
-https://cdn2.skygo.mn/live/disk1/TV9HD/HLS-FTA/TV9HD.m3u8
-#EXTINF:-1 tvg-id="МҮОНТ1HD" tvg-name="МҮОНТ-1 HD" tvg-country="mn" tvg-language="mn" group-title="Mongolya",МҮОНТ-1 HD
-https://cdn3.skygo.mn/live/disk1/MNB/HLS-FTA/MNB.m3u8
 #EXTINF:-1 tvg-id="DirectodasReuniõesdaAssembleiadeMacau" tvg-name="Directo das Reuniões da Assembleia de Macau" tvg-country="mo" tvg-language="mo" group-title="MO",Directo das Reuniões da Assembleia de Macau
 https://live3.tdm.com.mo/tv/ch22.live/playlist.m3u8
 #EXTINF:-1 tvg-id="TDMEntertainmentCh95" tvg-name="TDM Entertainment Ch. 95" tvg-country="mo" tvg-language="mo" group-title="MO",TDM Entertainment Ch. 95
@@ -5169,12 +5003,6 @@ https://live.obslivestream.com/vivatv/index.m3u8
 https://bcovlive-a.akamaihd.net/34b9e8a6345d4ee8acb351730d1dbe89/us-west-2/5816339219001/playlist.m3u8
 #EXTINF:-1 tvg-id="NBCTV" tvg-name="NBC TV" tvg-country="pg" tvg-language="pg" group-title="Papua Yeni Gine",NBC TV
 https://205444.global.ssl.fastly.net/64ee8a084b935f9f8a6f8825/live_ab333a6093bc11eeb89fbd81423485b7/index.fmp4.m3u8
-#EXTINF:-1 tvg-id="A2Z" tvg-name="A2Z" tvg-country="ph" tvg-language="ph" group-title="Filipinler",A2Z
-https://qp-pldt-live-grp-02-prod.akamaized.net/out/u/tv5.m3u8
-#EXTINF:-1 tvg-id="CLTV36" tvg-name="CLTV 36" tvg-country="ph" tvg-language="ph" group-title="Filipinler",CLTV 36
-https://live.cltv36.tv:5443/LiveApp/streams/cltvlive.m3u8
-#EXTINF:-1 tvg-id="INCTV" tvg-name="INC TV" tvg-country="ph" tvg-language="ph" group-title="Filipinler",INC TV
-https://199211.global.ssl.fastly.net/643cc12aa824db4374021c8c/live_95f6ac80dd6511ed9d08b12be56ae55e/index.m3u8
 #EXTINF:-1 tvg-id="DiscoverPakistan" tvg-name="Discover Pakistan" tvg-country="pk" tvg-language="pk" group-title="Pakistan",Discover Pakistan
 https://livecdn.live247stream.com/discoverpakistan/web/playlist.m3u8
 #EXTINF:-1 tvg-id="DunyaNews(INTFeed)(1)" tvg-name="Dunya News (INT Feed) (1)" tvg-country="pk" tvg-language="pk" group-title="Pakistan",Dunya News (INT Feed) (1)
@@ -6005,12 +5833,6 @@ https://amg01553-blueantmediaasi-zoomoonz-samsungnz-rdufn.amagi.tv/playlist/amg0
 https://cdn-apse1-prod.tsv2.amagi.tv/linear/amg01553-blueantmediaasi-zoomoonz-samsungnz/playlist.m3u8
 #EXTINF:-1 tvg-id="ZooMoo(Australia)(4)" tvg-name="Zoo Moo (Australia) (4)" tvg-country="sg" tvg-language="sg" group-title="Singapur",Zoo Moo (Australia) (4)
 https://cdn4.skygo.mn/live/disk1/Zoomoo/HLSv3-FTA/Zoomoo.m3u8
-#EXTINF:-1 tvg-id="ExodusTV(1)" tvg-name="Exodus TV (1)" tvg-country="si" tvg-language="si" group-title="Slovenya",Exodus TV (1)
-https://584943999.r.worldssl.net/584943999/_definst_/vzivo/playlist.m3u8
-#EXTINF:-1 tvg-id="ExodusTV(2)" tvg-name="Exodus TV (2)" tvg-country="si" tvg-language="si" group-title="Slovenya",Exodus TV (2)
-https://584943999.r.worldssl.net/584943999/vzivo/playlist.m3u8
-#EXTINF:-1 tvg-id="SIPTV" tvg-name="SIP TV" tvg-country="si" tvg-language="si" group-title="Slovenya",SIP TV
-https://data.siptv.si/live-siptv/hls/index.m3u8
 #EXTINF:-1 tvg-id="ducktv(1)" tvg-name="ducktv (1)" tvg-country="sk" tvg-language="sk" group-title="Slovakya",ducktv (1)
 https://mmm-dk.otteravision.com/DexaYJdJXkLqFxTK_DuckTVHDSAMS/DuckTVHDSAMS.stream/playlist.m3u8
 #EXTINF:-1 tvg-id="ducktv(3)" tvg-name="ducktv (3)" tvg-country="sk" tvg-language="sk" group-title="Slovakya",ducktv (3)
