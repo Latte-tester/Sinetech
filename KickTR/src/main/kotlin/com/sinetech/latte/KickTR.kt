@@ -381,9 +381,9 @@ class KickTR : MainAPI() {
 
         if (!playbackUrl.isNullOrBlank()) {
             callback.invoke(
-                ExtractorLink(
+                newExtractorLink(
                     source = this.name,
-                    name = "Kick Live",
+                    name = "Kick Canlı Yayın",
                     url = playbackUrl,
                     referer = "$mainUrl/",
                     quality = Qualities.Unknown.value,
