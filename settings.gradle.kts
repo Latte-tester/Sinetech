@@ -12,5 +12,6 @@ include(
     "TOGrup",
     "DiziFun",
     "AniworldMC",
-    "mywayTV"
+    "mywayTV",
+    "KickTR"
 )
