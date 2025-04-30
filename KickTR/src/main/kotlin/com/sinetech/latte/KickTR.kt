@@ -4,6 +4,9 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.lagradost.cloudstream3.*
 import com.lagradost.cloudstream3.network.CloudflareKiller
 import com.lagradost.cloudstream3.utils.*
+import com.lagradost.cloudstream3.utils.ExtractorApi
+import com.lagradost.cloudstream3.utils.ExtractorLink
+import com.lagradost.cloudstream3.utils.ExtractorLinkType
 import com.lagradost.cloudstream3.utils.AppUtils.parseJson
 import com.lagradost.cloudstream3.utils.AppUtils.tryParseJson
 import java.net.URLEncoder // URL encode için
@@ -352,28 +355,15 @@ class KickTR : MainAPI() {
         }
 
         val apiUrl = "$mainUrl/api/v2/channels/$streamerName"
-        var apiResponse: KickChannelApiResponseV2? = null
         var playbackUrl: String? = null
 
         try {
-            val response = app.get(apiUrl, interceptor = cloudflareInterceptor)
-             try {
-                apiResponse = response.parsed()
-             } catch (parseError: Exception) {
-                 parseError.printStackTrace()
-                 return false
-             }
-
-            if (apiResponse?.livestream?.isLive == true) {
-                 playbackUrl = apiResponse.playbackUrl
-                 if (!playbackUrl.isNullOrBlank()) {
-                 } else {
-                 }
+            val apiResponse = app.get(apiUrl, interceptor = cloudflareInterceptor).parsed<KickChannelApiResponseV2>()
+            if (apiResponse.livestream?.isLive == true && !apiResponse.playbackUrl.isNullOrBlank()) {
+                playbackUrl = apiResponse.playbackUrl
             } else {
-                val isLiveStatus = apiResponse?.livestream?.isLive ?: "Canlı yayın verileri eksik"
-                 return false
+                return false
             }
-
         } catch (e: Exception) {
             e.printStackTrace()
             return false
@@ -382,17 +372,17 @@ class KickTR : MainAPI() {
         if (!playbackUrl.isNullOrBlank()) {
             callback.invoke(
                 newExtractorLink(
-                    source  = this.name,
-                    name    = "Kick Live",
-                    url     = playbackUrl,
-                    type    = ExtractorLinkType.M3U8
-                    this.referer = "$mainUrl/",
-                    this.quality = Qualities.Unknown.value,
-                )
+                    source = this.name,
+                    name = "Kick Canlı Yayın",
+                    url = playbackUrl,
+                    type = ExtractorLinkType.M3U8 
+                ) {
+                    this.quality = Qualities.Unknown.value 
+                    this.referer = "$mainUrl/"
+                }
             )
             return true
         }
-
         return false
     }
 }
