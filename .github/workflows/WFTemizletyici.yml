@@ -1,4 +1,4 @@
-name: Workflow Temizleyici
+name: Gereksiz wf temizleyici
 
 on:
   workflow_dispatch:
