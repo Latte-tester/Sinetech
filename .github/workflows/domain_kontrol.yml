@@ -78,7 +78,7 @@ jobs:
             "title": "ci: Otomatik Domain Güncellemesi 🤖",
             "head": "$BRANCH_NAME",
             "base": "$BASE_BRANCH",
-            "body": "Workflow tarafından tespit edilen domain değişiklikleri uygulandı.\n\nLütfen değişiklikleri gözden geçirin ve onaylayın."
+            "body": "♻️ tespit edilen domain değişiklikleri uygulandı.\n\nLütfen değişiklikleri gözden geçirin ve onaylayın."
           }
           EOF
           echo "Pull Request oluşturuldu."
