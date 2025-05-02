@@ -175,10 +175,50 @@ class DiziFun : MainAPI() {
         }
 
         val type = if (url.contains("/film/")) TvType.Movie else TvType.TvSeries
-        val trailer = fixUrlNull(document.selectFirst(".plyr__video-wrapper .plyr__video-embed iframe")?.attr("src"))
-        Log.d("DiziFun", "Çekilen trailer URL: $trailer")
+        var trailer: String? = null // Fragman URL'sini saklayacak değişken
 
-        val recommendations = document.select(".related-series .item, .benzer-yapimlar .item").mapNotNull {
+    // 1. Tüm iframe elementlerini çek
+    val iframes = document.select("iframe")
+
+    // 2. iframe'ler arasında gez ve "youtube" içeren id'ye sahip olanı bul
+    for (iframe in iframes) {
+        val iframeId = iframe.attr("id")
+        val iframeSrc = iframe.attr("src")
+
+        if (iframeId.contains("youtube", ignoreCase = true) && iframeSrc.isNotBlank()) {
+            // 3. src özniteliğini kontrol et ve al
+            trailer = fixUrlNull(iframeSrc)?.let { url ->
+                 Log.d("DiziFun", "Fragman iframe bulundu (id ile): $iframeId, Raw URL: $url") // Log
+                 // URL formatlama mantığı (bu hala gerekli olabilir)
+                when {
+                    url.contains("youtube.com/embed/") -> {
+                        val videoId = url.substringAfterLast("/").substringBefore("?")
+                        "https://youtube.com/embed/$videoId"
+                    }
+                    url.contains("youtube-nocookie.com/embed/") -> {
+                        val videoId = url.substringAfterLast("/").substringBefore("?")
+                        "https://youtube.com/embed/$videoId"
+                    }
+                    else -> url // Diğer URL türlerini de desteklemek isterseniz
+                }
+            }
+            // İlk bulunan geçerli fragman iframe'i yeterli, döngüyü kır
+            if (trailer != null) {
+                break
+            }
+        }
+    }
+
+    Log.d("DiziFun", "Çekilen son trailer URL: $trailer") // Son çekilen URL logu
+
+    if (trailer != null) {
+        Log.d("DiziFun", "addTrailer çağrılıyor: $trailer") // addTrailer çağrı logu
+        this.addTrailer(trailer)
+    } else {
+        Log.d("DiziFun", "addTrailer çağrılmadı, fragman iframe bulunamadı veya src boş.") // Fragman bulunamadı logu
+    }
+        
+    val recommendations = document.select(".related-series .item, .benzer-yapimlar .item").mapNotNull {
 
             it.toSearchResult() ?: it.toRecentSearchResult()
         }
