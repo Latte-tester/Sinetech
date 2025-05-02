@@ -194,7 +194,7 @@ class DiziFun : MainAPI() {
                 this.tags = tags
                 this.actors = actors
                 this.recommendations = recommendations
-                this.addTrailer = trailer
+                addTrailer(trailer)
             }
         } else { 
             val episodes = mutableListOf<Episode>()
@@ -286,7 +286,7 @@ class DiziFun : MainAPI() {
                 this.tags = tags
                 this.actors = actors
                 this.recommendations = recommendations
-                this.addTrailer = trailer
+                addTrailer(trailer)
             }
         }
     }
