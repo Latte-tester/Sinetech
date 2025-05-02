@@ -340,17 +340,13 @@ class DiziFun : MainAPI() {
                 this.recommendations = recommendations
                 // Önce normal fragman URL'sini ekle
                 if (trailerUrl != null) { 
-                    this.addTrailer(trailerUrl) 
+                    this.addTrailer(trailerUrl = trailerUrl, referer = null, addRaw = false) 
                     Log.d("DiziFun", "addTrailer çağrıldı (trailerUrl): $trailerUrl")
                 }
                 // Eğer Plyr video oynatıcısından YouTube fragmanı varsa onu da ekle
                 else if (youtubeEmbedUrl != null) {
-                    this.addTrailer(youtubeEmbedUrl)
+                    this.addTrailer(trailerUrl = youtubeEmbedUrl, referer = null, addRaw = false)
                     Log.d("DiziFun", "addTrailer çağrıldı (youtubeEmbedUrl): $youtubeEmbedUrl")
-                }
-                // Eğer Plyr video oynatıcısından YouTube fragmanı varsa onu da ekle
-                else if (youtubeEmbedUrl != null) {
-                    this.addTrailer(youtubeEmbedUrl)
                 }
             }
         }
