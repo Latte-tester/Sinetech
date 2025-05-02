@@ -185,5 +185,5 @@ open class AniworldMC : MainAPI() {
 }
 
 class Dooood : DoodLaExtractor() {
-    override var mainUrl = "https://urochsunloath.com"
+    override var mainUrl = "https://doodstream.com"
 }
