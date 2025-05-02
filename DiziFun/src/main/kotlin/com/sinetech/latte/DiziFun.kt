@@ -175,17 +175,62 @@ class DiziFun : MainAPI() {
         }
 
         val type = if (url.contains("/film/")) TvType.Movie else TvType.TvSeries
-        // Fragman URL'sini al
-        val trailerUrl = fixUrlNull(document.selectFirst(".trailer-button a")?.attr("href"))
+        // Fragman URL'lerini al ve işle
+        val trailerUrl = fixUrlNull(document.selectFirst(".trailer-button a")?.attr("href"))?.let { url ->
+            when {
+                url.contains("youtube.com/embed/") -> {
+                    val videoId = url.substringAfterLast("/").substringBefore("?")
+                    "https://youtube.com/embed/$videoId"
+                }
+                url.contains("youtube.com/watch?v=") -> {
+                    val videoId = url.substringAfter("v=").substringBefore("&")
+                    "https://youtube.com/embed/$videoId"
+                }
+                url.contains("youtu.be/") -> {
+                    val videoId = url.substringAfterLast("/").substringBefore("?")
+                    "https://youtube.com/embed/$videoId"
+                }
+                url.contains("youtube-nocookie.com/embed/") -> {
+                    val videoId = url.substringAfterLast("/").substringBefore("?")
+                    "https://youtube.com/embed/$videoId"
+                }
+                else -> url
+            }
+        }
         
         // Plyr video oynatıcısı için fragman bilgilerini al
         val plyrVideoWrapper = document.selectFirst(".plyr__video-wrapper.plyr__video-embed")
         val plyrIframe = plyrVideoWrapper?.selectFirst("iframe")
-        val plyrPoster = plyrVideoWrapper?.selectFirst(".plyr__poster")?.attr("style")
-            ?.let { style -> Regex("url\\(\"(.+?)\"\\)").find(style)?.groupValues?.get(1) }
         
-        // YouTube fragman URL'sini al
-        val youtubeEmbedUrl = plyrIframe?.attr("src")
+        // YouTube fragman URL'sini al ve işle
+        val youtubeEmbedUrl = plyrIframe?.attr("src")?.let { url ->
+            if (url.startsWith("//")) {
+                val fullUrl = "https:$url"
+                when {
+                    fullUrl.contains("youtube.com/embed/") -> {
+                        val videoId = fullUrl.substringAfterLast("/").substringBefore("?")
+                        "https://youtube.com/embed/$videoId"
+                    }
+                    fullUrl.contains("youtube-nocookie.com/embed/") -> {
+                        val videoId = fullUrl.substringAfterLast("/").substringBefore("?")
+                        "https://youtube.com/embed/$videoId"
+                    }
+                    else -> fullUrl
+                }
+            } else {
+                when {
+                    url.contains("youtube.com/embed/") -> {
+                        val videoId = url.substringAfterLast("/").substringBefore("?")
+                        "https://youtube.com/embed/$videoId"
+                    }
+                    url.contains("youtube-nocookie.com/embed/") -> {
+                        val videoId = url.substringAfterLast("/").substringBefore("?")
+                        "https://youtube.com/embed/$videoId"
+                    }
+                    else -> url
+                }
+            }
+        }
 
         val recommendations = document.select(".related-series .item, .benzer-yapimlar .item").mapNotNull {
 
