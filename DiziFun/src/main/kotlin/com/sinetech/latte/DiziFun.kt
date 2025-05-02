@@ -208,13 +208,6 @@ class DiziFun : MainAPI() {
             }
         }
     }
-
-    if (trailer != null) {
-        Log.d("DiziFun", "addTrailer çağrılıyor: $trailer") // addTrailer çağrı logu
-        this.addTrailer(trailer)
-    } else {
-        Log.d("DiziFun", "addTrailer çağrılmadı, fragman iframe bulunamadı veya src boş.") // Fragman bulunamadı logu
-    }
         
     val recommendations = document.select(".related-series .item, .benzer-yapimlar .item").mapNotNull {
 
