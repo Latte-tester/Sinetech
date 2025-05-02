@@ -202,6 +202,7 @@ class DiziFun : MainAPI() {
                 else -> url
             }
         }
+        Log.d("DiziFun", "trailerUrl: $trailerUrl")
         
         // Plyr video oynatıcısı için fragman bilgilerini al
         val plyrVideoWrapper = document.selectFirst(".plyr__video-wrapper.plyr__video-embed")
@@ -236,6 +237,7 @@ class DiziFun : MainAPI() {
                 }
             }
         }
+        Log.d("DiziFun", "youtubeEmbedUrl: $youtubeEmbedUrl")
 
         val recommendations = document.select(".related-series .item, .benzer-yapimlar .item").mapNotNull {
 
@@ -257,10 +259,12 @@ class DiziFun : MainAPI() {
                 // Önce normal fragman URL'sini ekle
                 if (trailerUrl != null) { 
                     this.addTrailer(trailerUrl) 
+                    Log.d("DiziFun", "addTrailer çağrıldı (trailerUrl): $trailerUrl")
                 }
                 // Eğer Plyr video oynatıcısından YouTube fragmanı varsa onu da ekle
                 else if (youtubeEmbedUrl != null) {
                     this.addTrailer(youtubeEmbedUrl)
+                    Log.d("DiziFun", "addTrailer çağrıldı (youtubeEmbedUrl): $youtubeEmbedUrl")
                 }
             }
         } else { 
