@@ -175,50 +175,7 @@ class DiziFun : MainAPI() {
         }
 
         val type = if (url.contains("/film/")) TvType.Movie else TvType.TvSeries
-        // Fragman URL'lerini işleme fonksiyonu
-        fun processTrailerUrl(url: String): String {
-            return when {
-                url.startsWith("//") -> {
-                    val fullUrl = "https:$url"
-                    processTrailerUrl(fullUrl)
-                }
-                url.contains("youtube.com/embed/") || url.contains("youtube-nocookie.com/embed/") -> {
-                    val uri = URI(url)
-                    val videoId = uri.path.substringAfterLast("/").substringBefore("?")
-                    "https://youtube-nocookie.com/embed/$videoId${uri.query?.let { "?$it" } ?: ""}"
-                }
-                url.contains("youtube.com/watch?v=") -> {
-                    val uri = URI(url)
-                    val queryParams = uri.query.split("&").toMutableList()
-                    val videoId = queryParams.find { it.startsWith("v=") }?.substringAfter("v=") ?: return url
-                    queryParams.removeAll { it.startsWith("v=") }
-                    val remainingParams = if (queryParams.isNotEmpty()) "?${queryParams.joinToString("&")}" else ""
-                    "https://youtube-nocookie.com/embed/$videoId$remainingParams"
-                }
-                url.contains("youtu.be/") -> {
-                    val uri = URI(url)
-                    val videoId = uri.path.substringAfterLast("/")
-                    "https://youtube-nocookie.com/embed/$videoId${uri.query?.let { "?$it" } ?: ""}"
-                }
-                else -> url
-            }
-        }
-
-        // Fragman URL'lerini al ve işle
-        val trailerUrl = fixUrlNull(document.selectFirst(".trailer-button a")?.attr("href"))?.let { url ->
-            processTrailerUrl(url)
-        }
-        Log.d("DiziFun", "trailerUrl: $trailerUrl")
-        
-        // Plyr video oynatıcısı için fragman bilgilerini al
-        val plyrVideoWrapper = document.selectFirst(".plyr__video-wrapper.plyr__video-embed")
-        val plyrIframe = plyrVideoWrapper?.selectFirst("iframe")
-        
-        // YouTube fragman URL'sini al ve işle
-        val youtubeEmbedUrl = plyrIframe?.attr("src")?.let { url ->
-            processTrailerUrl(url)
-        }
-        Log.d("DiziFun", "youtubeEmbedUrl: $youtubeEmbedUrl")
+        val trailer = fixUrlNull(document.selectFirst(".div.plyr__video-wrapper .div.plyr__video-embed iframe")?.attr("src"))
 
         val recommendations = document.select(".related-series .item, .benzer-yapimlar .item").mapNotNull {
 
@@ -237,16 +194,7 @@ class DiziFun : MainAPI() {
                 this.tags = tags
                 this.actors = actors
                 this.recommendations = recommendations
-                // Önce normal fragman URL'sini ekle
-                if (trailerUrl != null) { 
-                    this.addTrailer(trailerUrl) 
-                    Log.d("DiziFun", "addTrailer çağrıldı (trailerUrl): $trailerUrl")
-                }
-                // Eğer Plyr video oynatıcısından YouTube fragmanı varsa onu da ekle
-                else if (youtubeEmbedUrl != null) {
-                    this.addTrailer(youtubeEmbedUrl)
-                    Log.d("DiziFun", "addTrailer çağrıldı (youtubeEmbedUrl): $youtubeEmbedUrl")
-                }
+                this.addTrailer = trailer
             }
         } else { 
             val episodes = mutableListOf<Episode>()
@@ -338,16 +286,7 @@ class DiziFun : MainAPI() {
                 this.tags = tags
                 this.actors = actors
                 this.recommendations = recommendations
-                // Önce normal fragman URL'sini ekle
-                if (trailerUrl != null) { 
-                    this.addTrailer(trailerUrl = trailerUrl, referer = null, addRaw = false) 
-                    Log.d("DiziFun", "addTrailer çağrıldı (trailerUrl): $trailerUrl")
-                }
-                // Eğer Plyr video oynatıcısından YouTube fragmanı varsa onu da ekle
-                else if (youtubeEmbedUrl != null) {
-                    this.addTrailer(trailerUrl = youtubeEmbedUrl, referer = null, addRaw = false)
-                    Log.d("DiziFun", "addTrailer çağrıldı (youtubeEmbedUrl): $youtubeEmbedUrl")
-                }
+                this.addTrailer = trailer
             }
         }
     }
