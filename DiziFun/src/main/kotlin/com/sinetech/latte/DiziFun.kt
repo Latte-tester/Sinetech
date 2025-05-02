@@ -178,21 +178,26 @@ class DiziFun : MainAPI() {
         // Fragman URL'lerini al ve işle
         val trailerUrl = fixUrlNull(document.selectFirst(".trailer-button a")?.attr("href"))?.let { url ->
             when {
-                url.contains("youtube.com/embed/") -> {
-                    val videoId = url.substringAfterLast("/").substringBefore("?")
-                    "https://youtube.com/embed/$videoId"
+                url.contains("youtube.com/embed/") || url.contains("youtube-nocookie.com/embed/") -> {
+                    val uri = URI(url)
+                    val path = uri.path
+                    val videoId = path.substringAfterLast("/")
+                    val queryParams = uri.query?.let { "?$it" } ?: ""
+                    "https://youtube.com/embed/$videoId$queryParams"
                 }
                 url.contains("youtube.com/watch?v=") -> {
-                    val videoId = url.substringAfter("v=").substringBefore("&")
-                    "https://youtube.com/embed/$videoId"
+                    val uri = URI(url)
+                    val queryParams = uri.query.split("&").toMutableList()
+                    val videoId = queryParams.find { it.startsWith("v=") }?.substringAfter("v=") ?: return@let url
+                    queryParams.removeAll { it.startsWith("v=") }
+                    val remainingParams = if (queryParams.isNotEmpty()) "?${queryParams.joinToString("&")}" else ""
+                    "https://youtube.com/embed/$videoId$remainingParams"
                 }
                 url.contains("youtu.be/") -> {
-                    val videoId = url.substringAfterLast("/").substringBefore("?")
-                    "https://youtube.com/embed/$videoId"
-                }
-                url.contains("youtube-nocookie.com/embed/") -> {
-                    val videoId = url.substringAfterLast("/").substringBefore("?")
-                    "https://youtube.com/embed/$videoId"
+                    val uri = URI(url)
+                    val videoId = uri.path.substringAfterLast("/")
+                    val queryParams = uri.query?.let { "?$it" } ?: ""
+                    "https://youtube.com/embed/$videoId$queryParams"
                 }
                 else -> url
             }
