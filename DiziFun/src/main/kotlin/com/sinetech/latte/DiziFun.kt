@@ -211,13 +211,6 @@ class DiziFun : MainAPI() {
 
     Log.d("DiziFun", "Çekilen son trailer URL: $trailer") // Son çekilen URL logu
 
-    if (trailer != null) {
-        Log.d("DiziFun", "addTrailer çağrılıyor: $trailer") // addTrailer çağrı logu
-        this.addTrailer(trailer)
-    } else {
-        Log.d("DiziFun", "addTrailer çağrılmadı, fragman iframe bulunamadı veya src boş.") // Fragman bulunamadı logu
-    }
-        
     val recommendations = document.select(".related-series .item, .benzer-yapimlar .item").mapNotNull {
 
             it.toSearchResult() ?: it.toRecentSearchResult()
@@ -235,7 +228,12 @@ class DiziFun : MainAPI() {
                 this.tags = tags
                 this.actors = actors
                 this.recommendations = recommendations
-                addTrailer(trailer)
+                if (trailer != null) {
+                    Log.d("DiziFun", "addTrailer çağrılıyor: $trailer") // addTrailer çağrı logu
+                    this.addTrailer(trailer)
+                } else {
+                    Log.d("DiziFun", "addTrailer çağrılmadı, fragman iframe bulunamadı veya src boş.") // Fragman bulunamadı logu
+                }
             }
         } else { 
             val episodes = mutableListOf<Episode>()
