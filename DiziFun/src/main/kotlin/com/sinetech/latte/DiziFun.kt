@@ -175,7 +175,17 @@ class DiziFun : MainAPI() {
         }
 
         val type = if (url.contains("/film/")) TvType.Movie else TvType.TvSeries
+        // Fragman URL'sini al
         val trailerUrl = fixUrlNull(document.selectFirst(".trailer-button a")?.attr("href"))
+        
+        // Plyr video oynatıcısı için fragman bilgilerini al
+        val plyrVideoWrapper = document.selectFirst(".plyr__video-wrapper.plyr__video-embed")
+        val plyrIframe = plyrVideoWrapper?.selectFirst("iframe")
+        val plyrPoster = plyrVideoWrapper?.selectFirst(".plyr__poster")?.attr("style")
+            ?.let { style -> Regex("url\\(\"(.+?)\"\\)").find(style)?.groupValues?.get(1) }
+        
+        // YouTube fragman URL'sini al
+        val youtubeEmbedUrl = plyrIframe?.attr("src")
 
         val recommendations = document.select(".related-series .item, .benzer-yapimlar .item").mapNotNull {
 
@@ -194,7 +204,14 @@ class DiziFun : MainAPI() {
                 this.tags = tags
                 this.actors = actors
                 this.recommendations = recommendations
-                if (trailerUrl != null) { this.addTrailer(trailerUrl) }
+                // Önce normal fragman URL'sini ekle
+                if (trailerUrl != null) { 
+                    this.addTrailer(trailerUrl) 
+                }
+                // Eğer Plyr video oynatıcısından YouTube fragmanı varsa onu da ekle
+                else if (youtubeEmbedUrl != null) {
+                    this.addTrailer(youtubeEmbedUrl)
+                }
             }
         } else { 
             val episodes = mutableListOf<Episode>()
@@ -286,7 +303,14 @@ class DiziFun : MainAPI() {
                 this.tags = tags
                 this.actors = actors
                 this.recommendations = recommendations
-                if (trailerUrl != null) { this.addTrailer(trailerUrl) }
+                // Önce normal fragman URL'sini ekle
+                if (trailerUrl != null) { 
+                    this.addTrailer(trailerUrl) 
+                }
+                // Eğer Plyr video oynatıcısından YouTube fragmanı varsa onu da ekle
+                else if (youtubeEmbedUrl != null) {
+                    this.addTrailer(youtubeEmbedUrl)
+                }
             }
         }
     }
