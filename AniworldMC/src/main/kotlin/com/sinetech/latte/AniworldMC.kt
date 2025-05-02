@@ -184,6 +184,6 @@ open class AniworldMC : MainAPI() {
 
 }
 
-class Dooood : DoodLaExtractor() {
+class Dood : DoodExtractor() {
     override var mainUrl = "https://doodstream.com"
 }
