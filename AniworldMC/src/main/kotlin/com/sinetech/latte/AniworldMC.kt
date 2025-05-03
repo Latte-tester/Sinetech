@@ -1,4 +1,4 @@
-package com.sinetech.latte // Veya com.lagradost.cloudstream3.animeproviders
+package com.sinetech.latte
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.lagradost.cloudstream3.*
@@ -173,8 +173,15 @@ open class AniworldMC : MainAPI() {
     }
 
     private fun String.getLanguage(document: Document): String? {
-        return document.selectFirst("div.changeLanguageBox img[data-lang-key=$this]")?.attr("title")
-            ?.removePrefix("mit")?.trim()
+        val titleText = document.selectFirst("div.changeLanguageBox img[data-lang-key=$this]")?.attr("title")
+        
+        return titleText?.let {
+            when {
+                it.startsWith("mit Untertitel Deutsch", ignoreCase = true) -> "Almanca Altyazılı" 
+                it.startsWith("mit Untertitel Englisch", ignoreCase = true) -> "İngilizce Altyazılı"
+                else -> it.removePrefix("mit ").trim()
+            }
+        }
     }
 
     private data class AnimeSearch(
@@ -184,6 +191,6 @@ open class AniworldMC : MainAPI() {
 
 }
 
-class Dood : DoodExtractor() {
+class Dooood : DoodLaExtractor() {
     override var mainUrl = "https://doodstream.com"
 }

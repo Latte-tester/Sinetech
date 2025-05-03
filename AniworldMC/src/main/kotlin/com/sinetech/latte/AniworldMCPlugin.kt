@@ -11,6 +11,6 @@ class AniworldMCPlugin: Plugin() {
         // All providers should be added in this manner. Please don't edit the providers list directly.
         registerMainAPI(AniworldMC())
         registerMainAPI(Serienstream())
-        registerExtractorAPI(Dood())
+        registerExtractorAPI(Dooood())
     }
 }
