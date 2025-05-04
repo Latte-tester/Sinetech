@@ -10,10 +10,13 @@
 | [TvBahcesi](TvBahcesi) | ![](https://img.shields.io/badge/version-1-orange) | [MIT](LICENSE) |
 | [DaddyLive](DaddyLive) | ![](https://img.shields.io/badge/version-1-orange) | [MIT](LICENSE) |
 | [ToGrup](TOGrup) | ![](https://img.shields.io/badge/version-1-orange) | [MIT](LICENSE) |
-| [WebDramaTurkey](VavooTO) | ![](https://img.shields.io/badge/version-1-orange) | [MIT](LICENSE) |
+| [WebDramaTurkey](WebDramaTurkey) | ![](https://img.shields.io/badge/version-1-orange) | [MIT](LICENSE) |
 | [Youtube Canlı TV](YTCanliTV) | ![](https://img.shields.io/badge/version-1-orange) | [MIT](LICENSE) |
 | [Youtube Eğlence İçerikleri](YTEglence) | ![](https://img.shields.io/badge/version-1-orange) | [MIT](LICENSE) |
-
+| [DiziFun](DiziFun) | ![](https://img.shields.io/badge/version-1-orange) | [MIT](LICENSE) |
+| [KickTR](KickTR) | ![](https://img.shields.io/badge/version-1-orange) | [MIT](LICENSE) |
+| [myWayTV](myWayTV) | ![](https://img.shields.io/badge/version-1-orange) | [MIT](LICENSE) |
+| [AniworldMC](AniworldMC) | ![](https://img.shields.io/badge/version-1-orange) | [MIT](LICENSE) |
 
 ---
 
@@ -34,4 +37,4 @@
 
 ---
 
-🔔 **Not:** Repoyu eklemek için Cloudstream içerisindeki Depo Ekle alanında Depo URL kısmına **"Latte"** yazmanız yeterlidir.
+🔔 **Not:** Repoyu eklemek için Cloudstream içerisindeki Depo Ekle alanında Depo URL kısmına **"Latte"** veya **"sinetech"**yazmanız yeterlidir.
