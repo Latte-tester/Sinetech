@@ -36,7 +36,4 @@
 📬 **Destek İletişim:** [Latte](https://forum.sinetech.tr/konu/powerboard-film-ve-dizi-arsivine-ozel-cloudstream-deposu.3672/)
 
 ---
-💾 Kurulum
-| (cloudstream/release)(https://github.com/recloudstream/cloudstream/releases) Adresinden güncel APK dosyasını indirip kurun. |
-Uygulamanın yüklü olduğu cihazda depoyu otomatik yüklemek için tıklayın
 🔔 **Not:** Repoyu eklemek için Cloudstream içerisindeki Depo Ekle alanında Depo URL kısmına **"Latte"** veya **sinetech** yazmanız yeterlidir.
