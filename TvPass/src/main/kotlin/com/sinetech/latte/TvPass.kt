@@ -33,12 +33,12 @@ class TvPass : MainAPI() {
     override val hasDownloadSupport = false
     override val supportedTypes = setOf(TvType.Live)
 
-    // Tarayıcıdan aldığınız başlıkları buraya kopyalayın (Cookie hariç şimdilik)
+    // Tarayıcıdan aldığınız başlıkları buraya kopyalayın
     private val browserHeaders = mapOf(
         "Accept" to "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
         "Accept-Language" to "tr-TR,tr;q=0.9,en-TR;q=0.8,en;q=0.7,en-US;q=0.6",
         "Cache-Control" to "no-cache",
-        "Pragma" to "no-cache", // Pragma başlığını da ekleyelim
+        "Pragma" to "no-cache",
         "Connection" to "keep-alive",
         "Referer" to mainUrl, // Ana sayfa için Referer'ı ana domain tutalım
         "Sec-Fetch-Dest" to "document",
@@ -46,8 +46,7 @@ class TvPass : MainAPI() {
         "Sec-Fetch-Site" to "same-origin",
         "Sec-Fetch-User" to "?1",
         "Upgrade-Insecure-Requests" to "1",
-        "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36" // Tarayıcıdaki User-Agent
-        // ":authority", ":method", ":path", ":scheme", "accept-encoding", "priority" gibi başlıklar HTTP/2 veya HTTP/3 özel başlıklarıdır ve app.get() tarafından otomatik olarak eklenir veya yönetilir. Bunları manuel eklemeye gerek yok.
+        "User-Agent" to "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36"
     )
 
     // Ana sayfayı yükler (HTML Parsing ile)
@@ -56,7 +55,6 @@ class TvPass : MainAPI() {
             val channelsUrl = "$mainUrl/channels"
             Log.d("TvPass", "Attempting to load homepage from: $channelsUrl")
 
-            // HTML isteği için başlıkları ekleyelim (tarayıcıdan aldığınız başlıklar)
             val homepageHeaders = browserHeaders.toMutableMap()
             // Referer'ı burada özellikle belirtmeye gerek yok, browserHeaders içinde ana domain olarak var.
             // Eğer Referer'ın channels sayfası olmasını isterseniz:
@@ -72,7 +70,6 @@ class TvPass : MainAPI() {
             val document = response.document
             Log.d("TvPass", "Homepage HTML loaded successfully. Parsing HTML.")
 
-             // Kanalların bulunduğu HTML elementlerini seç
             val channelItems = document.select("ul#channelsContainer > li > a")
             Log.d("TvPass", "Found ${channelItems.size} potential channel items using selector.")
 
@@ -129,7 +126,7 @@ class TvPass : MainAPI() {
         }
     }
 
-    // load fonksiyonu (Stream endpoint mantığı ile)
+    // Bir kanalın detaylarını ve akış kaynağını yükler
     override suspend fun load(url: String): LoadResponse {
         try {
             val loadData = parseJson<TvPassLoadData>(url)
@@ -137,17 +134,18 @@ class TvPass : MainAPI() {
 
             Log.d("TvPass", "Loading stream for channel: ${loadData.name} from URL: $channelUrl")
 
-            // load fonksiyonundaki HTML isteği için Referer başlığı kanal detay sayfası olmalı
             val detailPageHeaders = browserHeaders.toMutableMap()
             detailPageHeaders["Referer"] = channelUrl // Referer'ı kanal detay sayfası olarak ayarla
 
             val document = app.get(channelUrl, headers = detailPageHeaders).document
 
+            // JavaScript kodundan stream endpoint'ini (örn: /token/AEEast?quality=sd) bulalım
             var streamEndpoint: String? = null
-
             val scriptTags = document.select("script")
             for (script in scriptTags) {
                 val scriptContent = script.html()
+                // JavaScript kodunda "file:" veya "sources:" alanlarındaki değeri ara
+                // Bu değer muhtemelen "/token/{slug}?quality={kalite}" formatında olacak
                 val regex = "file:\\s*['\"](.*?)['\"]".toRegex()
                 val matchResult = regex.find(scriptContent)
                 if (matchResult != null) {
@@ -165,10 +163,11 @@ class TvPass : MainAPI() {
             }
 
             if (streamEndpoint.isNullOrBlank()) {
-                Log.e("TvPass", "Stream endpoint not found for ${loadData.name}")
-                throw Exception("Akış kaynağı endpoint'i bulunamadı.")
+                Log.e("TvPass", "Stream endpoint not found in HTML for ${loadData.name}")
+                throw Exception("Akış kaynağı endpoint'i HTML'de bulunamadı.")
             }
 
+            // Stream endpoint'e istek yaparak dönen JSON'dan asıl stream URL'sini çekelim
             val fullStreamEndpointUrl = if (streamEndpoint.startsWith("http")) streamEndpoint else "$mainUrl$streamEndpoint"
              Log.d("TvPass", "Attempting to fetch actual stream URL from endpoint: $fullStreamEndpointUrl")
 
@@ -176,48 +175,68 @@ class TvPass : MainAPI() {
              val endpointHeaders = browserHeaders.toMutableMap()
              endpointHeaders["Referer"] = channelUrl // Referer kanal detay sayfası
 
+            // Endpoint'ten dönen JSON'u çek
+            val streamJsonResponse = app.get(fullStreamEndpointUrl, headers = endpointHeaders)
 
-            val streamResponse = app.get(fullStreamEndpointUrl, headers = endpointHeaders)
-
-            if (!streamResponse.isSuccessful) {
-                 Log.e("TvPass", "Failed to fetch actual stream URL from endpoint $fullStreamEndpointUrl. Status: ${streamResponse.code}")
-                 throw Exception("Akış URL'si endpoint'ten çekilemedi. Durum Kodu: ${streamResponse.code}")
+            if (!streamJsonResponse.isSuccessful) {
+                 Log.e("TvPass", "Failed to fetch actual stream URL JSON from endpoint $fullStreamEndpointUrl. Status: ${streamJsonResponse.code}")
+                 throw Exception("Akış URL'si JSON'u endpoint'ten çekilemedi. Durum Kodu: ${streamJsonResponse.code}")
             }
 
-            val actualStreamUrl = streamResponse.text.trim()
-            Log.d("TvPass", "Fetched actual stream URL: $actualStreamUrl")
+            // JSON içeriğini parse et
+            // JavaScript koduna göre JSON yapısı { "url": "...", "status": "...", ... } gibi
+            val streamJsonData = parseJson<Map<String, Any>>(streamJsonResponse.text)
+
+            // JSON'daki "url" alanından asıl stream URL'sini alalım
+            val actualStreamUrl = streamJsonData["url"] as? String
+            Log.d("TvPass", "Fetched actual stream URL from JSON: $actualStreamUrl")
+
+            // JSON'daki "status" alanını kontrol edebiliriz (isteğe bağlı)
+             val streamStatus = streamJsonData["status"] as? String
+             if (streamStatus == "false" || streamStatus == "failed") {
+                 Log.e("TvPass", "Stream status indicates failure: $streamStatus for ${loadData.name}")
+                 throw Exception("Akış şu anda mevcut değil. Lütfen daha sonra tekrar deneyin.")
+             }
+
 
             if (actualStreamUrl.isNullOrBlank()) {
-                 Log.e("TvPass", "Actual stream URL is empty after fetching from endpoint for ${loadData.name}")
-                 throw Exception("Gerçek akış URL'si boş.")
+                 Log.e("TvPass", "Actual stream URL not found in JSON response for ${loadData.name}")
+                 throw Exception("Gerçek akış URL'si JSON yanıtında bulunamadı.")
             }
 
+            // Stream URL'sinin tipini belirleyelim
             val linkType = if (actualStreamUrl.endsWith(".m3u8", true) || actualStreamUrl.contains("m3u8", true)) {
                 ExtractorLinkType.M3U8
             } else {
                  ExtractorLinkType.VIDEO
             }
 
+            // ExtractorLink objesi oluşturma
+            // Stream URL'si için de Referer başlığı gerekiyor olabilir
             val extractorLink = ExtractorLink(
                 source = name,
                 name = "TvPass Stream",
-                url = actualStreamUrl,
-                referer = channelUrl,
-                quality = Qualities.Unknown.value,
-                headers = mapOf("Referer" to channelUrl),
-                type = linkType
+                url = actualStreamUrl, // Asıl stream URL'si
+                referer = channelUrl, // referer parametresi (genellikle stream'in geldiği sayfa URL'si)
+                quality = Qualities.Unknown.value, // quality parametresi
+                headers = mapOf("Referer" to channelUrl), // headers parametresi (stream isteği için Referer)
+                type = linkType // type parametresi
             )
 
+            // LoadResponse objesi oluşturma
+            // Tek bir stream kaynağı bulduğumuz için newLiveStreamLoadResponse yeterli
             return newLiveStreamLoadResponse(
                 name = loadData.name,
-                url = actualStreamUrl,
-                dataUrl = url
+                url = actualStreamUrl, // LoadResponse'un ana URL'si asıl stream URL'si
+                dataUrl = url // LoadData JSON'u
             ) {
                  this.posterUrl = loadData.posterUrl
                  val currentProgramTitle = document.selectFirst("span.text-base.text-gray-900.whitespace-normal.break-words")?.attr("title")?.trim()
                  if (!currentProgramTitle.isNullOrBlank()) {
                      this.plot = "Şu An Yayınlanan: $currentProgramTitle"
                  }
+                 // Extractor linkleri LoadResponse'a eklemeye gerek yok,
+                 // newLiveStreamLoadResponse direkt url parametresi üzerinden ExtractorLink oluşturur.
             }
 
         } catch (e: Exception) {
