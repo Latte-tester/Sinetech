@@ -5,7 +5,7 @@ cloudstream {
     language = "de"
 
     description = "Aniworld plugin from Hexated Repository from Github."
-    authors = listOf("Hexated")
+    authors = listOf("Hexated", "GitLatte")
     status = 1 
     tvTypes = listOf(
         "AnimeMovie",
