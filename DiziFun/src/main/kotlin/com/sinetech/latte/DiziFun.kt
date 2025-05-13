@@ -175,7 +175,7 @@ class DiziFun : MainAPI() {
         }
 
         val type = if (url.contains("/film/")) TvType.Movie else TvType.TvSeries
-        val trailerUrl = fixUrlNull(document.selectFirst(".trailer-button a")?.attr("href"))
+        val trailerUrl = fixUrlNull(document.selectFirst(".plyr__video-wrapper .plyr__video-embed iframe")?.attr("src"))
 
         val recommendations = document.select(".related-series .item, .benzer-yapimlar .item").mapNotNull {
 
