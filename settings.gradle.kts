@@ -13,6 +13,4 @@ include(
     "DiziFun",
     "AniworldMC",
     "mywayTV",
-    "KickTR",
-    "TvPass"
-)
+    "KickTR"
