@@ -1,6 +1,4 @@
 #EXTM3U
-#EXTINF:-1 tvg-id="AndorraTV" tvg-name="Andorra TV" tvg-country="ad" tvg-language="ad" group-title="Andorra",Andorra TV
-https://live-edge-eu-1.cdn.enetres.net/56495F77FD124FECA75590A906965F2C022/live-3000/index.m3u8
 #EXTINF:-1 tvg-id="AjmanTV" tvg-name="Ajman TV" tvg-country="ae" tvg-language="ae" group-title="Birleşik Arap Emirlikleri",Ajman TV
 https://cdn1.logichost.in/ajmantv/live/playlist.m3u8
 #EXTINF:-1 tvg-id="AlArabiya(1)" tvg-name="Al Arabiya (1)" tvg-country="ae" tvg-language="ae" group-title="Birleşik Arap Emirlikleri",Al Arabiya (1)
@@ -379,16 +377,6 @@ https://skynewsau-live.akamaized.net/hls/live/2002690/skynewsau-extra2/master.m3
 https://skynewsau-live.akamaized.net/hls/live/2002691/skynewsau-extra3/master.m3u8
 #EXTINF:-1 tvg-id="TVSN" tvg-name="TVSN" tvg-country="au" tvg-language="au" group-title="Avustralya",TVSN
 https://tvsnhlslivetest.akamaized.net/hls/live/2034711/TVSN-MSL4/master.m3u8
-#EXTINF:-1 tvg-id="ArubaTV" tvg-name="Aruba.TV" tvg-country="aw" tvg-language="aw" group-title="Aruba",Aruba.TV
-https://cdn01.setar.aw/Canal49/canal49/playlist.m3u8
-#EXTINF:-1 tvg-id="CoolFM989" tvg-name="Cool FM 98.9" tvg-country="aw" tvg-language="aw" group-title="Aruba",Cool FM 98.9
-https://live2.tensila.com/cool-v-1.arubara/hls/master.m3u8
-#EXTINF:-1 tvg-id="NosIslaTV" tvg-name="Nos Isla TV" tvg-country="aw" tvg-language="aw" group-title="Aruba",Nos Isla TV
-https://cdn01.setar.aw/Canal23/canal23/playlist.m3u8
-#EXTINF:-1 tvg-id="Power1017FM" tvg-name="Power 101.7 FM" tvg-country="aw" tvg-language="aw" group-title="Aruba",Power 101.7 FM
-https://vcp11.myplaytv.com/powerfm/powerfm/playlist.m3u8
-#EXTINF:-1 tvg-id="Telearuba" tvg-name="Telearuba" tvg-country="aw" tvg-language="aw" group-title="Aruba",Telearuba
-https://cdn01.setar.aw/Telearuba/telearuba/playlist.m3u8
 #EXTINF:-1 tvg-id="AlvinChannelTV" tvg-name="Alvin Channel TV" tvg-country="az" tvg-language="az" group-title="Azerbaycan",Alvin Channel TV
 https://cdn10-alvinchannel.yayin.com.tr/alvinchannel/alvinchannel/playlist.m3u8
 #EXTINF:-1 tvg-id="AzTV" tvg-name="Az TV" tvg-country="az" tvg-language="az" group-title="Azerbaycan",Az TV
@@ -397,26 +385,6 @@ https://str.yodacdn.net/aztv/index.m3u8
 https://live.livestreamtv.ca/azstar/amlst:azstar/playlist.m3u8
 #EXTINF:-1 tvg-id="MedeniyyetTV" tvg-name="Medeniyyet TV" tvg-country="az" tvg-language="az" group-title="Azerbaycan",Medeniyyet TV
 https://str.yodacdn.net/medeniyyet/index.m3u8
-#EXTINF:-1 tvg-id="AlJazeeraBalkans(1)" tvg-name="Al Jazeera Balkans (1)" tvg-country="ba" tvg-language="ba" group-title="Bosna-Hersek",Al Jazeera Balkans (1)
-https://live-hls-apps-ajb-v3-fa.getaj.net/AJB/index.m3u8
-#EXTINF:-1 tvg-id="AlJazeeraBalkans(2)" tvg-name="Al Jazeera Balkans (2)" tvg-country="ba" tvg-language="ba" group-title="Bosna-Hersek",Al Jazeera Balkans (2)
-https://live-hls-web-ajb.getaj.net/AJB/index.m3u8
-#EXTINF:-1 tvg-id="BNTV" tvg-name="BN TV" tvg-country="ba" tvg-language="ba" group-title="Bosna-Hersek",BN TV
-https://rtvbn.tv:8080/live/index.m3u8
-#EXTINF:-1 tvg-id="María+VisiónMedjugorje" tvg-name="María+Visión Medjugorje" tvg-country="ba" tvg-language="ba" group-title="Bosna-Hersek",María+Visión Medjugorje
-https://1601580044.rsc.cdn77.org/live/_jcn_/amlst:Italiasette/playlist.m3u8
-#EXTINF:-1 tvg-id="RTRSPlus" tvg-name="RTRS Plus" tvg-country="ba" tvg-language="ba" group-title="Bosna-Hersek",RTRS Plus
-https://pluslive.rtrs.tv/plus/plus/playlist.m3u8
-#EXTINF:-1 tvg-id="RTVHercegBosne" tvg-name="RTV Herceg-Bosne" tvg-country="ba" tvg-language="ba" group-title="Bosna-Hersek",RTV Herceg-Bosne
-https://prd-hometv-live-open.spectar.tv/ERO_1_083/playlist.m3u8
-#EXTINF:-1 tvg-id="RTVZenica" tvg-name="RTV Zenica" tvg-country="ba" tvg-language="ba" group-title="Bosna-Hersek",RTV Zenica
-https://stream.rtvze.ba/live/123/123.m3u8
-#EXTINF:-1 tvg-id="SuperTVMedia" tvg-name="Super TV Media" tvg-country="ba" tvg-language="ba" group-title="Bosna-Hersek",Super TV Media
-https://mirtv.club/live/mirtv/index.m3u8
-#EXTINF:-1 tvg-id="Televizija5" tvg-name="Televizija 5" tvg-country="ba" tvg-language="ba" group-title="Bosna-Hersek",Televizija 5
-https://balkanmedia.dynu.net/hls/tv5web.m3u8
-#EXTINF:-1 tvg-id="TelevizijaM" tvg-name="Televizija M" tvg-country="ba" tvg-language="ba" group-title="Bosna-Hersek",Televizija M
-https://live.tv-m.net/hls/stream.m3u8
 #EXTINF:-1 tvg-id="EkusheyTV" tvg-name="Ekushey TV" tvg-country="bd" tvg-language="bd" group-title="BD",Ekushey TV
 https://ekusheyserver.com/etvlivesn.m3u8
 #EXTINF:-1 tvg-id="MadaniChannelBangla" tvg-name="Madani Channel Bangla" tvg-country="bd" tvg-language="bd" group-title="BD",Madani Channel Bangla
@@ -525,208 +493,6 @@ https://media.streambrothers.com:1936/8506/8506/playlist.m3u8
 https://sincerecloud.stream/loadbalancer/public/actMdyoE.m3u8
 #EXTINF:-1 tvg-id="Live99FM" tvg-name="Live99FM" tvg-country="bq" tvg-language="bq" group-title="Bonaire, Sint Eustatius ve Saba",Live99FM
 https://media.streambrothers.com:1936/8014/8014/playlist.m3u8
-#EXTINF:-1 tvg-id="AdessoTV" tvg-name="Adesso TV" tvg-country="br" tvg-language="br" group-title="Brezilya",Adesso TV
-https://cdn.jmvstream.com/w/LVW-9715/LVW9715_12B26T62tm/playlist.m3u8
-#EXTINF:-1 tvg-id="AmazonSat" tvg-name="Amazon Sat" tvg-country="br" tvg-language="br" group-title="Brezilya",Amazon Sat
-https://amazonsat.brasilstream.com.br/hls/amazonsat/index.m3u8
-#EXTINF:-1 tvg-id="BoasNovas" tvg-name="Boas Novas" tvg-country="br" tvg-language="br" group-title="Brezilya",Boas Novas
-https://cdn.jmvstream.com/w/LVW-9375/LVW9375_6i0wPBCHYc/playlist.m3u8
-#EXTINF:-1 tvg-id="Canal25Jundiaí" tvg-name="Canal 25 Jundiaí" tvg-country="br" tvg-language="br" group-title="Brezilya",Canal 25 Jundiaí
-https://stream01.msolutionbrasil.com.br/hls/canal25/live.m3u8
-#EXTINF:-1 tvg-id="Canal38" tvg-name="Canal 38" tvg-country="br" tvg-language="br" group-title="Brezilya",Canal 38
-https://cdn.jmvstream.com/w/LVW-8503/LVW8503_d0V5oduFlK/playlist.m3u8
-#EXTINF:-1 tvg-id="CanaldoCriador" tvg-name="Canal do Criador" tvg-country="br" tvg-language="br" group-title="Brezilya",Canal do Criador
-https://607d2a1a47b1f.streamlock.net/crur/smil:canaldocriador.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="CanaldoInter" tvg-name="Canal do Inter" tvg-country="br" tvg-language="br" group-title="Brezilya",Canal do Inter
-https://video01.soultv.com.br/internacional/internacional/playlist.m3u8
-#EXTINF:-1 tvg-id="CanalEducação" tvg-name="Canal Educação" tvg-country="br" tvg-language="br" group-title="Brezilya",Canal Educação
-https://canaleducacao-stream.ebc.com.br/index.m3u8
-#EXTINF:-1 tvg-id="CanalGov" tvg-name="Canal Gov" tvg-country="br" tvg-language="br" group-title="Brezilya",Canal Gov
-https://canalgov-stream.ebc.com.br/index.m3u8
-#EXTINF:-1 tvg-id="CanalRural" tvg-name="Canal Rural" tvg-country="br" tvg-language="br" group-title="Brezilya",Canal Rural
-https://607d2a1a47b1f.streamlock.net/crur/smil:canalrural.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="CatveFM" tvg-name="Catve FM" tvg-country="br" tvg-language="br" group-title="Brezilya",Catve FM
-https://5b33b873179a2.streamlock.net:1443/radiocamera/livestream/playlist.m3u8
-#EXTINF:-1 tvg-id="CatveMasterTV" tvg-name="Catve Master TV" tvg-country="br" tvg-language="br" group-title="Brezilya",Catve Master TV
-https://5b33b873179a2.streamlock.net:1443/mastertv/livestream/playlist.m3u8
-#EXTINF:-1 tvg-id="Catve2" tvg-name="Catve2" tvg-country="br" tvg-language="br" group-title="Brezilya",Catve2
-https://5b33b873179a2.streamlock.net:1443/catve2/catve2/playlist.m3u8
-#EXTINF:-1 tvg-id="ChromaTV" tvg-name="Chroma TV" tvg-country="br" tvg-language="br" group-title="Brezilya",Chroma TV
-https://5c483b9d1019c.streamlock.net/8054/8054/playlist.m3u8
-#EXTINF:-1 tvg-id="ClassiqueTV" tvg-name="Classique TV" tvg-country="br" tvg-language="br" group-title="Brezilya",Classique TV
-https://stmv1.srvif.com/classique/classique/playlist.m3u8
-#EXTINF:-1 tvg-id="COMBrasil" tvg-name="COM Brasil" tvg-country="br" tvg-language="br" group-title="Brezilya",COM Brasil
-https://br5093.streamingdevideo.com.br/abc/abc/playlist.m3u8
-#EXTINF:-1 tvg-id="ConecTVBrasil" tvg-name="ConecTV Brasil" tvg-country="br" tvg-language="br" group-title="Brezilya",ConecTV Brasil
-https://stream01.msolutionbrasil.com.br/hls/conectv/live.m3u8
-#EXTINF:-1 tvg-id="ConexãoTV" tvg-name="Conexão TV" tvg-country="br" tvg-language="br" group-title="Brezilya",Conexão TV
-https://5a57bda70564a.streamlock.net/conexaotv/conexaotv.sdp/playlist.m3u8
-#EXTINF:-1 tvg-id="CWBTV" tvg-name="CWB TV" tvg-country="br" tvg-language="br" group-title="Brezilya",CWB TV
-https://59d39900ebfb8.streamlock.net/cwbtv/cwbtv/playlist.m3u8
-#EXTINF:-1 tvg-id="DemaisTV" tvg-name="Demais TV" tvg-country="br" tvg-language="br" group-title="Brezilya",Demais TV
-https://stmv1.samcast.com.br/demaistv6503/demaistv6503/playlist.m3u8
-#EXTINF:-1 tvg-id="ElyTV" tvg-name="ElyTV" tvg-country="br" tvg-language="br" group-title="Brezilya",ElyTV
-https://stmv1.srvsite.com/ely/ely/playlist.m3u8
-#EXTINF:-1 tvg-id="EUTV" tvg-name="EUTV" tvg-country="br" tvg-language="br" group-title="Brezilya",EUTV
-https://cdn.jmvstream.com/w/LVW-8719/LVW8719_AcLVAxWy5J/playlist.m3u8
-#EXTINF:-1 tvg-id="FalaLitoral" tvg-name="Fala Litoral" tvg-country="br" tvg-language="br" group-title="Brezilya",Fala Litoral
-https://5c483b9d1019c.streamlock.net/falalitoraltv/falalitoraltv/playlist.m3u8
-#EXTINF:-1 tvg-id="Geekdot" tvg-name="Geekdot" tvg-country="br" tvg-language="br" group-title="Brezilya",Geekdot
-https://stream.ichibantv.com:3764/hybrid/play.m3u8
-#EXTINF:-1 tvg-id="GospelCartoon" tvg-name="Gospel Cartoon" tvg-country="br" tvg-language="br" group-title="Brezilya",Gospel Cartoon
-https://stmv1.srvif.com/gospelcartoon/gospelcartoon/playlist.m3u8
-#EXTINF:-1 tvg-id="GospelMovieTV" tvg-name="Gospel Movie TV" tvg-country="br" tvg-language="br" group-title="Brezilya",Gospel Movie TV
-https://stmv1.srvif.com/gospelf/gospelf/playlist.m3u8
-#EXTINF:-1 tvg-id="IMPDTV" tvg-name="IMPD TV" tvg-country="br" tvg-language="br" group-title="Brezilya",IMPD TV
-https://58a4464faef53.streamlock.net/impd/ngrp:impd_all/playlist.m3u8
-#EXTINF:-1 tvg-id="ISTV" tvg-name="ISTV" tvg-country="br" tvg-language="br" group-title="Brezilya",ISTV
-https://stmv1.srvstm.com/sistema7933/sistema7933/playlist.m3u8
-#EXTINF:-1 tvg-id="Loading" tvg-name="Loading" tvg-country="br" tvg-language="br" group-title="Brezilya",Loading
-https://stmv1.srvif.com/loadingtv/loadingtv/playlist.m3u8
-#EXTINF:-1 tvg-id="MasterShowTV" tvg-name="Master Show TV" tvg-country="br" tvg-language="br" group-title="Brezilya",Master Show TV
-https://mastershowtv.videovox.pw/master6123/master6123/playlist.m3u8
-#EXTINF:-1 tvg-id="MKKWebTV" tvg-name="MKK Web TV" tvg-country="br" tvg-language="br" group-title="Brezilya",MKK Web TV
-https://video01.logicahost.com.br/mkkwebtv/mkkwebtv/playlist.m3u8
-#EXTINF:-1 tvg-id="MyTimeMovieNetworkBrazil" tvg-name="MyTime Movie Network Brazil" tvg-country="br" tvg-language="br" group-title="Brezilya",MyTime Movie Network Brazil
-https://appletree-mytime-samsungbrazil.amagi.tv/playlist.m3u8
-#EXTINF:-1 tvg-id="NovoTempo" tvg-name="Novo Tempo" tvg-country="br" tvg-language="br" group-title="Brezilya",Novo Tempo
-https://stream.live.novotempo.com/tv/smil:tvnovotempo.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="NuevoTiempo" tvg-name="Nuevo Tiempo" tvg-country="br" tvg-language="br" group-title="Brezilya",Nuevo Tiempo
-https://stream.live.novotempo.com/tv/smil:tvnuevotiempo.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="PlenaTV" tvg-name="Plena TV" tvg-country="br" tvg-language="br" group-title="Brezilya",Plena TV
-https://cdn.jmvstream.com/w/LVW-9591/LVW9591_PmXtgATnaS/playlist.m3u8
-#EXTINF:-1 tvg-id="RBATV" tvg-name="RBATV" tvg-country="br" tvg-language="br" group-title="Brezilya",RBATV
-https://cdn.live.br1.jmvstream.com/w/LVW-15748/LVW15748_Yed7yzLuRC/playlist.m3u8
-#EXTINF:-1 tvg-id="RecordNews(1)" tvg-name="Record News (1)" tvg-country="br" tvg-language="br" group-title="Brezilya",Record News (1)
-https://rnw-rn.otteravision.com/rnw/rn/rnw_rn.m3u8
-#EXTINF:-1 tvg-id="RecordTV" tvg-name="RecordTV" tvg-country="br" tvg-language="br" group-title="Brezilya",RecordTV
-https://cdn.jmvstream.com/w/LVW-10842/LVW10842_513N26MDBL/chunklist.m3u8
-#EXTINF:-1 tvg-id="RedeNGT" tvg-name="Rede NGT" tvg-country="br" tvg-language="br" group-title="Brezilya",Rede NGT
-https://isaocorp.cloudecast.com/ngt/index.m3u8
-#EXTINF:-1 tvg-id="RedeSPTV" tvg-name="Rede SPTV" tvg-country="br" tvg-language="br" group-title="Brezilya",Rede SPTV
-https://video01.logicahost.com.br/websptv/websptv/playlist.m3u8
-#EXTINF:-1 tvg-id="RedeTV!SP" tvg-name="Rede TV! SP" tvg-country="br" tvg-language="br" group-title="Brezilya",Rede TV! SP
-https://cdn.jmvstream.com/w/AVJ-15235/playlist/playlist.m3u8
-#EXTINF:-1 tvg-id="SBTInterior" tvg-name="SBT Interior" tvg-country="br" tvg-language="br" group-title="Brezilya",SBT Interior
-https://cdn.jmvstream.com/w/LVW-10801/LVW10801_Xvg4R0u57n/playlist.m3u8
-#EXTINF:-1 tvg-id="SICTV" tvg-name="SIC TV" tvg-country="br" tvg-language="br" group-title="Brezilya",SIC TV
-https://parecisfmlive.brasilstream.com.br/hls/parecisfmlive/index.m3u8
-#EXTINF:-1 tvg-id="STZTV" tvg-name="STZ TV" tvg-country="br" tvg-language="br" group-title="Brezilya",STZ TV
-https://cdn.jmvstream.com/w/AVJ-12952/playlist/playlist.m3u8
-#EXTINF:-1 tvg-id="TVAFolha" tvg-name="TV A Folha" tvg-country="br" tvg-language="br" group-title="Brezilya",TV A Folha
-https://video01.logicahost.com.br/tvafolha/tvafolha/playlist.m3u8
-#EXTINF:-1 tvg-id="TVA7Plus" tvg-name="TV A7 Plus" tvg-country="br" tvg-language="br" group-title="Brezilya",TV A7 Plus
-https://srv3.zcast.com.br/wellington7720/wellington7720/playlist.m3u8
-#EXTINF:-1 tvg-id="TVAldeia" tvg-name="TV Aldeia" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Aldeia
-https://stmv1.samcast.com.br/giovane7843/giovane7843/playlist.m3u8
-#EXTINF:-1 tvg-id="TVAliançaCatarinense" tvg-name="TV Aliança Catarinense" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Aliança Catarinense
-https://video01.logicahost.com.br/tvalianca/tvalianca/playlist.m3u8
-#EXTINF:-1 tvg-id="TVAlternativa" tvg-name="TV Alternativa" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Alternativa
-https://stmv5.samcast.com.br/wagner7919/wagner7919/playlist.m3u8
-#EXTINF:-1 tvg-id="TVAparecida" tvg-name="TV Aparecida" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Aparecida
-https://cdn.jmvstream.com/w/LVW-9716/LVW9716_HbtQtezcaw/playlist.m3u8
-#EXTINF:-1 tvg-id="TVAratu" tvg-name="TV Aratu" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Aratu
-https://cdn.jmvstream.com/w/LVW-8379/LVW8379_rIq6ZYiIiA/playlist.m3u8
-#EXTINF:-1 tvg-id="TVBoqueirão" tvg-name="TV Boqueirão" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Boqueirão
-https://srv3.zcast.com.br/tvboqueirao/tvboqueirao/playlist.m3u8
-#EXTINF:-1 tvg-id="TVBrasil" tvg-name="TV Brasil" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Brasil
-https://tvbrasil-stream.ebc.com.br/index.m3u8
-#EXTINF:-1 tvg-id="TVBrasilCentral" tvg-name="TV Brasil Central" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Brasil Central
-https://tbc.zoeweb.tv/tbc/tbc/playlist.m3u8
-#EXTINF:-1 tvg-id="TVBrasilOeste" tvg-name="TV Brasil Oeste" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Brasil Oeste
-https://5ad482a77183d.streamlock.net/operacaotbomt.com/operacaotbomt.com/playlist.m3u8
-#EXTINF:-1 tvg-id="TVBrusque" tvg-name="TV Brusque" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Brusque
-https://5ad482a77183d.streamlock.net/rodrigotvbrusque.com.br/5d880199c902eb4a1e8df00d/playlist.m3u8
-#EXTINF:-1 tvg-id="TVCâmara" tvg-name="TV Câmara" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Câmara
-https://stream3.camara.gov.br/tv1/manifest.m3u8
-#EXTINF:-1 tvg-id="TVCâmara2" tvg-name="TV Câmara 2" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Câmara 2
-https://stream3.camara.gov.br/tv2/manifest.m3u8
-#EXTINF:-1 tvg-id="TVCancaoNova" tvg-name="TV Cancao Nova" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Cancao Nova
-https://5c65286fc6ace.streamlock.net/cancaonova/CancaoNova.stream_720p/playlist.m3u8
-#EXTINF:-1 tvg-id="TVCidadedePetrópolis" tvg-name="TV Cidade de Petrópolis" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Cidade de Petrópolis
-https://video01.kshost.com.br:4443/inside2133/inside2133/playlist.m3u8
-#EXTINF:-1 tvg-id="TVCidadeVerde" tvg-name="TV Cidade Verde" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Cidade Verde
-https://stmv1.transmissaodigital.com/cidadeverdenovo/cidadeverdenovo/playlist.m3u8
-#EXTINF:-1 tvg-id="TVClube" tvg-name="TV Clube" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Clube
-https://5c483b9d1019c.streamlock.net/8186/8186/playlist.m3u8
-#EXTINF:-1 tvg-id="TVCNAgitos" tvg-name="TV CN Agitos" tvg-country="br" tvg-language="br" group-title="Brezilya",TV CN Agitos
-https://serv2.videovox.pw/cnagitos/cnagitos/playlist.m3u8
-#EXTINF:-1 tvg-id="TVCOMSantos" tvg-name="TV COM Santos" tvg-country="br" tvg-language="br" group-title="Brezilya",TV COM Santos
-https://srv1.zcast.com.br/tvcomsantos/tvcomsantos/playlist.m3u8
-#EXTINF:-1 tvg-id="TVCuruça" tvg-name="TV Curuça" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Curuça
-https://stmv1.srvif.com/tvcurucasp/tvcurucasp/playlist.m3u8
-#EXTINF:-1 tvg-id="TVDifusoraLeste" tvg-name="TV Difusora Leste" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Difusora Leste
-https://stream.amsolution.net.br:8443/live/60d0a8ea6b884/index.m3u8
-#EXTINF:-1 tvg-id="TVdoPovo" tvg-name="TV do Povo" tvg-country="br" tvg-language="br" group-title="Brezilya",TV do Povo
-https://video01.logicahost.com.br/tvdopovo1/tvdopovo1/playlist.m3u8
-#EXTINF:-1 tvg-id="TVGraoPará" tvg-name="TV Grao Pará" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Grao Pará
-https://video01.kshost.com.br:4443/moises3834/moises3834/playlist.m3u8
-#EXTINF:-1 tvg-id="TVGuará" tvg-name="TV Guará" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Guará
-https://video02.logicahost.com.br/tvguara23/tvguara23/playlist.m3u8
-#EXTINF:-1 tvg-id="TVJapi" tvg-name="TV Japi" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Japi
-https://stmv1.paineltv.net/tvjapi/tvjapi/playlist.m3u8
-#EXTINF:-1 tvg-id="TVMaceió" tvg-name="TV Maceió" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Maceió
-https://srv5.zcast.com.br/paulo4100/paulo4100/playlist.m3u8
-#EXTINF:-1 tvg-id="TVMackenzie" tvg-name="TV Mackenzie" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Mackenzie
-https://player.internetaovivo.com:8443/live_tvmackenzieabr/tvmackenzieabr/playlist.m3u8
-#EXTINF:-1 tvg-id="TVMaisMaricá" tvg-name="TV Mais Maricá" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Mais Maricá
-https://5cf4a2c2512a2.streamlock.net/tvmaismarica/tvmaismarica/playlist.m3u8
-#EXTINF:-1 tvg-id="TVMarajoara" tvg-name="TV Marajoara" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Marajoara
-https://tv02.zas.media:1936/tvmarajoara/tvmarajoara/playlist.m3u8
-#EXTINF:-1 tvg-id="TVMAX" tvg-name="TV MAX" tvg-country="br" tvg-language="br" group-title="Brezilya",TV MAX
-https://5cf4a2c2512a2.streamlock.net/tvmax/tvmax/playlist.m3u8
-#EXTINF:-1 tvg-id="TVMetropole" tvg-name="TV Metropole" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Metropole
-https://cdn-fundacao-2110.ciclano.io:1443/fundacao-2110/fundacao-2110/playlist.m3u8
-#EXTINF:-1 tvg-id="TVMon" tvg-name="TV Mon" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Mon
-https://srv1.zcast.com.br/tvmon/tvmon/playlist.m3u8
-#EXTINF:-1 tvg-id="TVPadreCicero" tvg-name="TV Padre Cicero" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Padre Cicero
-https://video01.logicahost.com.br/tvpadrecicero/tvpadrecicero/playlist.m3u8
-#EXTINF:-1 tvg-id="TVPantanalMS" tvg-name="TV Pantanal MS" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Pantanal MS
-https://5a2b083e9f360.streamlock.net/tvpantanal/tvpantanal.sdp/playlist.m3u8
-#EXTINF:-1 tvg-id="TVPassoFundo" tvg-name="TV Passo Fundo" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Passo Fundo
-https://5a57bda70564a.streamlock.net/tvpasso/tvpasso.sdp/playlist.m3u8
-#EXTINF:-1 tvg-id="TVPlan" tvg-name="TV Plan" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Plan
-https://live.cdn.upx.com/723b/myStream.sdp/playlist.m3u8
-#EXTINF:-1 tvg-id="TVRioPreto" tvg-name="TV Rio Preto" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Rio Preto
-https://video02.logicahost.com.br/tvriopreto/tvriopreto/playlist.m3u8
-#EXTINF:-1 tvg-id="TVSãoRaimundo" tvg-name="TV São Raimundo" tvg-country="br" tvg-language="br" group-title="Brezilya",TV São Raimundo
-https://stmv1.voxtvhd.com.br/9030/9030/playlist.m3u8
-#EXTINF:-1 tvg-id="TVSeries1AsPanteras" tvg-name="TV Series 1 As Panteras" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Series 1 As Panteras
-https://stmv1.srvif.com/tvserie/tvserie/playlist.m3u8
-#EXTINF:-1 tvg-id="TVSimCachoeiro" tvg-name="TV Sim Cachoeiro" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Sim Cachoeiro
-https://5cf4a2c2512a2.streamlock.net/8104/8104/playlist.m3u8
-#EXTINF:-1 tvg-id="TVSimColatina" tvg-name="TV Sim Colatina" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Sim Colatina
-https://5cf4a2c2512a2.streamlock.net/8132/8132/playlist.m3u8
-#EXTINF:-1 tvg-id="TVSimSãoMateus" tvg-name="TV Sim São Mateus" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Sim São Mateus
-https://5cf4a2c2512a2.streamlock.net/8236/8236/playlist.m3u8
-#EXTINF:-1 tvg-id="TVSulBahia" tvg-name="TV Sul Bahia" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Sul Bahia
-https://live.cdn.upx.com/00046/myStream.sdp/playlist.m3u8
-#EXTINF:-1 tvg-id="TVSuldeMinas" tvg-name="TV Sul de Minas" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Sul de Minas
-https://5cf4a2c2512a2.streamlock.net/tvsuldeminas/tvsuldeminas/playlist.m3u8
-#EXTINF:-1 tvg-id="TVTerceiroAnjo" tvg-name="TV Terceiro Anjo" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Terceiro Anjo
-https://streamer1.streamhost.org/salive/GMI3anjoh/playlist.m3u8
-#EXTINF:-1 tvg-id="TVThathi" tvg-name="TV Thathi" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Thathi
-https://cdn-grupo-10049.ciclano.io:1443/grupo-10049/grupo-10049/playlist.m3u8
-#EXTINF:-1 tvg-id="TVUniversal" tvg-name="TV Universal" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Universal
-https://644398c.ha.azioncdn.net/primary/tvuniversal_480p.sdp/playlist.m3u8
-#EXTINF:-1 tvg-id="TVValedoUruará" tvg-name="TV Vale do Uruará" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Vale do Uruará
-https://stmv1.paineltv.net/valeradiowebtv/valeradiowebtv/playlist.m3u8
-#EXTINF:-1 tvg-id="TVVilaReal" tvg-name="TV Vila Real" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Vila Real
-https://cdn.jmvstream.com/w/LVW-10841/LVW10841_mT77z9o2cP/playlist.m3u8
-#EXTINF:-1 tvg-id="TVZoom" tvg-name="TV Zoom" tvg-country="br" tvg-language="br" group-title="Brezilya",TV Zoom
-https://cdn.jmvstream.com/w/LVW-9730/LVW9730_LmUwslM8jt/playlist.m3u8
-#EXTINF:-1 tvg-id="TVBEJoinville" tvg-name="TVBE Joinville" tvg-country="br" tvg-language="br" group-title="Brezilya",TVBE Joinville
-https://5c483b9d1019c.streamlock.net/8022/8022/playlist.m3u8
-#EXTINF:-1 tvg-id="TVCOMMaceió" tvg-name="TVCOM Maceió" tvg-country="br" tvg-language="br" group-title="Brezilya",TVCOM Maceió
-https://srv5.zcast.com.br/tvcommaceio/tvcommaceio/playlist.m3u8
-#EXTINF:-1 tvg-id="TVERS" tvg-name="TVE RS" tvg-country="br" tvg-language="br" group-title="Brezilya",TVE RS
-https://streaming.procergs.com.br:8443/tve/stve/playlist.m3u8
-#EXTINF:-1 tvg-id="TVídeoNews" tvg-name="TVídeoNews" tvg-country="br" tvg-language="br" group-title="Brezilya",TVídeoNews
-https://video01.logicahost.com.br/tvideonews/tvideonews/playlist.m3u8
-#EXTINF:-1 tvg-id="TVitapé" tvg-name="TVitapé" tvg-country="br" tvg-language="br" group-title="Brezilya",TVitapé
-https://stream01.msolutionbrasil.com.br/hls/tvitape/live.m3u8
-#EXTINF:-1 tvg-id="TVNBN" tvg-name="TVNBN" tvg-country="br" tvg-language="br" group-title="Brezilya",TVNBN
-https://cdn.jmvstream.com/w/LVW-8410/LVW8410_uiZOVm6vz1/playlist.m3u8
 #EXTINF:-1 tvg-id="GuardianTalkRadio" tvg-name="Guardian Talk Radio" tvg-country="bs" tvg-language="bs" group-title="BS",Guardian Talk Radio
 https://cdn-edge1.streamcomedia.com/abr_tngr969fm/abr-tngr969fm_streams/playlist.m3u8
 #EXTINF:-1 tvg-id="TheParliamentaryChannel" tvg-name="The Parliamentary Channel" tvg-country="bs" tvg-language="bs" group-title="BS",The Parliamentary Channel
@@ -955,54 +721,6 @@ https://tnt-television.com/PSTV_TVHD/index.m3u8
 https://stream.berosat.live:19360/rlpro-tv/rlpro-tv.m3u8
 #EXTINF:-1 tvg-id="RTNC" tvg-name="RTNC" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",RTNC
 https://tnt-television.com/rtnc_HD/index.m3u8
-#EXTINF:-1 tvg-id="Canal9enFrançais" tvg-name="Canal 9 en Français" tvg-country="ch" tvg-language="ch" group-title="İsviçre",Canal 9 en Français
-https://livehd.vedge.infomaniak.com/livecast/livehd/master.m3u8
-#EXTINF:-1 tvg-id="CanalAlphaJura" tvg-name="Canal Alpha Jura" tvg-country="ch" tvg-language="ch" group-title="İsviçre",Canal Alpha Jura
-https://canalalphaju.vedge.infomaniak.com/livecast/ik:canalalphaju/playlist.m3u8
-#EXTINF:-1 tvg-id="CanalAlphaNeuchatel" tvg-name="Canal Alpha Neuchatel" tvg-country="ch" tvg-language="ch" group-title="İsviçre",Canal Alpha Neuchatel
-https://canalalpha.vedge.infomaniak.com/livecast/ik:canalalpha/playlist.m3u8
-#EXTINF:-1 tvg-id="Carac1" tvg-name="Carac 1" tvg-country="ch" tvg-language="ch" group-title="İsviçre",Carac 1
-https://edge13.vedge.infomaniak.com/livecast/ik:event/manifest.m3u8
-#EXTINF:-1 tvg-id="Carac2(1)" tvg-name="Carac 2 (1)" tvg-country="ch" tvg-language="ch" group-title="İsviçre",Carac 2 (1)
-https://onefmhd.vedge.infomaniak.com/livecast/ik:onefmhd/manifest.m3u8
-#EXTINF:-1 tvg-id="Carac2(2)" tvg-name="Carac 2 (2)" tvg-country="ch" tvg-language="ch" group-title="İsviçre",Carac 2 (2)
-https://onefmmd.vedge.infomaniak.com/livecast/ik:onefmmd/manifest.m3u8
-#EXTINF:-1 tvg-id="Carac3(1)" tvg-name="Carac 3 (1)" tvg-country="ch" tvg-language="ch" group-title="İsviçre",Carac 3 (1)
-https://lfmhd.vedge.infomaniak.com/livecast/lfmhd/playlist.m3u8
-#EXTINF:-1 tvg-id="Carac3(2)" tvg-name="Carac 3 (2)" tvg-country="ch" tvg-language="ch" group-title="İsviçre",Carac 3 (2)
-https://lfmmd.vedge.infomaniak.com/livecast/smil:lfmmd.smil/manifest.m3u8
-#EXTINF:-1 tvg-id="Carac4" tvg-name="Carac 4" tvg-country="ch" tvg-language="ch" group-title="İsviçre",Carac 4
-https://edge17.vedge.infomaniak.com/livecast/ik:compack_media_1/playlist.m3u8
-#EXTINF:-1 tvg-id="Couleur3" tvg-name="Couleur 3" tvg-country="ch" tvg-language="ch" group-title="İsviçre",Couleur 3
-https://rtsc3video.akamaized.net/hls/live/2042837/c3video/3/playlist.m3u8
-#EXTINF:-1 tvg-id="DieNeueZeit" tvg-name="Die Neue Zeit" tvg-country="ch" tvg-language="ch" group-title="İsviçre",Die Neue Zeit
-https://bild-und-ton.stream/die-neue-zeit-tv-live/smil:dnz-de.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="Kanal9aufDeutsch" tvg-name="Kanal 9 auf Deutsch" tvg-country="ch" tvg-language="ch" group-title="İsviçre",Kanal 9 auf Deutsch
-https://edge21.vedge.infomaniak.com/livecast/ik:livesd2/manifest.m3u8
-#EXTINF:-1 tvg-id="MaxTV/DieuTV" tvg-name="MaxTV/Dieu TV" tvg-country="ch" tvg-language="ch" group-title="İsviçre",MaxTV/Dieu TV
-https://cdn.katapy.io/cache/stream/katapytv/dieu/playlist.m3u8
-#EXTINF:-1 tvg-id="QS24tv" tvg-name="QS24.tv" tvg-country="ch" tvg-language="ch" group-title="İsviçre",QS24.tv
-https://h030.video-stream-hosting.de/quantisana-live/_definst_/smil:livestream.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="Radio3i" tvg-name="Radio 3i" tvg-country="ch" tvg-language="ch" group-title="İsviçre",Radio 3i
-https://vstream-cdn.ch/hls/radio3i.m3u8
-#EXTINF:-1 tvg-id="RADIODISCOuntTV" tvg-name="RADIO DISCOunt TV" tvg-country="ch" tvg-language="ch" group-title="İsviçre",RADIO DISCOunt TV
-https://585b674743bbb.streamlock.net/9030/9030/playlist.m3u8
-#EXTINF:-1 tvg-id="RTVIslam" tvg-name="RTV Islam" tvg-country="ch" tvg-language="ch" group-title="İsviçre",RTV Islam
-https://protokolldns.xyz/rtvislamweb554/index.m3u8
-#EXTINF:-1 tvg-id="RTVPendimi" tvg-name="RTV Pendimi" tvg-country="ch" tvg-language="ch" group-title="İsviçre",RTV Pendimi
-https://www.rtvpendimi.com:19360/tvpendimi/tvpendimi.m3u8
-#EXTINF:-1 tvg-id="ShivaLiveTV" tvg-name="Shiva Live TV" tvg-country="ch" tvg-language="ch" group-title="İsviçre",Shiva Live TV
-https://streameurope.ch/live/shivalivetv.m3u8
-#EXTINF:-1 tvg-id="Tele1" tvg-name="Tele 1" tvg-country="ch" tvg-language="ch" group-title="İsviçre",Tele 1
-https://cdnapisec.kaltura.com/p/1719221/sp/171922100/playManifest/entryId/1_xias5bqq/format/applehttp/protocol/https/a.m3u8
-#EXTINF:-1 tvg-id="TeleM1" tvg-name="Tele M1" tvg-country="ch" tvg-language="ch" group-title="İsviçre",Tele M1
-https://cdnapisec.kaltura.com/p/1719221/sp/171922100/playManifest/entryId/1_ljzy3evp/format/applehttp/protocol/https/a.m3u8
-#EXTINF:-1 tvg-id="TeleTicino" tvg-name="TeleTicino" tvg-country="ch" tvg-language="ch" group-title="İsviçre",TeleTicino
-https://vstream-cdn.ch/hls/teleticino.m3u8
-#EXTINF:-1 tvg-id="TVRheintal" tvg-name="TV Rheintal" tvg-country="ch" tvg-language="ch" group-title="İsviçre",TV Rheintal
-https://rtmp-vm.fidion.de/live/tvrt.m3u8
-#EXTINF:-1 tvg-id="TVO(CH)" tvg-name="TVO (CH)" tvg-country="ch" tvg-language="ch" group-title="İsviçre",TVO (CH)
-https://cdnapisec.kaltura.com/p/1719221/sp/171922100/playManifest/entryId/1_t5h46v64/format/applehttp/protocol/https/a.m3u8
 #EXTINF:-1 tvg-id="A12TV" tvg-name="A12 TV" tvg-country="ci" tvg-language="ci" group-title="Kosta Rika",A12 TV
 https://video1.getstreamhosting.com:1936/8420/8420/playlist.m3u8
 #EXTINF:-1 tvg-id="BenieTV" tvg-name="Benie TV" tvg-country="ci" tvg-language="ci" group-title="Kosta Rika",Benie TV
@@ -1169,16 +887,6 @@ https://v1.tustreaming.cl:19360/vozdepoder/vozdepoder.m3u8
 https://unlimited1-us.dps.live/vtv/vtv.smil/playlist.m3u8
 #EXTINF:-1 tvg-id="VTVValledeAconcagua(2)" tvg-name="VTV Valle de Aconcagua (2)" tvg-country="cl" tvg-language="cl" group-title="Şili",VTV Valle de Aconcagua (2)
 https://unlimited6-cl.dps.live/vtv/vtv.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="CENTélévision" tvg-name="CEN Télévision" tvg-country="cm" tvg-language="cm" group-title="Kamerun",CEN Télévision
-https://strhlslb01.streamakaci.tv/cen/cen-multi/playlist.m3u8
-#EXTINF:-1 tvg-id="CTVAfrique" tvg-name="CTV Afrique" tvg-country="cm" tvg-language="cm" group-title="Kamerun",CTV Afrique
-https://stream.it-innov.com/ctv/index.m3u8
-#EXTINF:-1 tvg-id="MISECTV" tvg-name="MISEC TV" tvg-country="cm" tvg-language="cm" group-title="Kamerun",MISEC TV
-https://stream.it-innov.com/misec/index.m3u8
-#EXTINF:-1 tvg-id="TR24" tvg-name="TR24" tvg-country="cm" tvg-language="cm" group-title="Kamerun",TR24
-https://stream.it-innov.com/tr24/index.m3u8
-#EXTINF:-1 tvg-id="Vision4" tvg-name="Vision 4" tvg-country="cm" tvg-language="cm" group-title="Kamerun",Vision 4
-https://cdn-globecast.akamaized.net/live/eds/vision4/hls_video/index.m3u8
 #EXTINF:-1 tvg-id="CCTV+1" tvg-name="CCTV+ 1" tvg-country="cn" tvg-language="cn" group-title="Çin",CCTV+ 1
 https://cd-live-stream.news.cctvplus.com/live/smil:CHANNEL1.smil/playlist.m3u8
 #EXTINF:-1 tvg-id="CCTV+2" tvg-name="CCTV+ 2" tvg-country="cn" tvg-language="cn" group-title="Çin",CCTV+ 2
@@ -3059,8 +2767,6 @@ https://cdn.streamhispanatv.net:3819/live/tvflorecialive.m3u8
 https://5ca9af4645e15.streamlock.net/mayas/videomayas/playlist.m3u8
 #EXTINF:-1 tvg-id="TVSRetro" tvg-name="TVS Retro" tvg-country="gt" tvg-language="gt" group-title="Guatemala",TVS Retro
 https://cdn.streamhispanatv.net:3531/live/tvsretrogtlive.m3u8
-#EXTINF:-1 tvg-id="Star101FM(KNUTGuam)" tvg-name="Star 101 FM (KNUT Guam)" tvg-country="gu" tvg-language="gu" group-title="GU",Star 101 FM (KNUT Guam)
-https://live2.tensila.com/knut-v-1.choice/hls/master.m3u8
 #EXTINF:-1 tvg-id="CreationTV" tvg-name="Creation TV" tvg-country="hk" tvg-language="hk" group-title="Hong Kong",Creation TV
 https://cdn.deepcore.online/hlsme/ctv_hk.m3u8
 #EXTINF:-1 tvg-id="PetClubTV" tvg-name="Pet Club TV" tvg-country="hk" tvg-language="hk" group-title="Hong Kong",Pet Club TV
@@ -3631,90 +3337,6 @@ https://d7x8z4yuq42qn.cloudfront.net/index_3.m3u8
 https://zainabia.livebox.co.in/ZainabiaChannelhls/channel.m3u8
 #EXTINF:-1 tvg-id="ZeeBiharJharkhand" tvg-name="Zee Bihar Jharkhand" tvg-country="in" tvg-language="in" group-title="Hindistan",Zee Bihar Jharkhand
 https://raw.githubusercontent.com/Alstruit/adaptive-streams/alstruit-4_24_in/streams/in/ZeeBiharJharkhand.m3u8
-#EXTINF:-1 tvg-id="ABNsat" tvg-name="ABNsat" tvg-country="iq" tvg-language="iq" group-title="Irak",ABNsat
-https://mediaserver.abnvideos.com/streams/abnsat.m3u8
-#EXTINF:-1 tvg-id="AfarinBaxcha" tvg-name="Afarin Baxcha" tvg-country="iq" tvg-language="iq" group-title="Irak",Afarin Baxcha
-https://5dcabf026b188.streamlock.net/afarinTV/livestream/playlist.m3u8
-#EXTINF:-1 tvg-id="AfarinTV" tvg-name="Afarin TV" tvg-country="iq" tvg-language="iq" group-title="Irak",Afarin TV
-https://65f16f0fdfc51.streamlock.net/afarinTV/livestream/playlist.m3u8
-#EXTINF:-1 tvg-id="AlIraqia" tvg-name="Al Iraqia" tvg-country="iq" tvg-language="iq" group-title="Irak",Al Iraqia
-https://cdn.catiacast.video/abr/8d2ffb0aba244e8d9101a9488a7daa05/playlist.m3u8
-#EXTINF:-1 tvg-id="AlIraqiaNews" tvg-name="Al Iraqia News" tvg-country="iq" tvg-language="iq" group-title="Irak",Al Iraqia News
-https://cdn.catiacast.video/abr/78054972db7708422595bc96c6e024ac/playlist.m3u8
-#EXTINF:-1 tvg-id="AlRasheedTV" tvg-name="Al Rasheed TV" tvg-country="iq" tvg-language="iq" group-title="Irak",Al Rasheed TV
-https://media1.livaat.com/static/AL-RASHEED-HD/playlist.m3u8
-#EXTINF:-1 tvg-id="AlJawadainTV" tvg-name="Al-Jawadain TV" tvg-country="iq" tvg-language="iq" group-title="Irak",Al-Jawadain TV
-https://live.aljawadain.org/live/aljawadaintv/playlist.m3u8
-#EXTINF:-1 tvg-id="AlSharqiya" tvg-name="Al-Sharqiya" tvg-country="iq" tvg-language="iq" group-title="Irak",Al-Sharqiya
-https://5d94523502c2d.streamlock.net/home/mystream/playlist.m3u8
-#EXTINF:-1 tvg-id="AlSharqiyaNews" tvg-name="Al-Sharqiya News" tvg-country="iq" tvg-language="iq" group-title="Irak",Al-Sharqiya News
-https://5d94523502c2d.streamlock.net/alsharqiyalive/mystream/playlist.m3u8
-#EXTINF:-1 tvg-id="AlawlaTV" tvg-name="Alawla TV" tvg-country="iq" tvg-language="iq" group-title="Irak",Alawla TV
-https://63b03f7689049.streamlock.net/live/1tv/playlist.m3u8
-#EXTINF:-1 tvg-id="Alqanat9TV" tvg-name="Alqanat9 TV" tvg-country="iq" tvg-language="iq" group-title="Irak",Alqanat9 TV
-https://cdn.bestream.io:19360/alqanat9/alqanat9.m3u8
-#EXTINF:-1 tvg-id="Alquran" tvg-name="Alquran" tvg-country="iq" tvg-language="iq" group-title="Irak",Alquran
-https://ktvlive.online/stream/hls/ch1.m3u8
-#EXTINF:-1 tvg-id="AVAFamily(1)" tvg-name="AVA Family (1)" tvg-country="iq" tvg-language="iq" group-title="Irak",AVA Family (1)
-https://familyhls.avatv.live/hls/stream.m3u8
-#EXTINF:-1 tvg-id="AVAFamily(2)" tvg-name="AVA Family (2)" tvg-country="iq" tvg-language="iq" group-title="Irak",AVA Family (2)
-https://ca-rt.onetv.app:8443/AVAFamily/index-0.m3u8
-#EXTINF:-1 tvg-id="BeitolAbbasTVChannel" tvg-name="BeitolAbbas TV Channel" tvg-country="iq" tvg-language="iq" group-title="Irak",BeitolAbbas TV Channel
-https://live.beitolabbas.tv/live/beitolabbastv.m3u8
-#EXTINF:-1 tvg-id="DijlahTarab" tvg-name="Dijlah Tarab" tvg-country="iq" tvg-language="iq" group-title="Irak",Dijlah Tarab
-https://ghaasiflu.online/tarab/index.m3u8
-#EXTINF:-1 tvg-id="DijlahTV" tvg-name="Dijlah TV" tvg-country="iq" tvg-language="iq" group-title="Irak",Dijlah TV
-https://ghaasiflu.online/Dijlah/index.m3u8
-#EXTINF:-1 tvg-id="DuaChannel" tvg-name="Dua Channel" tvg-country="iq" tvg-language="iq" group-title="Irak",Dua Channel
-https://live.ishiacloud.com/haditv.co.uk/dua-channel.m3u8
-#EXTINF:-1 tvg-id="EmanTv" tvg-name="EmanTv" tvg-country="iq" tvg-language="iq" group-title="Irak",EmanTv
-https://avr.host247.net/live/emantv/playlist.m3u8
-#EXTINF:-1 tvg-id="FarmodaTV" tvg-name="FarmodaTV" tvg-country="iq" tvg-language="iq" group-title="Irak",FarmodaTV
-https://avr.host247.net/live/FarmodaTV/playlist.m3u8
-#EXTINF:-1 tvg-id="HadiTVAzeriandRussian" tvg-name="Hadi TV Azeri and Russian" tvg-country="iq" tvg-language="iq" group-title="Irak",Hadi TV Azeri and Russian
-https://live.ishiacloud.com/haditv.co.uk/haditv3.m3u8
-#EXTINF:-1 tvg-id="HadiTVEnglishandUrdu" tvg-name="Hadi TV English and Urdu" tvg-country="iq" tvg-language="iq" group-title="Irak",Hadi TV English and Urdu
-https://live.ishiacloud.com/haditv.co.uk/haditv1.m3u8
-#EXTINF:-1 tvg-id="HadiTVFarsi" tvg-name="Hadi TV Farsi" tvg-country="iq" tvg-language="iq" group-title="Irak",Hadi TV Farsi
-https://live.ishiacloud.com/haditv.co.uk/haditv4.m3u8
-#EXTINF:-1 tvg-id="HadiTVHausa" tvg-name="Hadi TV Hausa" tvg-country="iq" tvg-language="iq" group-title="Irak",Hadi TV Hausa
-https://live.ishiacloud.com/haditv.co.uk/haditv5.m3u8
-#EXTINF:-1 tvg-id="HadiTVPashtoandPersian" tvg-name="Hadi TV Pashto and Persian" tvg-country="iq" tvg-language="iq" group-title="Irak",Hadi TV Pashto and Persian
-https://live.ishiacloud.com/haditv.co.uk/haditv6.m3u8
-#EXTINF:-1 tvg-id="ImamAsrTV" tvg-name="Imam Asr TV" tvg-country="iq" tvg-language="iq" group-title="Irak",Imam Asr TV
-https://iptv.imamasrtv.com/asrfa/playlist.m3u8
-#EXTINF:-1 tvg-id="iNEWSTV" tvg-name="iNEWS TV" tvg-country="iq" tvg-language="iq" group-title="Irak",iNEWS TV
-https://live.i-news.tv/hls/stream.m3u8
-#EXTINF:-1 tvg-id="KurdistanTV" tvg-name="Kurdistan TV" tvg-country="iq" tvg-language="iq" group-title="Irak",Kurdistan TV
-https://5a3ed7a72ed4b.streamlock.net/live/SMIL:myStream.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="KurdMaxMusic" tvg-name="KurdMax Music" tvg-country="iq" tvg-language="iq" group-title="Irak",KurdMax Music
-https://6476e46b58f91.streamlock.net/music/livestream/playlist.m3u8
-#EXTINF:-1 tvg-id="KurdMaxShow" tvg-name="KurdMax Show" tvg-country="iq" tvg-language="iq" group-title="Irak",KurdMax Show
-https://6476e46b58f91.streamlock.net/liveTrans/SHOW2/playlist.m3u8
-#EXTINF:-1 tvg-id="KurdMaxSorani" tvg-name="KurdMax Sorani" tvg-country="iq" tvg-language="iq" group-title="Irak",KurdMax Sorani
-https://6476e46b58f91.streamlock.net/liveTrans/KurdmaxS0rani!/playlist.m3u8
-#EXTINF:-1 tvg-id="MarjaeyatTVArabic" tvg-name="Marjaeyat TV Arabic" tvg-country="iq" tvg-language="iq" group-title="Irak",Marjaeyat TV Arabic
-https://livefa.marjaeyattv.com/mtv_ar/playlist.m3u8
-#EXTINF:-1 tvg-id="MarjaeyatTVEnglish" tvg-name="Marjaeyat TV English" tvg-country="iq" tvg-language="iq" group-title="Irak",Marjaeyat TV English
-https://livefa.marjaeyattv.com/mtv_en/playlist.m3u8
-#EXTINF:-1 tvg-id="MarjaeyatTVPersian" tvg-name="Marjaeyat TV Persian" tvg-country="iq" tvg-language="iq" group-title="Irak",Marjaeyat TV Persian
-https://livefa.marjaeyattv.com/mtv_fa/playlist.m3u8
-#EXTINF:-1 tvg-id="Mixkurdy" tvg-name="Mixkurdy" tvg-country="iq" tvg-language="iq" group-title="Irak",Mixkurdy
-https://avr.host247.net/live/Mix-kurdy/playlist.m3u8
-#EXTINF:-1 tvg-id="NRTTV" tvg-name="NRT TV" tvg-country="iq" tvg-language="iq" group-title="Irak",NRT TV
-https://media.streambrothers.com:1936/8226/8226/playlist.m3u8
-#EXTINF:-1 tvg-id="PayamTV" tvg-name="Payam TV" tvg-country="iq" tvg-language="iq" group-title="Irak",Payam TV
-https://media2.streambrothers.com:1936/8218/8218/playlist.m3u8
-#EXTINF:-1 tvg-id="RudawTV" tvg-name="Rudaw TV" tvg-country="iq" tvg-language="iq" group-title="Irak",Rudaw TV
-https://svs.itworkscdn.net/rudawlive/rudawlive.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="ShamsTV" tvg-name="Shams TV" tvg-country="iq" tvg-language="iq" group-title="Irak",Shams TV
-https://stream.shams.tv/hls/stream.m3u8
-#EXTINF:-1 tvg-id="WaarTV" tvg-name="Waar TV" tvg-country="iq" tvg-language="iq" group-title="Irak",Waar TV
-https://ca-rt.onetv.app/Waar/index-0.m3u8
-#EXTINF:-1 tvg-id="Zagros" tvg-name="Zagros" tvg-country="iq" tvg-language="iq" group-title="Irak",Zagros
-https://5a3ed7a72ed4b.streamlock.net/zagrostv/SMIL:myStream.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="ZarokTVSorani" tvg-name="Zarok TV Sorani" tvg-country="iq" tvg-language="iq" group-title="Irak",Zarok TV Sorani
-https://zindisorani.zaroktv.com.tr/hls/stream.m3u8
 #EXTINF:-1 tvg-id="247Box" tvg-name="247 Box" tvg-country="ir" tvg-language="ir" group-title="İran",247 Box
 https://hls.247box.live/hls/stream.m3u8
 #EXTINF:-1 tvg-id="AbalfadhlTV" tvg-name="Abalfadhl TV" tvg-country="ir" tvg-language="ir" group-title="İran",Abalfadhl TV
@@ -4485,26 +4107,6 @@ https://222103-hls.akamaized.net/668828a00bf80aa436254876/live_2cdb4ef03c1311efa
 https://stream-live.lrt.lt/lituanica/stream03/streamPlaylist.m3u8
 #EXTINF:-1 tvg-id="M1" tvg-name="M-1" tvg-country="lt" tvg-language="lt" group-title="Litvanya",M-1
 https://m-1.data.lt/m-1/smil:m-1.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="apartTV" tvg-name="apart TV" tvg-country="lu" tvg-language="lu" group-title="Luxemburg",apart TV
-https://2-fss-2.streamhoster.com/pl_124/206820-4338160-1/playlist.m3u8
-#EXTINF:-1 tvg-id="ChamberTV" tvg-name="Chamber TV" tvg-country="lu" tvg-language="lu" group-title="Luxemburg",Chamber TV
-https://media02.webtvlive.eu/chd-edge/smil:chamber_tv_hd.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="DudelangeTV" tvg-name="Dudelange TV" tvg-country="lu" tvg-language="lu" group-title="Luxemburg",Dudelange TV
-https://streamer20.multimedia.blue/Eltrona/DudelangeTV/playlist.m3u8
-#EXTINF:-1 tvg-id="eldoTV" tvg-name="eldo.TV" tvg-country="lu" tvg-language="lu" group-title="Luxemburg",eldo.TV
-https://stream.eldo.lu/data/live/tele/eldotv/1080p.m3u8
-#EXTINF:-1 tvg-id="HesperTV" tvg-name="Hesper TV" tvg-country="lu" tvg-language="lu" group-title="Luxemburg",Hesper TV
-https://streamer20.multimedia.blue/Eltrona/HesperangeTV/playlist.m3u8
-#EXTINF:-1 tvg-id="MamerTV" tvg-name="Mamer TV" tvg-country="lu" tvg-language="lu" group-title="Luxemburg",Mamer TV
-https://streamer20.multimedia.blue/Eltrona/MamerTV/playlist.m3u8
-#EXTINF:-1 tvg-id="MierschTV" tvg-name="MierschTV" tvg-country="lu" tvg-language="lu" group-title="Luxemburg",MierschTV
-https://streamer20.multimedia.blue/Eltrona/merschTV/playlist.m3u8
-#EXTINF:-1 tvg-id="PétangeInfoTV" tvg-name="Pétange Info TV" tvg-country="lu" tvg-language="lu" group-title="Luxemburg",Pétange Info TV
-https://streamer20.multimedia.blue/Eltrona/PetangeTV/playlist.m3u8
-#EXTINF:-1 tvg-id="RTLGold" tvg-name="RTL Gold" tvg-country="lu" tvg-language="lu" group-title="Luxemburg",RTL Gold
-https://stream.rtl.lu/data/live/tele/rtlgold/playlist.m3u8
-#EXTINF:-1 tvg-id="RTLTodayRadio" tvg-name="RTL Today Radio" tvg-country="lu" tvg-language="lu" group-title="Luxemburg",RTL Today Radio
-https://stream.rtl.lu/data/live/tele/rtltodayradio/playlist.m3u8
 #EXTINF:-1 tvg-id="LatvijasRadio3Klasika" tvg-name="Latvijas Radio 3 Klasika" tvg-country="lv" tvg-language="lv" group-title="Letonya",Latvijas Radio 3 Klasika
 https://5a44e5b800a41.streamlock.net/liveVLR3/mp4:Klasika/playlist.m3u8
 #EXTINF:-1 tvg-id="ReTV" tvg-name="Re TV" tvg-country="lv" tvg-language="lv" group-title="Letonya",Re TV
@@ -4515,14 +4117,6 @@ https://air.star.lv/TV_Jurmala_multistream/index.m3u8
 https://player.tvnet.lv/stream/amlst:61659/playlist.m3u8
 #EXTINF:-1 tvg-id="VidusdaugavasTelevīzija" tvg-name="Vidusdaugavas Televīzija" tvg-country="lv" tvg-language="lv" group-title="Letonya",Vidusdaugavas Televīzija
 https://straume.vdtv.lv/vdtv2/index.m3u8
-#EXTINF:-1 tvg-id="FebruaryChannel" tvg-name="February Channel" tvg-country="ly" tvg-language="ly" group-title="Libya",February Channel
-https://b01c02nl.mediatriple.net/videoonlylive/mtfknklgwrlive/broadcast_5dc818c793576.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="LibyaAlWataniya" tvg-name="Libya Al Wataniya" tvg-country="ly" tvg-language="ly" group-title="Libya",Libya Al Wataniya
-https://cdn-globecast.akamaized.net/live/eds/libya_al_watanya/hls_roku/index.m3u8
-#EXTINF:-1 tvg-id="SalamTV" tvg-name="Salam TV" tvg-country="ly" tvg-language="ly" group-title="Libya",Salam TV
-https://amsart-live.ercdn.net/salamtv/salamtv.m3u8
-#EXTINF:-1 tvg-id="TanasuhTV" tvg-name="Tanasuh TV" tvg-country="ly" tvg-language="ly" group-title="Libya",Tanasuh TV
-https://tip.stream.tanasuh.tv:4434/live/smil:tanasuhtv.smil/playlist.m3u8
 #EXTINF:-1 tvg-id="AlAoulaInternational" tvg-name="Al Aoula International" tvg-country="ma" tvg-language="ma" group-title="Marokko",Al Aoula International
 https://cdn.live.easybroadcast.io/abr_corp/73_aloula_w1dqfwm/playlist_dvr.m3u8
 #EXTINF:-1 tvg-id="AlAoulaLaâyoune" tvg-name="Al Aoula Laâyoune" tvg-country="ma" tvg-language="ma" group-title="Marokko",Al Aoula Laâyoune
@@ -4671,122 +4265,6 @@ https://2-fss-1.streamhoster.com/pl_148/201830-1293592-1/playlist.m3u8
 https://sendlive.online/hls/mmtv.m3u8
 #EXTINF:-1 tvg-id="SSTV" tvg-name="SSTV" tvg-country="mv" tvg-language="mv" group-title="Maldivler",SSTV
 https://sstv.ssplay.mv/hls/sstv-live/index.m3u8
-#EXTINF:-1 tvg-id="8NTV" tvg-name="8NTV" tvg-country="mx" tvg-language="mx" group-title="Meksika",8NTV
-https://60417ddeaf0d9.streamlock.net/ntv/videontv/playlist.m3u8
-#EXTINF:-1 tvg-id="ADN40" tvg-name="ADN 40" tvg-country="mx" tvg-language="mx" group-title="Meksika",ADN 40
-https://mdstrm.com/live-stream-playlist/60b578b060947317de7b57ac.m3u8
-#EXTINF:-1 tvg-id="AlcanceTV" tvg-name="Alcance TV" tvg-country="mx" tvg-language="mx" group-title="Meksika",Alcance TV
-https://5bf8041cb3fed.streamlock.net/AlcanceTV/AlcanceTV/playlist.m3u8
-#EXTINF:-1 tvg-id="AMXNoticias" tvg-name="AMX Noticias" tvg-country="mx" tvg-language="mx" group-title="Meksika",AMX Noticias
-https://5e50264bd6766.streamlock.net/mexiquense2/videomexiquense2/playlist.m3u8
-#EXTINF:-1 tvg-id="AntenaTV" tvg-name="Antena TV" tvg-country="mx" tvg-language="mx" group-title="Meksika",Antena TV
-https://5ca9af4645e15.streamlock.net/grd/videogrd/playlist.m3u8
-#EXTINF:-1 tvg-id="AztecaInternacional" tvg-name="Azteca Internacional" tvg-country="mx" tvg-language="mx" group-title="Meksika",Azteca Internacional
-https://azt-mun.otteravision.com/azt/mun/mun.m3u8
-#EXTINF:-1 tvg-id="CaliforniaMediosTV" tvg-name="California Medios TV" tvg-country="mx" tvg-language="mx" group-title="Meksika",California Medios TV
-https://s5.mexside.net:1936/medios/medios/playlist.m3u8
-#EXTINF:-1 tvg-id="Canal10Cancún" tvg-name="Canal 10 Cancún" tvg-country="mx" tvg-language="mx" group-title="Meksika",Canal 10 Cancún
-https://canal10.mediaflix.istream.mx/wza_live/live/movil/playlist.m3u8
-#EXTINF:-1 tvg-id="Canal10Chiapas" tvg-name="Canal 10 Chiapas" tvg-country="mx" tvg-language="mx" group-title="Meksika",Canal 10 Chiapas
-https://5ca9af4645e15.streamlock.net/chiapas/videochiapas/playlist.m3u8
-#EXTINF:-1 tvg-id="Canal10Durango" tvg-name="Canal 10 Durango" tvg-country="mx" tvg-language="mx" group-title="Meksika",Canal 10 Durango
-https://5e50264bd6766.streamlock.net/canal10durango/videocanal10durango/playlist.m3u8
-#EXTINF:-1 tvg-id="Canal15ILCESummaSabres" tvg-name="Canal 15 ILCE Summa Sabres" tvg-country="mx" tvg-language="mx" group-title="Meksika",Canal 15 ILCE Summa Sabres
-https://live-ilce.ovp-vivaro.digital/ovp-origin-abr/ngrp:6359ef999f3fb_all/playlist.m3u8
-#EXTINF:-1 tvg-id="Canal26Aguascalientes" tvg-name="Canal 26 Aguascalientes" tvg-country="mx" tvg-language="mx" group-title="Meksika",Canal 26 Aguascalientes
-https://60417ddeaf0d9.streamlock.net/telemetrika3/smil:telemetrika3.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="Canal33Tijuana" tvg-name="Canal 33 Tijuana" tvg-country="mx" tvg-language="mx" group-title="Meksika",Canal 33 Tijuana
-https://5f2c1b0d880e5.streamlock.net/canal33tijuana/videocanal33tijuana/playlist.m3u8
-#EXTINF:-1 tvg-id="Canal44Chihuahua" tvg-name="Canal 44 Chihuahua" tvg-country="mx" tvg-language="mx" group-title="Meksika",Canal 44 Chihuahua
-https://5e50264bd6766.streamlock.net/canal442/videocanal442/playlist.m3u8
-#EXTINF:-1 tvg-id="CanalCatorce" tvg-name="Canal Catorce" tvg-country="mx" tvg-language="mx" group-title="Meksika",Canal Catorce
-https://s5.mexside.net:1936/canal14/canal14/playlist.m3u8
-#EXTINF:-1 tvg-id="CanalParlamentodelCongresodeJalisco" tvg-name="Canal Parlamento del Congreso de Jalisco" tvg-country="mx" tvg-language="mx" group-title="Meksika",Canal Parlamento del Congreso de Jalisco
-https://60417ddeaf0d9.streamlock.net/srtc/smil:srtc.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="ElSonorense" tvg-name="El Sonorense" tvg-country="mx" tvg-language="mx" group-title="Meksika",El Sonorense
-https://s5.mexside.net:1936/elsonorense/elsonorense/playlist.m3u8
-#EXTINF:-1 tvg-id="Filmex(Xumo)" tvg-name="Filmex (Xumo)" tvg-country="mx" tvg-language="mx" group-title="Meksika",Filmex (Xumo)
-https://filmex-filmex-xumo.amagi.tv/playlist.m3u8
-#EXTINF:-1 tvg-id="FilmexClásico" tvg-name="Filmex Clásico" tvg-country="mx" tvg-language="mx" group-title="Meksika",Filmex Clásico
-https://filmex-filmexclasico-xumo.amagi.tv/playlist.m3u8
-#EXTINF:-1 tvg-id="GoldenTV" tvg-name="Golden TV" tvg-country="mx" tvg-language="mx" group-title="Meksika",Golden TV
-https://bozztv.com/gusa/gusa-goldentv/index.m3u8
-#EXTINF:-1 tvg-id="ITVDeportes" tvg-name="ITV Deportes" tvg-country="mx" tvg-language="mx" group-title="Meksika",ITV Deportes
-https://thm-it-roku.otteravision.com/thm/it/it.m3u8
-#EXTINF:-1 tvg-id="JusticiaTV" tvg-name="Justicia TV" tvg-country="mx" tvg-language="mx" group-title="Meksika",Justicia TV
-https://live-scjn.ovp-vivaro.digital/ovp-origin/638a22b47746d/playlist.m3u8
-#EXTINF:-1 tvg-id="LaVozGruperaTV" tvg-name="La Voz Grupera TV" tvg-country="mx" tvg-language="mx" group-title="Meksika",La Voz Grupera TV
-https://cloudvideo.servers10.com:8081/8128/index.m3u8
-#EXTINF:-1 tvg-id="LoboTV" tvg-name="Lobo TV" tvg-country="mx" tvg-language="mx" group-title="Meksika",Lobo TV
-https://5ca3e84a76d30.streamlock.net/tvlobo/videotvlobo/playlist.m3u8
-#EXTINF:-1 tvg-id="MaríaVisiónMexico" tvg-name="María Visión Mexico" tvg-country="mx" tvg-language="mx" group-title="Meksika",María Visión Mexico
-https://1601580044.rsc.cdn77.org/live/_jcn_/amlst:Mariavision/master.m3u8
-#EXTINF:-1 tvg-id="MexiquenseTV" tvg-name="Mexiquense TV" tvg-country="mx" tvg-language="mx" group-title="Meksika",Mexiquense TV
-https://5e50264bd6766.streamlock.net/mexiquense/videomexiquense/playlist.m3u8
-#EXTINF:-1 tvg-id="NayaritComunica" tvg-name="Nayarit Comunica" tvg-country="mx" tvg-language="mx" group-title="Meksika",Nayarit Comunica
-https://live.iplanay.gob.mx/hls/nayarittv.m3u8
-#EXTINF:-1 tvg-id="NueveTVSanLuísPotosí" tvg-name="Nueve TV San Luís Potosí" tvg-country="mx" tvg-language="mx" group-title="Meksika",Nueve TV San Luís Potosí
-https://5ca9af4645e15.streamlock.net/nuevetv/videonuevetv/.m3u8
-#EXTINF:-1 tvg-id="OnceMéxico" tvg-name="Once México" tvg-country="mx" tvg-language="mx" group-title="Meksika",Once México
-https://vivo.canaloncelive.tv/alivepkgr3/ngrp:cepro_all/playlist.m3u8
-#EXTINF:-1 tvg-id="RadioyTelevisiónBudokan" tvg-name="Radio y Televisión Budokan" tvg-country="mx" tvg-language="mx" group-title="Meksika",Radio y Televisión Budokan
-https://cp.panelchs.com:1936/8016/8016/playlist.m3u8
-#EXTINF:-1 tvg-id="RalyTV" tvg-name="Raly TV" tvg-country="mx" tvg-language="mx" group-title="Meksika",Raly TV
-https://cloudvideo.servers10.com:8081/8072/index.m3u8
-#EXTINF:-1 tvg-id="RCGTV" tvg-name="RCG TV" tvg-country="mx" tvg-language="mx" group-title="Meksika",RCG TV
-https://video1.getstreamhosting.com:1936/8172/8172/playlist.m3u8
-#EXTINF:-1 tvg-id="RCGTV(Timeshifted2Hours)" tvg-name="RCG TV (Timeshifted -2 Hours)" tvg-country="mx" tvg-language="mx" group-title="Meksika",RCG TV (Timeshifted -2 Hours)
-https://video1.getstreamhosting.com:1936/8246/8246/playlist.m3u8
-#EXTINF:-1 tvg-id="RTQQueretaro" tvg-name="RTQ Queretaro" tvg-country="mx" tvg-language="mx" group-title="Meksika",RTQ Queretaro
-https://59d39900ebfb8.streamlock.net/rytqrolive/rytqrolive/chunklist.m3u8
-#EXTINF:-1 tvg-id="SeñalEspaña(XHUNESTDT)" tvg-name="Señal España (XHUNES-TDT)" tvg-country="mx" tvg-language="mx" group-title="Meksika",Señal España (XHUNES-TDT)
-https://tv91.hostingnuclear.com:19360/xhunestv/xhunestv.m3u8
-#EXTINF:-1 tvg-id="SIPSETVCUN81" tvg-name="SIPSE TVCUN 8.1" tvg-country="mx" tvg-language="mx" group-title="Meksika",SIPSE TVCUN 8.1
-https://webprod.sipse.com.mx:8080/show/tvcun.m3u8
-#EXTINF:-1 tvg-id="SuperChannel12" tvg-name="Super Channel 12" tvg-country="mx" tvg-language="mx" group-title="Meksika",Super Channel 12
-https://servilive.com:3263/live/channel12live.m3u8
-#EXTINF:-1 tvg-id="TeleYucatan" tvg-name="Tele Yucatan" tvg-country="mx" tvg-language="mx" group-title="Meksika",Tele Yucatan
-https://5ca3e84a76d30.streamlock.net/teleyucatan/videoteleyucatan/playlist.m3u8
-#EXTINF:-1 tvg-id="TeleplaySureste(1)" tvg-name="Teleplay Sureste (1)" tvg-country="mx" tvg-language="mx" group-title="Meksika",Teleplay Sureste (1)
-https://teleplay.mediaflix.istream.mx/livestream/teleplay/livehd/playlist.m3u8
-#EXTINF:-1 tvg-id="TeleplaySureste(2)" tvg-name="Teleplay Sureste (2)" tvg-country="mx" tvg-language="mx" group-title="Meksika",Teleplay Sureste (2)
-https://teleplay.mediaflix.istream.mx/livestream/teleplay/livesd/playlist.m3u8
-#EXTINF:-1 tvg-id="TVCuatro41" tvg-name="TV Cuatro 4.1" tvg-country="mx" tvg-language="mx" group-title="Meksika",TV Cuatro 4.1
-https://5f1af61612fb5.streamlock.net/tv4/tv4.smil/.m3u8
-#EXTINF:-1 tvg-id="TVCuatro42" tvg-name="TV Cuatro 4.2" tvg-country="mx" tvg-language="mx" group-title="Meksika",TV Cuatro 4.2
-https://5f2c1b0d880e5.streamlock.net/tv42/tv42.smil/.m3u8
-#EXTINF:-1 tvg-id="TVLoboDurango" tvg-name="TV Lobo Durango" tvg-country="mx" tvg-language="mx" group-title="Meksika",TV Lobo Durango
-https://5ca9af4645e15.streamlock.net/lobodurango/videolobodurango/playlist.m3u8
-#EXTINF:-1 tvg-id="TVMarLaPaz" tvg-name="TV Mar La Paz" tvg-country="mx" tvg-language="mx" group-title="Meksika",TV Mar La Paz
-https://5fc584f3f19c9.streamlock.net/tvmarlapaz/smil:tvmarlapaz.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="TVMarPuertoVallarta" tvg-name="TV Mar Puerto Vallarta" tvg-country="mx" tvg-language="mx" group-title="Meksika",TV Mar Puerto Vallarta
-https://5ca3e84a76d30.streamlock.net/tvmarvallarta/videotvmarvallarta/playlist.m3u8
-#EXTINF:-1 tvg-id="TVNuevoLeónCanal28(XHMNLTDT)" tvg-name="TV Nuevo León Canal 28 (XHMNL-TDT)" tvg-country="mx" tvg-language="mx" group-title="Meksika",TV Nuevo León Canal 28 (XHMNL-TDT)
-https://s5.mexside.net:1936/canal28/canal28/playlist.m3u8
-#EXTINF:-1 tvg-id="TVUJAT(XHUJATTDT)" tvg-name="TV UJAT (XHUJAT-TDT)" tvg-country="mx" tvg-language="mx" group-title="Meksika",TV UJAT (XHUJAT-TDT)
-https://5e50264bd6766.streamlock.net/ujat/videoujat/playlist.m3u8
-#EXTINF:-1 tvg-id="TVMás" tvg-name="TVMás" tvg-country="mx" tvg-language="mx" group-title="Meksika",TVMás
-https://60417ddeaf0d9.streamlock.net/telemetrika3/telemetrika3.smil/.m3u8
-#EXTINF:-1 tvg-id="TVMÁS(XHGVTDT)" tvg-name="TVMÁS (XHGV-TDT)" tvg-country="mx" tvg-language="mx" group-title="Meksika",TVMÁS (XHGV-TDT)
-https://5ca9af4645e15.streamlock.net/rtv/videortv/playlist.m3u8
-#EXTINF:-1 tvg-id="TVPCuliacán" tvg-name="TVP Culiacán" tvg-country="mx" tvg-language="mx" group-title="Meksika",TVP Culiacán
-https://5ca3e84a76d30.streamlock.net/gpacifico1/smil:gpculiacan.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="TVPLosMochis" tvg-name="TVP Los Mochis" tvg-country="mx" tvg-language="mx" group-title="Meksika",TVP Los Mochis
-https://5ca3e84a76d30.streamlock.net/gpacifico2/mochis.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="TVPMazatlán" tvg-name="TVP Mazatlán" tvg-country="mx" tvg-language="mx" group-title="Meksika",TVP Mazatlán
-https://5ca3e84a76d30.streamlock.net/gpacifico4/smil:mazatlan.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="TVPObregón" tvg-name="TVP Obregón" tvg-country="mx" tvg-language="mx" group-title="Meksika",TVP Obregón
-https://5ca3e84a76d30.streamlock.net/gpacifico3/obregon.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="UltraTVPuebla" tvg-name="Ultra TV Puebla" tvg-country="mx" tvg-language="mx" group-title="Meksika",Ultra TV Puebla
-https://5e50264bd6766.streamlock.net/telemetrika2/smil:telemetrika2.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="UMTV" tvg-name="UMTV" tvg-country="mx" tvg-language="mx" group-title="Meksika",UMTV
-https://60417ddeaf0d9.streamlock.net/montemorelos/videomontemorelos/playlist.m3u8
-#EXTINF:-1 tvg-id="UnisonTV" tvg-name="Unison TV" tvg-country="mx" tvg-language="mx" group-title="Meksika",Unison TV
-https://stream.unison.mx/hls/unisontvatem.m3u8
-#EXTINF:-1 tvg-id="VBMediaTV" tvg-name="VB Media TV" tvg-country="mx" tvg-language="mx" group-title="Meksika",VB Media TV
-https://capomo01-enitv.eninetworks.com/locales_vbmedia_publico/index.m3u8
-#EXTINF:-1 tvg-id="VisiónTelevisión" tvg-name="Visión Televisión" tvg-country="mx" tvg-language="mx" group-title="Meksika",Visión Televisión
-https://cloudvideo.servers10.com:8081/8016/index.m3u8
 #EXTINF:-1 tvg-id="AstroAwani" tvg-name="Astro Awani" tvg-country="my" tvg-language="my" group-title="Malaysia",Astro Awani
 https://d2idp3hzkhjpih.cloudfront.net/out/v1/4b85d9c2bf97413eb0c9fd875599b837/index.m3u8
 #EXTINF:-1 tvg-id="DuniaSinema" tvg-name="Dunia Sinema" tvg-country="my" tvg-language="my" group-title="Malaysia",Dunia Sinema
@@ -5059,44 +4537,12 @@ https://ms7.mx-cd.net/dtv-11/99-660295/WOS.smil/playlist.m3u8
 https://ms7.mx-cd.net/tv/99-660295/WOS.smil/playlist.m3u8
 #EXTINF:-1 tvg-id="ZO!34" tvg-name="ZO!34" tvg-country="nl" tvg-language="nl" group-title="Hollanda",ZO!34
 https://video.uitzending.tv:19360/zo34/zo34.m3u8
-#EXTINF:-1 tvg-id="CanalMotor(1)" tvg-name="Canal Motor (1)" tvg-country="no" tvg-language="no" group-title="Norveç",Canal Motor (1)
-https://digicom.hls.iptvdc.com/canalmotor/index.m3u8
-#EXTINF:-1 tvg-id="CanalMotor(2)" tvg-name="Canal Motor (2)" tvg-country="no" tvg-language="no" group-title="Norveç",Canal Motor (2)
-https://digicom.hls.iptvdc.com/motorstv/index.m3u8
-#EXTINF:-1 tvg-id="Frikanalen" tvg-name="Frikanalen" tvg-country="no" tvg-language="no" group-title="Norveç",Frikanalen
-https://frikanalen.no/stream/index.m3u8
-#EXTINF:-1 tvg-id="TVØstfold" tvg-name="TV Østfold" tvg-country="no" tvg-language="no" group-title="Norveç",TV Østfold
-https://streamnorge.com:8088/hls/tvo.m3u8
 #EXTINF:-1 tvg-id="CapitalTV" tvg-name="Capital TV" tvg-country="np" tvg-language="np" group-title="Nepal",Capital TV
 https://streaming.tvnepal.com:19360/capitaltv/capitaltv.m3u8
 #EXTINF:-1 tvg-id="IndigenousTelevision" tvg-name="Indigenous Television" tvg-country="np" tvg-language="np" group-title="Nepal",Indigenous Television
 https://np.truestreamz.com/broadcaster/INDIGENOUSmob.stream/playlist.m3u8
 #EXTINF:-1 tvg-id="ParyawaranTV" tvg-name="Paryawaran TV" tvg-country="np" tvg-language="np" group-title="Nepal",Paryawaran TV
 https://webtv-stream.nettv.com.np/broadcaster/Paryawaran.stream/playlist.m3u8
-#EXTINF:-1 tvg-id="ActionHollywoodMovies" tvg-name="Action Hollywood Movies" tvg-country="nz" tvg-language="nz" group-title="Yeni Zelanda",Action Hollywood Movies
-https://cdn-apse1-prod.tsv2.amagi.tv/linear/amg01076-lightningintern-actionhollywood-samsungnz/playlist.m3u8
-#EXTINF:-1 tvg-id="CineView" tvg-name="CineView" tvg-country="nz" tvg-language="nz" group-title="Yeni Zelanda",CineView
-https://cdn-apse1-prod.tsv2.amagi.tv/linear/amg01076-lightningintern-rialto-samsungnz/playlist.m3u8
-#EXTINF:-1 tvg-id="DrybarComedy" tvg-name="Drybar Comedy" tvg-country="nz" tvg-language="nz" group-title="Yeni Zelanda",Drybar Comedy
-https://drybar-drybarcomedy-1-nz.samsung.wurl.tv/playlist.m3u8
-#EXTINF:-1 tvg-id="Firstlight" tvg-name="Firstlight" tvg-country="nz" tvg-language="nz" group-title="Yeni Zelanda",Firstlight
-https://uni01rtmp.tulix.tv/firstlight/firstlight.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="JuiceTV" tvg-name="Juice TV" tvg-country="nz" tvg-language="nz" group-title="Yeni Zelanda",Juice TV
-https://juicex.nz/hls/mystream.m3u8
-#EXTINF:-1 tvg-id="KordiaTV" tvg-name="Kordia TV" tvg-country="nz" tvg-language="nz" group-title="Yeni Zelanda",Kordia TV
-https://ptvlive.kordia.net.nz/out/v1/3fc2254c865a457c8d7fbbce227a2aae/index.m3u8
-#EXTINF:-1 tvg-id="LoveStoriesTV" tvg-name="Love Stories TV" tvg-country="nz" tvg-language="nz" group-title="Yeni Zelanda",Love Stories TV
-https://84e619480232400a842ce499d053458a.mediatailor.us-east-1.amazonaws.com/v1/manifest/04fd913bb278d8775298c26fdca9d9841f37601f/ONO_LoveStoriesTV/18a65393-ba3b-4912-90d5-7188c128ac66/3.m3u8
-#EXTINF:-1 tvg-id="ParliamentTV" tvg-name="Parliament TV" tvg-country="nz" tvg-language="nz" group-title="Yeni Zelanda",Parliament TV
-https://ptvlive.kordia.net.nz/out/v1/daf20b9a9ec5449dadd734e50ce52b74/index.m3u8
-#EXTINF:-1 tvg-id="PulseTV" tvg-name="Pulse TV" tvg-country="nz" tvg-language="nz" group-title="Yeni Zelanda",Pulse TV
-https://cdn-apse1-prod.tsv2.amagi.tv/linear/amg01076-lightningintern-pulse-samsungnz/playlist.m3u8
-#EXTINF:-1 tvg-id="RealCrime" tvg-name="Real Crime" tvg-country="nz" tvg-language="nz" group-title="Yeni Zelanda",Real Crime
-https://cdn-apse1-prod.tsv2.amagi.tv/linear/amg00426-littledotstudio-realcrimebetanz-samsungnz/playlist.m3u8
-#EXTINF:-1 tvg-id="WairarapaTV(1)" tvg-name="Wairarapa TV (1)" tvg-country="nz" tvg-language="nz" group-title="Yeni Zelanda",Wairarapa TV (1)
-https://stream.wairarapatv.co.nz/Broadband_High/playlist.m3u8
-#EXTINF:-1 tvg-id="WairarapaTV(2)" tvg-name="Wairarapa TV (2)" tvg-country="nz" tvg-language="nz" group-title="Yeni Zelanda",Wairarapa TV (2)
-https://stream.wairarapatv.co.nz/Cellular_High/playlist.m3u8
 #EXTINF:-1 tvg-id="AlistiqamaTV" tvg-name="Alistiqama TV" tvg-country="om" tvg-language="om" group-title="Omman",Alistiqama TV
 https://jmc-live.ercdn.net/alistiqama/alistiqama.m3u8
 #EXTINF:-1 tvg-id="OmanAlthakafia" tvg-name="Oman Althakafia" tvg-country="om" tvg-language="om" group-title="Omman",Oman Althakafia
@@ -5985,32 +5431,6 @@ https://shls-live-event2-prod-dub.shahid.net/out/v1/0456ede1a39145d98b3d8c8062dd
 https://shls-live-mood-ak.akamaized.net/out/v1/90143f040feb40589d18c57863d9e829/index.m3u8
 #EXTINF:-1 tvg-id="ThikrayatTV" tvg-name="Thikrayat TV" tvg-country="sa" tvg-language="sa" group-title="Suudi Arabistan",Thikrayat TV
 https://al-ekhbaria-prod-dub.shahid.net/out/v1/ef87956651694f4ba2ccc16e852dbb95/index.m3u8
-#EXTINF:-1 tvg-id="DabangaTV" tvg-name="Dabanga TV" tvg-country="sd" tvg-language="sd" group-title="SD",Dabanga TV
-https://hls.dabangasudan.org/hls/stream.m3u8
-#EXTINF:-1 tvg-id="SudanTV" tvg-name="Sudan TV" tvg-country="sd" tvg-language="sd" group-title="SD",Sudan TV
-https://cdn-globecast.akamaized.net/live/eds/sudan_tv/hls_roku/index.m3u8
-#EXTINF:-1 tvg-id="AryenTV" tvg-name="Aryen TV" tvg-country="se" tvg-language="se" group-title="İsveç",Aryen TV
-https://aryen.tv/live/tv/playlist.m3u8
-#EXTINF:-1 tvg-id="BloombergTV+" tvg-name="Bloomberg TV+" tvg-country="se" tvg-language="se" group-title="İsveç",Bloomberg TV+
-https://bloomberg-bloombergtv-3-se.samsung.wurl.tv/playlist.m3u8
-#EXTINF:-1 tvg-id="DiTV" tvg-name="Di TV" tvg-country="se" tvg-language="se" group-title="İsveç",Di TV
-https://cdn0-03837-liveedge0.dna.ip-only.net/03837-liveedge0/smil:03837-tx4/playlist.m3u8
-#EXTINF:-1 tvg-id="ExpressenTV" tvg-name="Expressen TV" tvg-country="se" tvg-language="se" group-title="İsveç",Expressen TV
-https://cdn0-03837-liveedge0.dna.ip-only.net/03837-liveedge0/smil:03837-tx2/playlist.m3u8
-#EXTINF:-1 tvg-id="KomalaTV" tvg-name="Komala TV" tvg-country="se" tvg-language="se" group-title="İsveç",Komala TV
-https://live.tvkomala.com/live/komala/playlist.m3u8
-#EXTINF:-1 tvg-id="LifeStyleTV" tvg-name="LifeStyleTV" tvg-country="se" tvg-language="se" group-title="İsveç",LifeStyleTV
-https://app.viloud.tv/hls/channel/711fd3f3a4728449889ee22ba72958ff.m3u8
-#EXTINF:-1 tvg-id="MiracleChannel" tvg-name="Miracle Channel" tvg-country="se" tvg-language="se" group-title="İsveç",Miracle Channel
-https://miracle.stream.boxigy.com/hls/miracle1.m3u8
-#EXTINF:-1 tvg-id="MiracleTV" tvg-name="Miracle TV" tvg-country="se" tvg-language="se" group-title="İsveç",Miracle TV
-https://live.miraclechannel.com/hls/miracle1.m3u8
-#EXTINF:-1 tvg-id="MissionAsia" tvg-name="Mission Asia" tvg-country="se" tvg-language="se" group-title="İsveç",Mission Asia
-https://livecdn.live247stream.com/missionasia/tv/playlist.m3u8
-#EXTINF:-1 tvg-id="MyzenFit" tvg-name="Myzen Fit" tvg-country="se" tvg-language="se" group-title="İsveç",Myzen Fit
-https://cdn-ue1-prod.tsv2.amagi.tv/linear/amg01255-secomcofites-my-myzen-samsungen-samsungse/playlist.m3u8
-#EXTINF:-1 tvg-id="Waterbear" tvg-name="Waterbear" tvg-country="se" tvg-language="se" group-title="İsveç",Waterbear
-https://cdn-ue1-prod.tsv2.amagi.tv/linear/amg01415-waterbearnetwor-waterbear-samsungse/playlist.m3u8
 #EXTINF:-1 tvg-id="CNAInternational" tvg-name="CNA International" tvg-country="sg" tvg-language="sg" group-title="Singapur",CNA International
 https://d2e1asnsl7br7b.cloudfront.net/7782e205e72f43aeb4a48ec97f66ebbe/index.m3u8
 #EXTINF:-1 tvg-id="ZooMoo(Australia)(1)" tvg-name="Zoo Moo (Australia) (1)" tvg-country="sg" tvg-language="sg" group-title="Singapur",Zoo Moo (Australia) (1)
@@ -6025,26 +5445,6 @@ https://584943999.r.worldssl.net/584943999/_definst_/vzivo/playlist.m3u8
 https://584943999.r.worldssl.net/584943999/vzivo/playlist.m3u8
 #EXTINF:-1 tvg-id="SIPTV" tvg-name="SIP TV" tvg-country="si" tvg-language="si" group-title="Slovenya",SIP TV
 https://data.siptv.si/live-siptv/hls/index.m3u8
-#EXTINF:-1 tvg-id="ducktv(1)" tvg-name="ducktv (1)" tvg-country="sk" tvg-language="sk" group-title="Slovakya",ducktv (1)
-https://mmm-dk.otteravision.com/DexaYJdJXkLqFxTK_DuckTVHDSAMS/DuckTVHDSAMS.stream/playlist.m3u8
-#EXTINF:-1 tvg-id="LifeTv" tvg-name="LifeTv" tvg-country="sk" tvg-language="sk" group-title="Slovakya",LifeTv
-https://lifetv.mpks.sk/s.m3u8
-#EXTINF:-1 tvg-id="MarkizaKlasik" tvg-name="Markiza Klasik" tvg-country="sk" tvg-language="sk" group-title="Slovakya",Markiza Klasik
-https://cdnsk003.panaccess.com/local/Markiza_Klasik/index.m3u8
-#EXTINF:-1 tvg-id="MarkizaKrimi" tvg-name="Markiza Krimi" tvg-country="sk" tvg-language="sk" group-title="Slovakya",Markiza Krimi
-https://cdnsk003.panaccess.com/local/Markiza_krimi/index.m3u8
-#EXTINF:-1 tvg-id="MTR" tvg-name="MTR" tvg-country="sk" tvg-language="sk" group-title="Slovakya",MTR
-https://cdnsk003.panaccess.com/local/Ruzomberok/index.m3u8
-#EXTINF:-1 tvg-id="TelevíziaMočenok" tvg-name="Televízia Močenok" tvg-country="sk" tvg-language="sk" group-title="Slovakya",Televízia Močenok
-https://5ca49f2417d90.streamlock.net/mocenok/livestream/playlist.m3u8
-#EXTINF:-1 tvg-id="TVCentral" tvg-name="TV Central" tvg-country="sk" tvg-language="sk" group-title="Slovakya",TV Central
-https://arenasportslovakia.ddns.net/hls/cetv2.m3u8
-#EXTINF:-1 tvg-id="TVDK" tvg-name="TV DK" tvg-country="sk" tvg-language="sk" group-title="Slovakya",TV DK
-https://5ca49f2417d90.streamlock.net/live/dolnykubin1/playlist.m3u8
-#EXTINF:-1 tvg-id="TVNRSR" tvg-name="TV NRSR" tvg-country="sk" tvg-language="sk" group-title="Slovakya",TV NRSR
-https://n11.stv.livebox.sk/stv-tv/stv4.stream/playlist.m3u8
-#EXTINF:-1 tvg-id="TVT" tvg-name="TVT" tvg-country="sk" tvg-language="sk" group-title="Slovakya",TVT
-https://5ca49f2417d90.streamlock.net/live/turzovka/playlist.m3u8
 #EXTINF:-1 tvg-id="SanMarinoRTV" tvg-name="San Marino RTV" tvg-country="sm" tvg-language="sm" group-title="San Marino",San Marino RTV
 https://d2hrvno5bw6tg2.cloudfront.net/smrtv-ch01/smil:ch-01.smil/chunklist.m3u8
 #EXTINF:-1 tvg-id="SanMarinoRTVSport" tvg-name="San Marino RTV Sport" tvg-country="sm" tvg-language="sm" group-title="San Marino",San Marino RTV Sport
