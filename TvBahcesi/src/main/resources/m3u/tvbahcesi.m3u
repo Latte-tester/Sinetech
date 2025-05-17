@@ -2131,32 +2131,6 @@ https://video.compuwebecuador.com:3067/live/tvcolorlive.m3u8
 https://video.compuwebecuador.com:3323/live/uniandeslive.m3u8
 #EXTINF:-1 tvg-id="ZaracayTV" tvg-name="Zaracay TV" tvg-country="ec" tvg-language="ec" group-title="Ekvador",Zaracay TV
 https://video2.makrodigital.com/zaracay/zaracay/playlist.m3u8
-#EXTINF:-1 tvg-id="BestofDanceTV" tvg-name="Best of Dance TV" tvg-country="ee" tvg-language="ee" group-title="Estonya",Best of Dance TV
-https://m1b2.worldcast.tv/dancetelevisionone/dancetelevisionone.m3u8
-#EXTINF:-1 tvg-id="DanceTVAlgorhythm" tvg-name="DanceTV Algorhythm" tvg-country="ee" tvg-language="ee" group-title="Estonya",DanceTV Algorhythm
-https://m2b2.worldcast.tv:7443/dancetelevisionfour/dancetelevisionfour.m3u8
-#EXTINF:-1 tvg-id="DanceTVChillAF" tvg-name="DanceTV Chill AF" tvg-country="ee" tvg-language="ee" group-title="Estonya",DanceTV Chill AF
-https://mbit1.worldcast.tv/dancetelevisioneight/multibit.m3u8
-#EXTINF:-1 tvg-id="DanceTVDeepHouseDistrict" tvg-name="DanceTV Deep House District" tvg-country="ee" tvg-language="ee" group-title="Estonya",DanceTV Deep House District
-https://m1b2.worldcast.tv/dancetelevisiontwo/dancetelevisiontwo.m3u8
-#EXTINF:-1 tvg-id="DanceTVEDMMainstage" tvg-name="DanceTV EDM Mainstage" tvg-country="ee" tvg-language="ee" group-title="Estonya",DanceTV EDM Mainstage
-https://mbit1.worldcast.tv/dancetelevisionseven/multibit.m3u8
-#EXTINF:-1 tvg-id="DanceTVHouseFloor" tvg-name="DanceTV House Floor" tvg-country="ee" tvg-language="ee" group-title="Estonya",DanceTV House Floor
-https://m2b2.worldcast.tv:7443/dancetelevisionfive/dancetelevisionfive.m3u8
-#EXTINF:-1 tvg-id="DanceTVMelodicTech" tvg-name="DanceTV Melodic Tech" tvg-country="ee" tvg-language="ee" group-title="Estonya",DanceTV Melodic Tech
-https://mbit1.worldcast.tv/dancetelevisionnine/multibit.m3u8
-#EXTINF:-1 tvg-id="DanceTVMinimalTech" tvg-name="DanceTV Minimal Tech" tvg-country="ee" tvg-language="ee" group-title="Estonya",DanceTV Minimal Tech
-https://mbit1.worldcast.tv/dancetelevisionsix/multibit.m3u8
-#EXTINF:-1 tvg-id="ETV" tvg-name="ETV" tvg-country="ee" tvg-language="ee" group-title="Estonya",ETV
-https://sb.err.ee/live/etv.m3u8
-#EXTINF:-1 tvg-id="ETV+" tvg-name="ETV+" tvg-country="ee" tvg-language="ee" group-title="Estonya",ETV+
-https://sb.err.ee/live/etvpluss.m3u8
-#EXTINF:-1 tvg-id="ETV2" tvg-name="ETV2" tvg-country="ee" tvg-language="ee" group-title="Estonya",ETV2
-https://sb.err.ee/live/etv2.m3u8
-#EXTINF:-1 tvg-id="LifeTV" tvg-name="Life TV" tvg-country="ee" tvg-language="ee" group-title="Estonya",Life TV
-https://lifetv.bitflip.ee/live/stream1.m3u8
-#EXTINF:-1 tvg-id="Riigikogu" tvg-name="Riigikogu" tvg-country="ee" tvg-language="ee" group-title="Estonya",Riigikogu
-https://le02.euddn.net/6487956abb8faf0706d8c4c2465f54cb3625b812fec8e13d11668907ff00f44b004ea22691a9216c71ebda22b7e6e57c8b923aeee9e1e6aa447947c014b7a3babd73ab865562f4ae463ce0c617da65805296ed52a0af64d7d881781d282ea970de7a1ab524c1ea73e271a8df71d43212f4850e2d81241308886184db1abf516f2d6d0b9965402fc7c960e27fa968eabb077474e7493c278ebae58d614923fb2f5c76c2865cb681763ffd765a39a629ce/smil:rk_live_1.smil/playlist.m3u8
 #EXTINF:-1 tvg-id="AghapyTV" tvg-name="Aghapy TV" tvg-country="eg" tvg-language="eg" group-title="Mısır",Aghapy TV
 https://5b622f07944df.streamlock.net/aghapy.tv/aghapy.smil/playlist.m3u8
 #EXTINF:-1 tvg-id="AlGhadPlus" tvg-name="Al Ghad Plus" tvg-country="eg" tvg-language="eg" group-title="Mısır",Al Ghad Plus
@@ -4151,40 +4125,6 @@ https://amg01796-amg01796c17-rakuten-it-7492.playouts.now.amagi.tv/playlist/amg0
 https://5a1178b42cc03.streamlock.net/CGTV2024/CGTV2024/playlist.m3u8
 #EXTINF:-1 tvg-id="MTMTV" tvg-name="MTM TV" tvg-country="jm" tvg-language="jm" group-title="Jamaika",MTM TV
 https://angel.btbn.tv:5443/mtmtv/streams/live.m3u8
-#EXTINF:-1 tvg-id="AlHaqiqa" tvg-name="Al Haqiqa" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Al Haqiqa
-https://jmc-live.ercdn.net/alhaqiqa/alhaqiqa.m3u8
-#EXTINF:-1 tvg-id="AlMamlakaTV" tvg-name="Al Mamlaka TV" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Al Mamlaka TV
-https://bcovlive-a.akamaihd.net/4109c7ba30fd4a44ad9afe917c67a8c8/eu-central-1/6415809151001/playlist.m3u8
-#EXTINF:-1 tvg-id="AlhaqeqaAldawlia" tvg-name="Alhaqeqa Aldawlia" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Alhaqeqa Aldawlia
-https://ghaasiflu.online/alhqeqa/index.m3u8
-#EXTINF:-1 tvg-id="AltaghierTV" tvg-name="Altaghier TV" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Altaghier TV
-https://194788.global.ssl.fastly.net/63c63697632705047ffda2da/live_d33349a0962a11ed907dd9e556777b63/rewind-14400.m3u8
-#EXTINF:-1 tvg-id="AmmanTV" tvg-name="Amman TV" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Amman TV
-https://ammantv-live.ercdn.net/ammantvhd/ammantvhd.m3u8
-#EXTINF:-1 tvg-id="JordanArchive" tvg-name="Jordan Archive" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Jordan Archive
-https://playlist.fasttvcdn.com/pl/cc0blorawy1ibohhrupraa/Archive/playlist.m3u8
-#EXTINF:-1 tvg-id="JordanComedy" tvg-name="Jordan Comedy" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Jordan Comedy
-https://playlist.fasttvcdn.com/pl/cc0blorawy1ibohhrupraa/Comedy/playlist.m3u8
-#EXTINF:-1 tvg-id="JordanDrama" tvg-name="Jordan Drama" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Jordan Drama
-https://playlist.fasttvcdn.com/pl/cc0blorawy1ibohhrupraa/Drama/playlist.m3u8
-#EXTINF:-1 tvg-id="JordanKitchen" tvg-name="Jordan Kitchen" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Jordan Kitchen
-https://playlist.fasttvcdn.com/pl/cc0blorawy1ibohhrupraa/cooking/playlist.m3u8
-#EXTINF:-1 tvg-id="JordanSatelliteChannel" tvg-name="Jordan Satellite Channel" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Jordan Satellite Channel
-https://jrtv-live.ercdn.net/jordanhd/jordanhd.m3u8
-#EXTINF:-1 tvg-id="JordanSongs" tvg-name="Jordan Songs" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Jordan Songs
-https://playlist.fasttvcdn.com/pl/cc0blorawy1ibohhrupraa/Song/playlist.m3u8
-#EXTINF:-1 tvg-id="JordanTourism" tvg-name="Jordan Tourism" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Jordan Tourism
-https://playlist.fasttvcdn.com/pl/cc0blorawy1ibohhrupraa/Tourism/playlist.m3u8
-#EXTINF:-1 tvg-id="RoyaComedy" tvg-name="Roya Comedy" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Roya Comedy
-https://playlist.fasttvcdn.com/pl/toa2uuhhygheuly7xtuqrg/roya-comedy/playlist.m3u8
-#EXTINF:-1 tvg-id="RoyaDrama" tvg-name="Roya Drama" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Roya Drama
-https://playlist.fasttvcdn.com/pl/a2le4pbpa6rpzv147haf4w/drama/playlist.m3u8
-#EXTINF:-1 tvg-id="RoyaKidsOriginals" tvg-name="Roya Kids Originals" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Roya Kids Originals
-https://playlist.fasttvcdn.com/pl/ptllxjd03j6g9oxxjdfapg/roya-kids-originals/playlist.m3u8
-#EXTINF:-1 tvg-id="RoyaKitchen" tvg-name="Roya Kitchen" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Roya Kitchen
-https://playlist.fasttvcdn.com/pl/toa2uuhhygheuly7xtuqrg/roya-kitchen/playlist.m3u8
-#EXTINF:-1 tvg-id="RoyaTV" tvg-name="Roya TV" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Roya TV
-https://royatv-live.daioncdn.net/royatv/royatv.m3u8
 #EXTINF:-1 tvg-id="CGNTVJapan" tvg-name="CGNTV Japan" tvg-country="jp" tvg-language="jp" group-title="Japonya",CGNTV Japan
 https://d2p4mrcwl6ly4.cloudfront.net/out/v1/8d50f69fdbbf411a8d302743e4263716/CGNWebLiveJP.m3u8
 #EXTINF:-1 tvg-id="NHKWorldPremium" tvg-name="NHK World Premium" tvg-country="jp" tvg-language="jp" group-title="Japonya",NHK World Premium
@@ -4235,116 +4175,6 @@ https://live.kh.malimarcdn.com/live/tvk2.stream/playlist.m3u8
 https://stream.wikitv.asia/live/ngrp:myStream_all/playlist.m3u8
 #EXTINF:-1 tvg-id="ZIZTV" tvg-name="ZIZ TV" tvg-country="kn" tvg-language="kn" group-title="Saint Kitts ve Nevis",ZIZ TV
 https://media.slactech.com:1936/ZIZDirect/ZIZDirect/playlist.m3u8
-#EXTINF:-1 tvg-id="ABNTV" tvg-name="ABN TV" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",ABN TV
-https://vod2.abn.co.kr/IPHONE/abn.m3u8
-#EXTINF:-1 tvg-id="ArirangRadio" tvg-name="Arirang Radio" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",Arirang Radio
-https://amdlive-ch02-ctnd-com.akamaized.net/arirang_3ch/smil:arirang_3ch.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="ArirangTV(1)" tvg-name="Arirang TV (1)" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",Arirang TV (1)
-https://amdlive-ch01-ctnd-com.akamaized.net/arirang_1ch/smil:arirang_1ch.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="ArirangTV(2)" tvg-name="Arirang TV (2)" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",Arirang TV (2)
-https://amdlive-ch02-ctnd-com.akamaized.net/arirang_1ch/smil:arirang_1ch.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="ArirangTV(3)" tvg-name="Arirang TV (3)" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",Arirang TV (3)
-https://amdlive-ch03-ctnd-com.akamaized.net/arirang_1ch/smil:arirang_1ch.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="ArirangTV(4)" tvg-name="Arirang TV (4)" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",Arirang TV (4)
-https://cdn-01.bonus-tv.ru/arirang_edge/playlist.m3u8
-#EXTINF:-1 tvg-id="ArirangTVUN" tvg-name="Arirang TV UN" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",Arirang TV UN
-https://amdlive-ch02-ctnd-com.akamaized.net/arirang_2ch/smil:arirang_2ch.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="BTNTV" tvg-name="BTN TV" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",BTN TV
-https://btn.nowcdn.co.kr/btn/btnlive2m/playlist.m3u8
-#EXTINF:-1 tvg-id="CGNTVSouthKorea" tvg-name="CGNTV South Korea" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",CGNTV South Korea
-https://du35ivadp6cxj.cloudfront.net/out/v1/81781d23cbbf490990b2aa9181d4ce19/CGNWebLiveKR.m3u8
-#EXTINF:-1 tvg-id="CJOnStyle" tvg-name="CJ OnStyle" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",CJ OnStyle
-https://live-ch1.cjonstyle.net/cjmalllive/stream2/playlist.m3u8
-#EXTINF:-1 tvg-id="CJOnStylePlus" tvg-name="CJ OnStyle Plus" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",CJ OnStyle Plus
-https://live-ch2.cjonstyle.net/cjosplus/live2/playlist.m3u8
-#EXTINF:-1 tvg-id="EBS1(1)" tvg-name="EBS 1 (1)" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",EBS 1 (1)
-https://ebsonair.ebs.co.kr/ebs1familypc/familypc1m/playlist.m3u8
-#EXTINF:-1 tvg-id="EBS1(2)" tvg-name="EBS 1 (2)" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",EBS 1 (2)
-https://ebsonair.ebs.co.kr/groundwavefamilypc/familypc1m/playlist.m3u8
-#EXTINF:-1 tvg-id="EBS2" tvg-name="EBS 2" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",EBS 2
-https://ebsonair.ebs.co.kr/ebs2familypc/familypc1m/playlist.m3u8
-#EXTINF:-1 tvg-id="EBSE" tvg-name="EBS E" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",EBS E
-https://ebsonair.ebs.co.kr/plus3familypc/familypc1m/playlist.m3u8
-#EXTINF:-1 tvg-id="EBSkids" tvg-name="EBS kids" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",EBS kids
-https://ebsonair.ebs.co.kr/ebsufamilypc/familypc1m/playlist.m3u8
-#EXTINF:-1 tvg-id="EBS+1" tvg-name="EBS+ 1" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",EBS+ 1
-https://ebsonair.ebs.co.kr/plus1familypc/familypc1m/playlist.m3u8
-#EXTINF:-1 tvg-id="EBS+2" tvg-name="EBS+ 2" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",EBS+ 2
-https://ebsonair.ebs.co.kr/plus2familypc/familypc1m/playlist.m3u8
-#EXTINF:-1 tvg-id="FGTV" tvg-name="FGTV" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",FGTV
-https://fgtvlive.fgtv.com/smil:fgtv.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="GongyoungShopping" tvg-name="Gongyoung Shopping" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",Gongyoung Shopping
-https://etv.publichs.com/live5.stream/playlist.m3u8
-#EXTINF:-1 tvg-id="GSMyShop" tvg-name="GS My Shop" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",GS My Shop
-https://gstv-myshop.gsshop.com/myshop_hd/myshop_hd.stream/playlist.m3u8
-#EXTINF:-1 tvg-id="GSShop" tvg-name="GS Shop" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",GS Shop
-https://gstv-gsshop.gsshop.com/gsshop_hd/gsshop_hd.stream/playlist.m3u8
-#EXTINF:-1 tvg-id="GugakTV국악방송" tvg-name="GugakTV 국악방송" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",GugakTV 국악방송
-https://mgugaklive.nowcdn.co.kr/gugakvideo/gugakvideo.stream/playlist.m3u8
-#EXTINF:-1 tvg-id="Home&Shopping" tvg-name="Home & Shopping" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",Home & Shopping
-https://s28.qtcdn.co.kr/media/liveM3U8/idx/518045142/enc/1860408350/playlist.m3u8
-#EXTINF:-1 tvg-id="HyundaiHomeShopping" tvg-name="Hyundai Home Shopping" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",Hyundai Home Shopping
-https://livejj.hyundaihmall.com:8443/live/ngrp:hmall.stream_pc/playlist.m3u8
-#EXTINF:-1 tvg-id="HyundaiHomeShoppingPlus" tvg-name="Hyundai Home Shopping Plus" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",Hyundai Home Shopping Plus
-https://dtvstreaming.hyundaihmall.com/newcjp3/_definst_/newcjpstream.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="JCNTV" tvg-name="JCN TV" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",JCN TV
-https://jcnonair-1108.acs.wecandeo.com/ms/3162/1108/index.m3u8
-#EXTINF:-1 tvg-id="KoreaTV" tvg-name="Korea TV" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",Korea TV
-https://hlive.ktv.go.kr/live/klive_h.stream/playlist.m3u8
-#EXTINF:-1 tvg-id="LotteHomeShopping" tvg-name="Lotte Home Shopping" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",Lotte Home Shopping
-https://pchlslivesw.lotteimall.com/live/livestream/lotteimalllive_mp4.m3u8
-#EXTINF:-1 tvg-id="LotteOneTV" tvg-name="Lotte OneTV" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",Lotte OneTV
-https://onetvhlslive.lotteimall.com/lotteonetvlive/lotteonetvlive.mp4.m3u8
-#EXTINF:-1 tvg-id="MBCChuncheon(춘천MBC)" tvg-name="MBC Chuncheon (춘천 MBC)" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",MBC Chuncheon (춘천 MBC)
-https://stream.chmbc.co.kr/TV/myStream/playlist.m3u8
-#EXTINF:-1 tvg-id="MBCDaegu(대구MBC)" tvg-name="MBC Daegu (대구 MBC)" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",MBC Daegu (대구 MBC)
-https://5ee1ec6f32118.streamlock.net/live/livetv/playlist.m3u8
-#EXTINF:-1 tvg-id="MBCDaejeon(대전MBC)" tvg-name="MBC Daejeon (대전 MBC)" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",MBC Daejeon (대전 MBC)
-https://ns1.tjmbc.co.kr/live/myStream.sdp/playlist.m3u8
-#EXTINF:-1 tvg-id="MBCJeju(제주MBC)" tvg-name="MBC Jeju (제주 MBC)" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",MBC Jeju (제주 MBC)
-https://wowza.jejumbc.com/live/tv_jejumbc/playlist.m3u8
-#EXTINF:-1 tvg-id="MBCYeosu(여수MBC)" tvg-name="MBC Yeosu (여수 MBC)" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",MBC Yeosu (여수 MBC)
-https://5c3639aa99149.streamlock.net/live_TV/tv/playlist.m3u8
-#EXTINF:-1 tvg-id="NBSKoreaAgriculturalBroadcasting" tvg-name="NBS Korea Agricultural Broadcasting" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",NBS Korea Agricultural Broadcasting
-https://media.joycorp.co.kr:4443/live/ngrp:live_all/playlist.m3u8
-#EXTINF:-1 tvg-id="NSHomeShopping" tvg-name="NS Home Shopping" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",NS Home Shopping
-https://livestream.nsmall.com/IPHONE/nsmallMobile.m3u8
-#EXTINF:-1 tvg-id="NSShopPlus" tvg-name="NS Shop Plus" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",NS Shop Plus
-https://shoppstream.nsmall.com/IPHONE/mobile.m3u8
-#EXTINF:-1 tvg-id="OBSGyeonginTV(OBS경인TV)" tvg-name="OBS Gyeongin TV (OBS경인TV)" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",OBS Gyeongin TV (OBS경인TV)
-https://vod.obs.co.kr:444/live/obsstream1/tv.stream/playlist.m3u8
-#EXTINF:-1 tvg-id="OUN" tvg-name="OUN" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",OUN
-https://live.knou.ac.kr/knou1/live1/playlist.m3u8
-#EXTINF:-1 tvg-id="ShinsegaeShoppingTV" tvg-name="Shinsegae Shopping TV" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",Shinsegae Shopping TV
-https://liveout.catenoid.net/live-02-shinsegaetvshopping/shinsegaetvshopping_720p/playlist.m3u8
-#EXTINF:-1 tvg-id="ShoppingNT" tvg-name="Shopping NT" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",Shopping NT
-https://live.shoppingntmall.com/live/10011.m3u8
-#EXTINF:-1 tvg-id="TBSSeoul" tvg-name="TBS Seoul" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",TBS Seoul
-https://cdntv.tbs.seoul.kr/tbs/tbs_tv_web.smil/playlist.m3u8
-#EXTINF:-1 tvg-id="WShopping" tvg-name="W Shopping" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",W Shopping
-https://liveout.catenoid.net/live-05-wshopping/wshopping_1500k/playlist.m3u8
-#EXTINF:-1 tvg-id="WBCTV" tvg-name="WBC TV" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",WBC TV
-https://cdnlive179.smartucc.kr/smartlive/312/46324be24454bd98f785039457ac695d/playlist.m3u8
-#EXTINF:-1 tvg-id="KTV1(1)" tvg-name="KTV 1 (1)" tvg-country="kw" tvg-language="kw" group-title="Kuvvet",KTV 1 (1)
-https://kwtktv1ta.cdn.mangomolo.com/ktv1/smil:ktv1.stream.smil/chunklist.m3u8
-#EXTINF:-1 tvg-id="KTV1(2)" tvg-name="KTV 1 (2)" tvg-country="kw" tvg-language="kw" group-title="Kuvvet",KTV 1 (2)
-https://cdn-globecast.akamaized.net/live/eds/kuwait_tv1/hls_roku/index.m3u8
-#EXTINF:-1 tvg-id="KTV2" tvg-name="KTV 2" tvg-country="kw" tvg-language="kw" group-title="Kuvvet",KTV 2
-https://kwtktv2ta.cdn.mangomolo.com/ktv2/smil:ktv2.stream.smil/chunklist.m3u8
-#EXTINF:-1 tvg-id="KTVAlQurain" tvg-name="KTV Al Qurain" tvg-country="kw" tvg-language="kw" group-title="Kuvvet",KTV Al Qurain
-https://kwtktvaqta.cdn.mangomolo.com/ktvaq/smil:tktvaq.stream.smil/chunklist.m3u8
-#EXTINF:-1 tvg-id="KTVArabe" tvg-name="KTV Arabe" tvg-country="kw" tvg-language="kw" group-title="Kuvvet",KTV Arabe
-https://kwtktvata.cdn.mangomolo.com/ktva/smil:tktva.stream.smil/chunklist.m3u8
-#EXTINF:-1 tvg-id="KTVEthraa" tvg-name="KTV Ethraa" tvg-country="kw" tvg-language="kw" group-title="Kuvvet",KTV Ethraa
-https://kwtethta.cdn.mangomolo.com/eth/smil:eth.stream.smil/chunklist.m3u8
-#EXTINF:-1 tvg-id="KTVNews" tvg-name="KTV News" tvg-country="kw" tvg-language="kw" group-title="Kuvvet",KTV News
-https://kwtkbta.cdn.mangomolo.com/kb/smil:kb.stream.smil/chunklist.m3u8
-#EXTINF:-1 tvg-id="KTVSport" tvg-name="KTV Sport" tvg-country="kw" tvg-language="kw" group-title="Kuvvet",KTV Sport
-https://kwtspta.cdn.mangomolo.com/sp/smil:sp.stream.smil/chunklist.m3u8
-#EXTINF:-1 tvg-id="KTVSportPlus" tvg-name="KTV Sport Plus" tvg-country="kw" tvg-language="kw" group-title="Kuvvet",KTV Sport Plus
-https://kwtsplta.cdn.mangomolo.com/spl/smil:spl.stream.smil/chunklist.m3u8
-#EXTINF:-1 tvg-id="MarinaTV" tvg-name="Marina TV" tvg-country="kw" tvg-language="kw" group-title="Kuvvet",Marina TV
-https://ffs.gulfsat.com/Marina-TV-HD/index.m3u8
 #EXTINF:-1 tvg-id="AbaiTV" tvg-name="Abai TV" tvg-country="kz" tvg-language="kz" group-title="Kazakistan",Abai TV
 https://abaitv-stream.qazcdn.com/abaitv/abaitv/playlist.m3u8
 #EXTINF:-1 tvg-id="AlauTV" tvg-name="Alau TV" tvg-country="kz" tvg-language="kz" group-title="Kazakistan",Alau TV
