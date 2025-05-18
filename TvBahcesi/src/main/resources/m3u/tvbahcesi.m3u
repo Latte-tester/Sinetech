@@ -955,6 +955,32 @@ https://5caf24a595d94.streamlock.net:1937/8132/8132/playlist.m3u8
 https://wowzastream.westmancom.com/wcgtvlive/wcgtvPSA.stream/master.m3u8
 #EXTINF:-1 tvg-id="WildTV" tvg-name="Wild TV" tvg-country="ca" tvg-language="ca" group-title="Kanada",Wild TV
 https://dfhsahpa45kk2.cloudfront.net/scheduler/scheduleMaster/476.m3u8
+#EXTINF:-1 tvg-id="CBCTV" tvg-name="CBC TV" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",CBC TV
+https://stream.berosat.live:19360/cbc-tv/cbc-tv.m3u8
+#EXTINF:-1 tvg-id="CCPVTV" tvg-name="CCPV TV" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",CCPV TV
+https://tnt-television.com/CCPV-TV/index.m3u8
+#EXTINF:-1 tvg-id="CompassionTV" tvg-name="Compassion TV" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",Compassion TV
+https://tnt-television.com/COMPASSION_FM/index.m3u8
+#EXTINF:-1 tvg-id="EVITV" tvg-name="EVI TV" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",EVI TV
+https://stream.berosat.live:19360/evi-tv/evi-tv.m3u8
+#EXTINF:-1 tvg-id="GéopolisTV" tvg-name="Géopolis TV" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",Géopolis TV
+https://tnt-television.com/Geopolis_tv/index.m3u8
+#EXTINF:-1 tvg-id="LaSentinelleTV" tvg-name="La Sentinelle TV" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",La Sentinelle TV
+https://tnt-television.com/LA_SENTINELLE/index.m3u8
+#EXTINF:-1 tvg-id="LBFDRTV" tvg-name="LBFD RTV" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",LBFD RTV
+https://tnt-television.com/LBFD_RTV/index.m3u8
+#EXTINF:-1 tvg-id="MetanoiaTV" tvg-name="Metanoia TV" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",Metanoia TV
+https://tnt-television.com/METANOIA-STREAM1/index.m3u8
+#EXTINF:-1 tvg-id="MishapiVoiceTV" tvg-name="Mishapi Voice TV" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",Mishapi Voice TV
+https://tnt-television.com/MISHAPI-STREAM1/index.m3u8
+#EXTINF:-1 tvg-id="NumericaTV" tvg-name="Numerica TV" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",Numerica TV
+https://tnt-television.com/NUMERICA/index.m3u8
+#EXTINF:-1 tvg-id="ONETV" tvg-name="ONE-TV" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",ONE-TV
+https://core.live-apc.eu:5443/LiveApp/streams/backup.m3u8
+#EXTINF:-1 tvg-id="PSTVHD" tvg-name="PSTV HD" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",PSTV HD
+https://tnt-television.com/PSTV_TVHD/index.m3u8
+#EXTINF:-1 tvg-id="RLPROTV" tvg-name="RL PRO TV" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",RL PRO TV
+https://stream.berosat.live:19360/rlpro-tv/rlpro-tv.m3u8
 #EXTINF:-1 tvg-id="Esaie45Tele" tvg-name="Esaie 45 Tele" tvg-country="cg" tvg-language="cg" group-title="CG",Esaie 45 Tele
 https://stream.berosat.live:19360/esaie45-tv/esaie45-tv.m3u8
 #EXTINF:-1 tvg-id="Canal9enFrançais" tvg-name="Canal 9 en Français" tvg-country="ch" tvg-language="ch" group-title="İsviçre",Canal 9 en Français
@@ -1491,6 +1517,40 @@ https://svs.itworkscdn.net/sat7turklive/sat7turk.smil/playlist_dvr.m3u8
 https://sl2.sigmatv.com/hls/live.m3u8
 #EXTINF:-1 tvg-id="TV2020" tvg-name="TV 2020" tvg-country="cy" tvg-language="cy" group-title="Cayman Adaları",TV 2020
 https://sc-kuzeykibrissmarttv.ercdn.net/tv2020/bantp1/playlist.m3u8
+#EXTINF:-1 tvg-id="ElektrikaTV" tvg-name="Elektrika TV" tvg-country="cz" tvg-language="cz" group-title="Çekya",Elektrika TV
+https://rtmp.elektrika.cz/live/myStream.sdp/playlist.m3u8
+#EXTINF:-1 tvg-id="JČ1" tvg-name="JČ1" tvg-country="cz" tvg-language="cz" group-title="Çekya",JČ1
+https://stream.jc1.cz/hls/jc1.m3u8
+#EXTINF:-1 tvg-id="Jihočeskátelevize" tvg-name="Jihočeská televize" tvg-country="cz" tvg-language="cz" group-title="Çekya",Jihočeská televize
+https://vysilani.zaktv.cz/broadcast/hls/jtv/index.m3u8
+#EXTINF:-1 tvg-id="MňauTV" tvg-name="Mňau TV" tvg-country="cz" tvg-language="cz" group-title="Çekya",Mňau TV
+https://5ca49f2417d90.streamlock.net/mnau/livestream/playlist.m3u8
+#EXTINF:-1 tvg-id="Óčko(1)" tvg-name="Óčko (1)" tvg-country="cz" tvg-language="cz" group-title="Çekya",Óčko (1)
+https://ocko-live-dash.ssl.cdn.cra.cz/cra_live2/ocko.stream.1.smil/playlist.m3u8
+#EXTINF:-1 tvg-id="Óčko(2)" tvg-name="Óčko (2)" tvg-country="cz" tvg-language="cz" group-title="Çekya",Óčko (2)
+https://ocko-live.ssl.cdn.cra.cz/channels/ocko/playlist.m3u8
+#EXTINF:-1 tvg-id="ÓčkoExpres" tvg-name="Óčko Expres" tvg-country="cz" tvg-language="cz" group-title="Çekya",Óčko Expres
+https://ocko-live.ssl.cdn.cra.cz/channels/ocko_expres/playlist.m3u8
+#EXTINF:-1 tvg-id="ÓčkoGold" tvg-name="Óčko Gold" tvg-country="cz" tvg-language="cz" group-title="Çekya",Óčko Gold
+https://ocko-live.ssl.cdn.cra.cz/channels/ocko_gold/playlist.m3u8
+#EXTINF:-1 tvg-id="OIKTV" tvg-name="OIK TV" tvg-country="cz" tvg-language="cz" group-title="Çekya",OIK TV
+https://streamer05.low-latency.cz/oiktv/index.m3u8
+#EXTINF:-1 tvg-id="PlzeňTV" tvg-name="Plzeň TV" tvg-country="cz" tvg-language="cz" group-title="Çekya",Plzeň TV
+https://vysilani.zaktv.cz/broadcast/hls/ptv/index.m3u8
+#EXTINF:-1 tvg-id="PolarTV" tvg-name="Polar TV" tvg-country="cz" tvg-language="cz" group-title="Çekya",Polar TV
+https://stream.polar.cz/polar/polarlive-1/playlist.m3u8
+#EXTINF:-1 tvg-id="Polar2TV" tvg-name="Polar2 TV" tvg-country="cz" tvg-language="cz" group-title="Çekya",Polar2 TV
+https://stream.polar.cz/polar2/polarlive2-1/playlist.m3u8
+#EXTINF:-1 tvg-id="RetroMusicTelevision(1)" tvg-name="Retro Music Television (1)" tvg-country="cz" tvg-language="cz" group-title="Çekya",Retro Music Television (1)
+https://stream.mediawork.cz/retrotv/retrotvHQ1/playlist.m3u8
+#EXTINF:-1 tvg-id="RetroMusicTelevision(2)" tvg-name="Retro Music Television (2)" tvg-country="cz" tvg-language="cz" group-title="Çekya",Retro Music Television (2)
+https://stream.mediawork.cz/retrotv/smil:retrotv2.smil/playlist.m3u8
+#EXTINF:-1 tvg-id="TVBrno1" tvg-name="TV Brno 1" tvg-country="cz" tvg-language="cz" group-title="Çekya",TV Brno 1
+https://stream.polar.cz/tvbrno1/tvbrno1live-1/playlist.m3u8
+#EXTINF:-1 tvg-id="ÚTV" tvg-name="ÚTV" tvg-country="cz" tvg-language="cz" group-title="Çekya",ÚTV
+https://vysilani.zaktv.cz/broadcast/hls/utv/index.m3u8
+#EXTINF:-1 tvg-id="VýchodočeskáTV" tvg-name="Východočeská TV" tvg-country="cz" tvg-language="cz" group-title="Çekya",Východočeská TV
+https://stream.polar.cz/vctv/vctvlive-1/playlist.m3u8
 #EXTINF:-1 tvg-id="123TV" tvg-name="1-2-3 TV" tvg-country="de" tvg-language="de" group-title="Almanya",1-2-3 TV
 https://123tv-mx1.flex-cdn.net/index.m3u8
 #EXTINF:-1 tvg-id="AlexBerlin" tvg-name="Alex Berlin" tvg-country="de" tvg-language="de" group-title="Almanya",Alex Berlin
@@ -2075,6 +2135,34 @@ https://video.compuwebecuador.com:3323/live/uniandeslive.m3u8
 https://cloud37.ecuatel.com/vostv/live/manifest.m3u8
 #EXTINF:-1 tvg-id="ZaracayTV" tvg-name="Zaracay TV" tvg-country="ec" tvg-language="ec" group-title="Ekvador",Zaracay TV
 https://video2.makrodigital.com/zaracay/zaracay/playlist.m3u8
+#EXTINF:-1 tvg-id="BestofDanceTV" tvg-name="Best of Dance TV" tvg-country="ee" tvg-language="ee" group-title="Estonya",Best of Dance TV
+https://m1b2.worldcast.tv/dancetelevisionone/dancetelevisionone.m3u8
+#EXTINF:-1 tvg-id="DanceTVAlgorhythm" tvg-name="DanceTV Algorhythm" tvg-country="ee" tvg-language="ee" group-title="Estonya",DanceTV Algorhythm
+https://m2b2.worldcast.tv:7443/dancetelevisionfour/dancetelevisionfour.m3u8
+#EXTINF:-1 tvg-id="DanceTVChillAF" tvg-name="DanceTV Chill AF" tvg-country="ee" tvg-language="ee" group-title="Estonya",DanceTV Chill AF
+https://mbit1.worldcast.tv/dancetelevisioneight/multibit.m3u8
+#EXTINF:-1 tvg-id="DanceTVDeepHouseDistrict" tvg-name="DanceTV Deep House District" tvg-country="ee" tvg-language="ee" group-title="Estonya",DanceTV Deep House District
+https://m1b2.worldcast.tv/dancetelevisiontwo/dancetelevisiontwo.m3u8
+#EXTINF:-1 tvg-id="DanceTVEDMMainstage" tvg-name="DanceTV EDM Mainstage" tvg-country="ee" tvg-language="ee" group-title="Estonya",DanceTV EDM Mainstage
+https://mbit1.worldcast.tv/dancetelevisionseven/multibit.m3u8
+#EXTINF:-1 tvg-id="DanceTVHouseFloor" tvg-name="DanceTV House Floor" tvg-country="ee" tvg-language="ee" group-title="Estonya",DanceTV House Floor
+https://m2b2.worldcast.tv:7443/dancetelevisionfive/dancetelevisionfive.m3u8
+#EXTINF:-1 tvg-id="DanceTVMelodicTech" tvg-name="DanceTV Melodic Tech" tvg-country="ee" tvg-language="ee" group-title="Estonya",DanceTV Melodic Tech
+https://mbit1.worldcast.tv/dancetelevisionnine/multibit.m3u8
+#EXTINF:-1 tvg-id="DanceTVMinimalTech" tvg-name="DanceTV Minimal Tech" tvg-country="ee" tvg-language="ee" group-title="Estonya",DanceTV Minimal Tech
+https://mbit1.worldcast.tv/dancetelevisionsix/multibit.m3u8
+#EXTINF:-1 tvg-id="DanceTVTechnoWarehouse" tvg-name="DanceTV Techno Warehouse" tvg-country="ee" tvg-language="ee" group-title="Estonya",DanceTV Techno Warehouse
+https://m2b2.worldcast.tv:7443/dancetelevisionthree/dancetelevisionthree.m3u8
+#EXTINF:-1 tvg-id="ETV" tvg-name="ETV" tvg-country="ee" tvg-language="ee" group-title="Estonya",ETV
+https://sb.err.ee/live/etv.m3u8
+#EXTINF:-1 tvg-id="ETV+" tvg-name="ETV+" tvg-country="ee" tvg-language="ee" group-title="Estonya",ETV+
+https://sb.err.ee/live/etvpluss.m3u8
+#EXTINF:-1 tvg-id="ETV2" tvg-name="ETV2" tvg-country="ee" tvg-language="ee" group-title="Estonya",ETV2
+https://sb.err.ee/live/etv2.m3u8
+#EXTINF:-1 tvg-id="LifeTV" tvg-name="Life TV" tvg-country="ee" tvg-language="ee" group-title="Estonya",Life TV
+https://lifetv.bitflip.ee/live/stream1.m3u8
+#EXTINF:-1 tvg-id="Riigikogu" tvg-name="Riigikogu" tvg-country="ee" tvg-language="ee" group-title="Estonya",Riigikogu
+https://le02.euddn.net/6487956abb8faf0706d8c4c2465f54cb3625b812fec8e13d11668907ff00f44b004ea22691a9216c71ebda22b7e6e57c8b923aeee9e1e6aa447947c014b7a3babd73ab865562f4ae463ce0c617da65805296ed52a0af64d7d881781d282ea970de7a1ab524c1ea73e271a8df71d43212f4850e2d81241308886184db1abf516f2d6d0b9965402fc7c960e27fa968eabb077474e7493c278ebae58d614923fb2f5c76c2865cb681763ffd765a39a629ce/smil:rk_live_1.smil/playlist.m3u8
 #EXTINF:-1 tvg-id="AghapyTV" tvg-name="Aghapy TV" tvg-country="eg" tvg-language="eg" group-title="Mısır",Aghapy TV
 https://5b622f07944df.streamlock.net/aghapy.tv/aghapy.smil/playlist.m3u8
 #EXTINF:-1 tvg-id="AlGhadPlus" tvg-name="Al Ghad Plus" tvg-country="eg" tvg-language="eg" group-title="Mısır",Al Ghad Plus
@@ -2827,6 +2915,16 @@ https://1681360479.rsc.cdn77.org/1681360479/index.m3u8
 https://guineetvdirect.online:3320/live/atvguineelive.m3u8
 #EXTINF:-1 tvg-id="EspaceTV" tvg-name="Espace TV" tvg-country="gn" tvg-language="gn" group-title="Guinea",Espace TV
 https://edge11.vedge.infomaniak.com/livecast/ik:espacetv/manifest.m3u8
+#EXTINF:-1 tvg-id="ETV" tvg-name="ETV" tvg-country="gp" tvg-language="gp" group-title="Guadeloupe",ETV
+https://edge12.vedge.infomaniak.com/livecast/ik:etvgp/manifest.m3u8
+#EXTINF:-1 tvg-id="MadrasFMTV" tvg-name="Madras FM TV" tvg-country="gp" tvg-language="gp" group-title="Guadeloupe",Madras FM TV
+https://edge12.vedge.infomaniak.com/livecast/ik:madrasfmtv/manifest.m3u8
+#EXTINF:-1 tvg-id="RadioTVBasseTerre" tvg-name="Radio TV Basse-Terre" tvg-country="gp" tvg-language="gp" group-title="Guadeloupe",Radio TV Basse-Terre
+https://vdo.ssl-stream.com:3412/stream/play.m3u8
+#EXTINF:-1 tvg-id="RHTGuadeloupe" tvg-name="RHT Guadeloupe" tvg-country="gp" tvg-language="gp" group-title="Guadeloupe",RHT Guadeloupe
+https://edge12.vedge.infomaniak.com/livecast/ik:livehautetension/manifest.m3u8
+#EXTINF:-1 tvg-id="TEVEKA" tvg-name="TEVEKA" tvg-country="gp" tvg-language="gp" group-title="Guadeloupe",TEVEKA
+https://www.teveka.net:8443/show/teveka/index.m3u8
 #EXTINF:-1 tvg-id="SolTV" tvg-name="SolTV" tvg-country="gq" tvg-language="gq" group-title="Ekvator Ginesi",SolTV
 https://stream.solmediaeg.com/soltv/soltv.m3u8
 #EXTINF:-1 tvg-id="AcheloosTV" tvg-name="Acheloos TV" tvg-country="gr" tvg-language="gr" group-title="Yunanistan",Acheloos TV
@@ -3049,6 +3147,20 @@ https://live.leveex.hr/hls/live.m3u8
 https://tvjadran.stream.agatin.hr:3412/live/tvjadranlive.m3u8
 #EXTINF:-1 tvg-id="TVNova" tvg-name="TV Nova" tvg-country="hr" tvg-language="hr" group-title="Hırvatistan",TV Nova
 https://stream.agatin.hr:3727/live/tvnovalive.m3u8
+#EXTINF:-1 tvg-id="HaitiNewsChannel" tvg-name="Haiti News Channel" tvg-country="ht" tvg-language="ht" group-title="Haiti",Haiti News Channel
+https://haititivi.com/website/haitinews/index.m3u8
+#EXTINF:-1 tvg-id="KajouTV" tvg-name="Kajou TV" tvg-country="ht" tvg-language="ht" group-title="Haiti",Kajou TV
+https://video1.getstreamhosting.com:1936/8055/8055/playlist.m3u8
+#EXTINF:-1 tvg-id="RadioTélé4VEH" tvg-name="Radio Télé 4VEH" tvg-country="ht" tvg-language="ht" group-title="Haiti",Radio Télé 4VEH
+https://uni01rtmp.tulix.tv/4vehtv/4vehtv-firetv/playlist.m3u8
+#EXTINF:-1 tvg-id="RadioTéléHit" tvg-name="Radio Télé Hit" tvg-country="ht" tvg-language="ht" group-title="Haiti",Radio Télé Hit
+https://59d39900ebfb8.streamlock.net/RadioTelehit/RadioTelehit/playlist.m3u8
+#EXTINF:-1 tvg-id="RadioTelePlanetCompas" tvg-name="Radio Tele Planet Compas" tvg-country="ht" tvg-language="ht" group-title="Haiti",Radio Tele Planet Compas
+https://5dcab9aed5331.streamlock.net/mrcompas1/livestream/playlist.m3u8
+#EXTINF:-1 tvg-id="RadioTéléStanneCharitab" tvg-name="Radio Télé Stanne Charitab" tvg-country="ht" tvg-language="ht" group-title="Haiti",Radio Télé Stanne Charitab
+https://59d39900ebfb8.streamlock.net/radiotelestannecharitab/radiotelestannecharitab/playlist.m3u8
+#EXTINF:-1 tvg-id="TeleLouange" tvg-name="Tele Louange" tvg-country="ht" tvg-language="ht" group-title="Haiti",Tele Louange
+https://5790d294af2dc.streamlock.net/8124/8124/playlist.m3u8
 #EXTINF:-1 tvg-id="16tvBudapest" tvg-name="16tv Budapest" tvg-country="hu" tvg-language="hu" group-title="Macaristan",16tv Budapest
 https://cloudfront44.lexanetwork.com:1344/freerelay/16tv.sdp/playlist.m3u8
 #EXTINF:-1 tvg-id="AlföldTV" tvg-name="Alföld TV" tvg-country="hu" tvg-language="hu" group-title="Macaristan",Alföld TV
@@ -4085,6 +4197,40 @@ https://amg01796-amg01796c17-rakuten-it-7492.playouts.now.amagi.tv/playlist/amg0
 https://5a1178b42cc03.streamlock.net/CGTV2024/CGTV2024/playlist.m3u8
 #EXTINF:-1 tvg-id="MTMTV" tvg-name="MTM TV" tvg-country="jm" tvg-language="jm" group-title="Jamaika",MTM TV
 https://angel.btbn.tv:5443/mtmtv/streams/live.m3u8
+#EXTINF:-1 tvg-id="AlHaqiqa" tvg-name="Al Haqiqa" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Al Haqiqa
+https://jmc-live.ercdn.net/alhaqiqa/alhaqiqa.m3u8
+#EXTINF:-1 tvg-id="AlMamlakaTV" tvg-name="Al Mamlaka TV" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Al Mamlaka TV
+https://bcovlive-a.akamaihd.net/4109c7ba30fd4a44ad9afe917c67a8c8/eu-central-1/6415809151001/playlist.m3u8
+#EXTINF:-1 tvg-id="AlhaqeqaAldawlia" tvg-name="Alhaqeqa Aldawlia" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Alhaqeqa Aldawlia
+https://ghaasiflu.online/alhqeqa/index.m3u8
+#EXTINF:-1 tvg-id="AltaghierTV" tvg-name="Altaghier TV" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Altaghier TV
+https://194788.global.ssl.fastly.net/63c63697632705047ffda2da/live_d33349a0962a11ed907dd9e556777b63/rewind-14400.m3u8
+#EXTINF:-1 tvg-id="AmmanTV" tvg-name="Amman TV" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Amman TV
+https://ammantv-live.ercdn.net/ammantvhd/ammantvhd.m3u8
+#EXTINF:-1 tvg-id="JordanArchive" tvg-name="Jordan Archive" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Jordan Archive
+https://playlist.fasttvcdn.com/pl/cc0blorawy1ibohhrupraa/Archive/playlist.m3u8
+#EXTINF:-1 tvg-id="JordanComedy" tvg-name="Jordan Comedy" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Jordan Comedy
+https://playlist.fasttvcdn.com/pl/cc0blorawy1ibohhrupraa/Comedy/playlist.m3u8
+#EXTINF:-1 tvg-id="JordanDrama" tvg-name="Jordan Drama" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Jordan Drama
+https://playlist.fasttvcdn.com/pl/cc0blorawy1ibohhrupraa/Drama/playlist.m3u8
+#EXTINF:-1 tvg-id="JordanKitchen" tvg-name="Jordan Kitchen" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Jordan Kitchen
+https://playlist.fasttvcdn.com/pl/cc0blorawy1ibohhrupraa/cooking/playlist.m3u8
+#EXTINF:-1 tvg-id="JordanSatelliteChannel" tvg-name="Jordan Satellite Channel" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Jordan Satellite Channel
+https://jrtv-live.ercdn.net/jordanhd/jordanhd.m3u8
+#EXTINF:-1 tvg-id="JordanSongs" tvg-name="Jordan Songs" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Jordan Songs
+https://playlist.fasttvcdn.com/pl/cc0blorawy1ibohhrupraa/Song/playlist.m3u8
+#EXTINF:-1 tvg-id="JordanTourism" tvg-name="Jordan Tourism" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Jordan Tourism
+https://playlist.fasttvcdn.com/pl/cc0blorawy1ibohhrupraa/Tourism/playlist.m3u8
+#EXTINF:-1 tvg-id="RoyaComedy" tvg-name="Roya Comedy" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Roya Comedy
+https://playlist.fasttvcdn.com/pl/toa2uuhhygheuly7xtuqrg/roya-comedy/playlist.m3u8
+#EXTINF:-1 tvg-id="RoyaDrama" tvg-name="Roya Drama" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Roya Drama
+https://playlist.fasttvcdn.com/pl/a2le4pbpa6rpzv147haf4w/drama/playlist.m3u8
+#EXTINF:-1 tvg-id="RoyaKidsOriginals" tvg-name="Roya Kids Originals" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Roya Kids Originals
+https://playlist.fasttvcdn.com/pl/ptllxjd03j6g9oxxjdfapg/roya-kids-originals/playlist.m3u8
+#EXTINF:-1 tvg-id="RoyaKitchen" tvg-name="Roya Kitchen" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Roya Kitchen
+https://playlist.fasttvcdn.com/pl/toa2uuhhygheuly7xtuqrg/roya-kitchen/playlist.m3u8
+#EXTINF:-1 tvg-id="RoyaTV" tvg-name="Roya TV" tvg-country="jo" tvg-language="jo" group-title="Jordanya",Roya TV
+https://royatv-live.daioncdn.net/royatv/royatv.m3u8
 #EXTINF:-1 tvg-id="CGNTVJapan" tvg-name="CGNTV Japan" tvg-country="jp" tvg-language="jp" group-title="Japonya",CGNTV Japan
 https://d2p4mrcwl6ly4.cloudfront.net/out/v1/8d50f69fdbbf411a8d302743e4263716/CGNWebLiveJP.m3u8
 #EXTINF:-1 tvg-id="NHKWorldPremium" tvg-name="NHK World Premium" tvg-country="jp" tvg-language="jp" group-title="Japonya",NHK World Premium
@@ -4219,6 +4365,28 @@ https://cdntv.tbs.seoul.kr/tbs/tbs_tv_web.smil/playlist.m3u8
 https://liveout.catenoid.net/live-05-wshopping/wshopping_1500k/playlist.m3u8
 #EXTINF:-1 tvg-id="WBCTV" tvg-name="WBC TV" tvg-country="kr" tvg-language="kr" group-title="Güney Kore",WBC TV
 https://cdnlive179.smartucc.kr/smartlive/312/46324be24454bd98f785039457ac695d/playlist.m3u8
+#EXTINF:-1 tvg-id="AlMaaliTV" tvg-name="Al Maali TV" tvg-country="kw" tvg-language="kw" group-title="Kuvvet",Al Maali TV
+https://kali.vdopanel.com:3797/live/bashaclicklive.m3u8
+#EXTINF:-1 tvg-id="KTV1(1)" tvg-name="KTV 1 (1)" tvg-country="kw" tvg-language="kw" group-title="Kuvvet",KTV 1 (1)
+https://kwtktv1ta.cdn.mangomolo.com/ktv1/smil:ktv1.stream.smil/chunklist.m3u8
+#EXTINF:-1 tvg-id="KTV1(2)" tvg-name="KTV 1 (2)" tvg-country="kw" tvg-language="kw" group-title="Kuvvet",KTV 1 (2)
+https://cdn-globecast.akamaized.net/live/eds/kuwait_tv1/hls_roku/index.m3u8
+#EXTINF:-1 tvg-id="KTV2" tvg-name="KTV 2" tvg-country="kw" tvg-language="kw" group-title="Kuvvet",KTV 2
+https://kwtktv2ta.cdn.mangomolo.com/ktv2/smil:ktv2.stream.smil/chunklist.m3u8
+#EXTINF:-1 tvg-id="KTVAlQurain" tvg-name="KTV Al Qurain" tvg-country="kw" tvg-language="kw" group-title="Kuvvet",KTV Al Qurain
+https://kwtktvaqta.cdn.mangomolo.com/ktvaq/smil:tktvaq.stream.smil/chunklist.m3u8
+#EXTINF:-1 tvg-id="KTVArabe" tvg-name="KTV Arabe" tvg-country="kw" tvg-language="kw" group-title="Kuvvet",KTV Arabe
+https://kwtktvata.cdn.mangomolo.com/ktva/smil:tktva.stream.smil/chunklist.m3u8
+#EXTINF:-1 tvg-id="KTVEthraa" tvg-name="KTV Ethraa" tvg-country="kw" tvg-language="kw" group-title="Kuvvet",KTV Ethraa
+https://kwtethta.cdn.mangomolo.com/eth/smil:eth.stream.smil/chunklist.m3u8
+#EXTINF:-1 tvg-id="KTVNews" tvg-name="KTV News" tvg-country="kw" tvg-language="kw" group-title="Kuvvet",KTV News
+https://kwtkbta.cdn.mangomolo.com/kb/smil:kb.stream.smil/chunklist.m3u8
+#EXTINF:-1 tvg-id="KTVSport" tvg-name="KTV Sport" tvg-country="kw" tvg-language="kw" group-title="Kuvvet",KTV Sport
+https://kwtspta.cdn.mangomolo.com/sp/smil:sp.stream.smil/chunklist.m3u8
+#EXTINF:-1 tvg-id="KTVSportPlus" tvg-name="KTV Sport Plus" tvg-country="kw" tvg-language="kw" group-title="Kuvvet",KTV Sport Plus
+https://kwtsplta.cdn.mangomolo.com/spl/smil:spl.stream.smil/chunklist.m3u8
+#EXTINF:-1 tvg-id="MarinaTV" tvg-name="Marina TV" tvg-country="kw" tvg-language="kw" group-title="Kuvvet",Marina TV
+https://ffs.gulfsat.com/Marina-TV-HD/index.m3u8
 #EXTINF:-1 tvg-id="AbaiTV" tvg-name="Abai TV" tvg-country="kz" tvg-language="kz" group-title="Kazakistan",Abai TV
 https://abaitv-stream.qazcdn.com/abaitv/abaitv/playlist.m3u8
 #EXTINF:-1 tvg-id="AlauTV" tvg-name="Alau TV" tvg-country="kz" tvg-language="kz" group-title="Kazakistan",Alau TV
