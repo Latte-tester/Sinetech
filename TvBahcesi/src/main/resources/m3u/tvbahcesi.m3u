@@ -437,6 +437,30 @@ https://muzkurd.com/sterktv/sterk/playlist.m3u8
 https://dpp-live-events.medialaancdn.be/events/hls/aes/webstream1.m3u8
 #EXTINF:-1 tvg-id="VTM2" tvg-name="VTM 2" tvg-country="be" tvg-language="be" group-title="Belçika",VTM 2
 https://dpp-live-events.medialaancdn.be/events/hls/aes/webstream3.m3u8
+#EXTINF:-1 tvg-id="RTB" tvg-name="RTB" tvg-country="bf" tvg-language="bf" group-title="Burkina Faso",RTB
+https://edge12.vedge.infomaniak.com/livecast/ik:rtblive1_8/manifest.m3u8
+#EXTINF:-1 tvg-id="AgroTV" tvg-name="Agro TV" tvg-country="bg" tvg-language="bg" group-title="Bulgaristan",Agro TV
+https://restr2.bgtv.bg/agro/hls/agro.m3u8
+#EXTINF:-1 tvg-id="CityTV" tvg-name="City TV" tvg-country="bg" tvg-language="bg" group-title="Bulgaristan",City TV
+https://tv.city.bg/play/tshls/citytv/index.m3u8
+#EXTINF:-1 tvg-id="Evrokom" tvg-name="Evrokom" tvg-country="bg" tvg-language="bg" group-title="Bulgaristan",Evrokom
+https://live.ecomservice.bg/hls/stream.m3u8
+#EXTINF:-1 tvg-id="HopeChannelBulgaria" tvg-name="Hope Channel Bulgaria" tvg-country="bg" tvg-language="bg" group-title="Bulgaristan",Hope Channel Bulgaria
+https://hc1.hopetv.bg/live/hopetv_all.smil/playlist.m3u8
+#EXTINF:-1 tvg-id="LightChannel" tvg-name="Light Channel" tvg-country="bg" tvg-language="bg" group-title="Bulgaristan",Light Channel
+https://streamer1.streamhost.org/salive/GMIlcbgM/playlist.m3u8
+#EXTINF:-1 tvg-id="MagicTV" tvg-name="Magic TV" tvg-country="bg" tvg-language="bg" group-title="Bulgaristan",Magic TV
+https://bss1.neterra.tv/magictv/magictv.m3u8
+#EXTINF:-1 tvg-id="TheVoiceTV" tvg-name="The Voice TV" tvg-country="bg" tvg-language="bg" group-title="Bulgaristan",The Voice TV
+https://bss1.neterra.tv/thevoice/thevoice.m3u8
+#EXTINF:-1 tvg-id="ThisisBulgariaHD" tvg-name="This is Bulgaria HD" tvg-country="bg" tvg-language="bg" group-title="Bulgaristan",This is Bulgaria HD
+https://streamer103.neterra.tv/thisisbulgaria/live.m3u8
+#EXTINF:-1 tvg-id="TiankovFolk" tvg-name="Tiankov Folk" tvg-country="bg" tvg-language="bg" group-title="Bulgaristan",Tiankov Folk
+https://streamer103.neterra.tv/tiankov-folk/live.m3u8
+#EXTINF:-1 tvg-id="TiankovOrientFolk" tvg-name="Tiankov Orient Folk" tvg-country="bg" tvg-language="bg" group-title="Bulgaristan",Tiankov Orient Folk
+https://streamer103.neterra.tv/tiankov-orient/live.m3u8
+#EXTINF:-1 tvg-id="TravelTV" tvg-name="Travel TV" tvg-country="bg" tvg-language="bg" group-title="Bulgaristan",Travel TV
+https://streamer103.neterra.tv/travel/live.m3u8
 #EXTINF:-1 tvg-id="BahrainInternational" tvg-name="Bahrain International" tvg-country="bh" tvg-language="bh" group-title="Bahreyn",Bahrain International
 https://5c7b683162943.streamlock.net/live/ngrp:bahraininternational_all/playlist.m3u8
 #EXTINF:-1 tvg-id="BahrainQuran" tvg-name="Bahrain Quran" tvg-country="bh" tvg-language="bh" group-title="Bahreyn",Bahrain Quran
@@ -931,6 +955,32 @@ https://5caf24a595d94.streamlock.net:1937/8132/8132/playlist.m3u8
 https://wowzastream.westmancom.com/wcgtvlive/wcgtvPSA.stream/master.m3u8
 #EXTINF:-1 tvg-id="WildTV" tvg-name="Wild TV" tvg-country="ca" tvg-language="ca" group-title="Kanada",Wild TV
 https://dfhsahpa45kk2.cloudfront.net/scheduler/scheduleMaster/476.m3u8
+#EXTINF:-1 tvg-id="CBCTV" tvg-name="CBC TV" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",CBC TV
+https://stream.berosat.live:19360/cbc-tv/cbc-tv.m3u8
+#EXTINF:-1 tvg-id="CCPVTV" tvg-name="CCPV TV" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",CCPV TV
+https://tnt-television.com/CCPV-TV/index.m3u8
+#EXTINF:-1 tvg-id="CompassionTV" tvg-name="Compassion TV" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",Compassion TV
+https://tnt-television.com/COMPASSION_FM/index.m3u8
+#EXTINF:-1 tvg-id="EVITV" tvg-name="EVI TV" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",EVI TV
+https://stream.berosat.live:19360/evi-tv/evi-tv.m3u8
+#EXTINF:-1 tvg-id="GéopolisTV" tvg-name="Géopolis TV" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",Géopolis TV
+https://tnt-television.com/Geopolis_tv/index.m3u8
+#EXTINF:-1 tvg-id="LaSentinelleTV" tvg-name="La Sentinelle TV" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",La Sentinelle TV
+https://tnt-television.com/LA_SENTINELLE/index.m3u8
+#EXTINF:-1 tvg-id="LBFDRTV" tvg-name="LBFD RTV" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",LBFD RTV
+https://tnt-television.com/LBFD_RTV/index.m3u8
+#EXTINF:-1 tvg-id="MetanoiaTV" tvg-name="Metanoia TV" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",Metanoia TV
+https://tnt-television.com/METANOIA-STREAM1/index.m3u8
+#EXTINF:-1 tvg-id="MishapiVoiceTV" tvg-name="Mishapi Voice TV" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",Mishapi Voice TV
+https://tnt-television.com/MISHAPI-STREAM1/index.m3u8
+#EXTINF:-1 tvg-id="NumericaTV" tvg-name="Numerica TV" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",Numerica TV
+https://tnt-television.com/NUMERICA/index.m3u8
+#EXTINF:-1 tvg-id="ONETV" tvg-name="ONE-TV" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",ONE-TV
+https://core.live-apc.eu:5443/LiveApp/streams/backup.m3u8
+#EXTINF:-1 tvg-id="PSTVHD" tvg-name="PSTV HD" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",PSTV HD
+https://tnt-television.com/PSTV_TVHD/index.m3u8
+#EXTINF:-1 tvg-id="RLPROTV" tvg-name="RL PRO TV" tvg-country="cd" tvg-language="cd" group-title="Demokratik Kongo",RL PRO TV
+https://stream.berosat.live:19360/rlpro-tv/rlpro-tv.m3u8
 #EXTINF:-1 tvg-id="Esaie45Tele" tvg-name="Esaie 45 Tele" tvg-country="cg" tvg-language="cg" group-title="CG",Esaie 45 Tele
 https://stream.berosat.live:19360/esaie45-tv/esaie45-tv.m3u8
 #EXTINF:-1 tvg-id="Canal9enFrançais" tvg-name="Canal 9 en Français" tvg-country="ch" tvg-language="ch" group-title="İsviçre",Canal 9 en Français
@@ -1253,6 +1303,106 @@ https://l.cztvcloud.com/channels/lantian/SXxiaoshan1/720p.m3u8
 https://l.cztvcloud.com/channels/lantian/SXxiaoshan2/720p.m3u8
 #EXTINF:-1 tvg-id="餘姚姚江文化" tvg-name="餘姚姚江文化" tvg-country="cn" tvg-language="cn" group-title="Çin",餘姚姚江文化
 https://l.cztvcloud.com/channels/lantian/SXyuyao2/720p.m3u8
+#EXTINF:-1 tvg-id="AvivamientoTV" tvg-name="Avivamiento TV" tvg-country="co" tvg-language="co" group-title="Kolombiya",Avivamiento TV
+https://s1.abntelevision.com/avivamientoabr/stream/avivamientohd/avivamientohd/playlist.m3u8
+#EXTINF:-1 tvg-id="BumTelevisión(1)" tvg-name="Bum Televisión (1)" tvg-country="co" tvg-language="co" group-title="Kolombiya",Bum Televisión (1)
+https://movil.ejeserver.com/live/visiondorada.m3u8
+#EXTINF:-1 tvg-id="BumTelevisión(2)" tvg-name="Bum Televisión (2)" tvg-country="co" tvg-language="co" group-title="Kolombiya",Bum Televisión (2)
+https://video.ejeserver.com/live/visiondorada.m3u8
+#EXTINF:-1 tvg-id="Canal2AlpavisiónNeiva" tvg-name="Canal 2 Alpavisión Neiva" tvg-country="co" tvg-language="co" group-title="Kolombiya",Canal 2 Alpavisión Neiva
+https://stmv1.voxtvhd.com.br/alpavision/alpavision/playlist.m3u8
+#EXTINF:-1 tvg-id="Canal8TV+(1)" tvg-name="Canal 8 TV+ (1)" tvg-country="co" tvg-language="co" group-title="Kolombiya",Canal 8 TV+ (1)
+https://movil.ejeserver.com/live/canal8tv.m3u8
+#EXTINF:-1 tvg-id="Canal8TV+(2)" tvg-name="Canal 8 TV+ (2)" tvg-country="co" tvg-language="co" group-title="Kolombiya",Canal 8 TV+ (2)
+https://video.ejeserver.com/live/canal8tv.m3u8
+#EXTINF:-1 tvg-id="Canal9Cosespu" tvg-name="Canal 9 Cosespu" tvg-country="co" tvg-language="co" group-title="Kolombiya",Canal 9 Cosespu
+https://video2.lhdserver.es/canal9cosespu/live.m3u8
+#EXTINF:-1 tvg-id="Canal14Codazzi" tvg-name="Canal 14 Codazzi" tvg-country="co" tvg-language="co" group-title="Kolombiya",Canal 14 Codazzi
+https://eu1.servers10.com:8081/8056/index.m3u8
+#EXTINF:-1 tvg-id="CanalCapital" tvg-name="Canal Capital" tvg-country="co" tvg-language="co" group-title="Kolombiya",Canal Capital
+https://cdns.livewave.co:19360/canalcapital/canalcapital.m3u8
+#EXTINF:-1 tvg-id="CanalMásTelevisión(1)" tvg-name="Canal Más Televisión (1)" tvg-country="co" tvg-language="co" group-title="Kolombiya",Canal Más Televisión (1)
+https://movil.ejeserver.com/live/teledoradahd.m3u8
+#EXTINF:-1 tvg-id="CanalMásTelevisión(2)" tvg-name="Canal Más Televisión (2)" tvg-country="co" tvg-language="co" group-title="Kolombiya",Canal Más Televisión (2)
+https://video.ejeserver.com/live/teledoradahd.m3u8
+#EXTINF:-1 tvg-id="CanalMundoVisión(1)" tvg-name="Canal Mundo Visión (1)" tvg-country="co" tvg-language="co" group-title="Kolombiya",Canal Mundo Visión (1)
+https://movil.ejeserver.com/live/mundovisiontv.m3u8
+#EXTINF:-1 tvg-id="CanalMundoVisión(2)" tvg-name="Canal Mundo Visión (2)" tvg-country="co" tvg-language="co" group-title="Kolombiya",Canal Mundo Visión (2)
+https://video.ejeserver.com/live/mundovisiontv.m3u8
+#EXTINF:-1 tvg-id="CanalNets(1)" tvg-name="Canal Nets (1)" tvg-country="co" tvg-language="co" group-title="Kolombiya",Canal Nets (1)
+https://movil.ejeserver.com/live/nets.m3u8
+#EXTINF:-1 tvg-id="CanalNets(2)" tvg-name="Canal Nets (2)" tvg-country="co" tvg-language="co" group-title="Kolombiya",Canal Nets (2)
+https://video.ejeserver.com/live/nets.m3u8
+#EXTINF:-1 tvg-id="CanalSantaMartaTV" tvg-name="Canal Santa Marta TV" tvg-country="co" tvg-language="co" group-title="Kolombiya",Canal Santa Marta TV
+https://streaming.amelbasoluciones.co:19360/santamartalive/santamartalive.m3u8
+#EXTINF:-1 tvg-id="CanalTelefamilia" tvg-name="Canal Telefamilia" tvg-country="co" tvg-language="co" group-title="Kolombiya",Canal Telefamilia
+https://stmv2.voxtvhd.com.br/telefamilia/telefamilia/playlist.m3u8
+#EXTINF:-1 tvg-id="CiudadelaTV" tvg-name="CiudadelaTV" tvg-country="co" tvg-language="co" group-title="Kolombiya",CiudadelaTV
+https://cp.panelchs.com:1936/8096/8096/playlist.m3u8
+#EXTINF:-1 tvg-id="CNCSantanderdeQuilichao(1)" tvg-name="CNC Santander de Quilichao (1)" tvg-country="co" tvg-language="co" group-title="Kolombiya",CNC Santander de Quilichao (1)
+https://movil.ejeserver.com/live/cncsantander.m3u8
+#EXTINF:-1 tvg-id="CNCSantanderdeQuilichao(2)" tvg-name="CNC Santander de Quilichao (2)" tvg-country="co" tvg-language="co" group-title="Kolombiya",CNC Santander de Quilichao (2)
+https://video.ejeserver.com/live/cncsantander.m3u8
+#EXTINF:-1 tvg-id="Cosmovision" tvg-name="Cosmovision" tvg-country="co" tvg-language="co" group-title="Kolombiya",Cosmovision
+https://videohls2.cosmovision.tv/hls/sd.m3u8
+#EXTINF:-1 tvg-id="CTVBarranquilla" tvg-name="CTV Barranquilla" tvg-country="co" tvg-language="co" group-title="Kolombiya",CTV Barranquilla
+https://59a564764e2b6.streamlock.net/ctvbarranquilla/ctv/playlist.m3u8
+#EXTINF:-1 tvg-id="Eduvision" tvg-name="Eduvision" tvg-country="co" tvg-language="co" group-title="Kolombiya",Eduvision
+https://stmv3.voxtvhd.com.br/conex2/conex2/playlist.m3u8
+#EXTINF:-1 tvg-id="EnCasaTV" tvg-name="En Casa TV" tvg-country="co" tvg-language="co" group-title="Kolombiya",En Casa TV
+https://cp.panelchs.com:1936/8112/8112/playlist.m3u8
+#EXTINF:-1 tvg-id="FrecuenciaFTV" tvg-name="Frecuencia F TV" tvg-country="co" tvg-language="co" group-title="Kolombiya",Frecuencia F TV
+https://tv.frecuenciaf.com/live/envivo.m3u8
+#EXTINF:-1 tvg-id="INPOTV" tvg-name="INPO TV" tvg-country="co" tvg-language="co" group-title="Kolombiya",INPO TV
+https://cp.panelchs.com:1936/8108/8108/playlist.m3u8
+#EXTINF:-1 tvg-id="LaHermandadSalsera" tvg-name="La Hermandad Salsera" tvg-country="co" tvg-language="co" group-title="Kolombiya",La Hermandad Salsera
+https://streamlov.alsolnet.com/hermandadsalsera/live/playlist.m3u8
+#EXTINF:-1 tvg-id="MasMusicaFM(1)" tvg-name="MasMusica FM (1)" tvg-country="co" tvg-language="co" group-title="Kolombiya",MasMusica FM (1)
+https://movil.ejeserver.com/live/masmusica.m3u8
+#EXTINF:-1 tvg-id="MasMusicaFM(2)" tvg-name="MasMusica FM (2)" tvg-country="co" tvg-language="co" group-title="Kolombiya",MasMusica FM (2)
+https://video.ejeserver.com/live/masmusica.m3u8
+#EXTINF:-1 tvg-id="MCITelevision" tvg-name="MCI Television" tvg-country="co" tvg-language="co" group-title="Kolombiya",MCI Television
+https://video.ejeserver.com/live/mcitelevision.m3u8
+#EXTINF:-1 tvg-id="NSTV" tvg-name="NSTV" tvg-country="co" tvg-language="co" group-title="Kolombiya",NSTV
+https://cp.panelchs.com:1936/8038/8038/playlist.m3u8
+#EXTINF:-1 tvg-id="OasisTV" tvg-name="Oasis TV" tvg-country="co" tvg-language="co" group-title="Kolombiya",Oasis TV
+https://5e85d90130e77.streamlock.net/6020/6020/playlist.m3u8
+#EXTINF:-1 tvg-id="OndambientalTV" tvg-name="Ondambiental TV" tvg-country="co" tvg-language="co" group-title="Kolombiya",Ondambiental TV
+https://stmv4.voxtvhd.com.br/ondastereo/ondastereo/playlist.m3u8
+#EXTINF:-1 tvg-id="RCNMás" tvg-name="RCN Más" tvg-country="co" tvg-language="co" group-title="Kolombiya",RCN Más
+https://rcntv-rcnmas-1-us.plex.wurl.tv/playlist.m3u8
+#EXTINF:-1 tvg-id="RDMTelevisión" tvg-name="RDM Televisión" tvg-country="co" tvg-language="co" group-title="Kolombiya",RDM Televisión
+https://cp.panelchs.com:1936/8010/8010/playlist.m3u8
+#EXTINF:-1 tvg-id="Red+" tvg-name="Red+" tvg-country="co" tvg-language="co" group-title="Kolombiya",Red+
+https://inforedvos.lcdn.claro.net.co/Content/HLS_HLS_DIR/Live/channel(REDMASHDWEB)/master.m3u8
+#EXTINF:-1 tvg-id="Reyali" tvg-name="Reyali" tvg-country="co" tvg-language="co" group-title="Kolombiya",Reyali
+https://eu1.servers10.com:8081/8090/index.m3u8
+#EXTINF:-1 tvg-id="SalsaGordaTelevision" tvg-name="Salsa Gorda Television" tvg-country="co" tvg-language="co" group-title="Kolombiya",Salsa Gorda Television
+https://ssh101.bozztv.com/ssh101/qMUAZEy/playlist.m3u8
+#EXTINF:-1 tvg-id="SatelCanal4" tvg-name="Satel Canal 4" tvg-country="co" tvg-language="co" group-title="Kolombiya",Satel Canal 4
+https://server.asilivehd.com:3802/live/canal4live.m3u8
+#EXTINF:-1 tvg-id="SuramTV" tvg-name="Suram TV" tvg-country="co" tvg-language="co" group-title="Kolombiya",Suram TV
+https://livetv.305streamhd.com:3111/live/suramtvlive.m3u8
+#EXTINF:-1 tvg-id="TDIColombia" tvg-name="TDI Colombia" tvg-country="co" tvg-language="co" group-title="Kolombiya",TDI Colombia
+https://streaming.amelbasoluciones.co:19360/tdicolombia/tdicolombia.m3u8
+#EXTINF:-1 tvg-id="Teleislas" tvg-name="Teleislas" tvg-country="co" tvg-language="co" group-title="Kolombiya",Teleislas
+https://5ab772334c39c.streamlock.net/live-teleislas/teleislas/playlist.m3u8
+#EXTINF:-1 tvg-id="Telepacífico" tvg-name="Telepacífico" tvg-country="co" tvg-language="co" group-title="Kolombiya",Telepacífico
+https://play.cdn.enetres.net/6E5C615AA5FF4123ACAF0DAB57B7B8DC021/022/playlist.m3u8
+#EXTINF:-1 tvg-id="Televilla" tvg-name="Televilla" tvg-country="co" tvg-language="co" group-title="Kolombiya",Televilla
+https://cp.panelchs.com:1936/8060/8060/playlist.m3u8
+#EXTINF:-1 tvg-id="TuUniversoTV" tvg-name="Tu Universo TV" tvg-country="co" tvg-language="co" group-title="Kolombiya",Tu Universo TV
+https://5bf8041cb3fed.streamlock.net/TUUNIVERSOTV/TUUNIVERSOTV/playlist.m3u8
+#EXTINF:-1 tvg-id="TVPeñol" tvg-name="TV Peñol" tvg-country="co" tvg-language="co" group-title="Kolombiya",TV Peñol
+https://stmv1.voxtvhd.com.br/tvpenol/tvpenol/playlist.m3u8
+#EXTINF:-1 tvg-id="TVSanJorge" tvg-name="TV San Jorge" tvg-country="co" tvg-language="co" group-title="Kolombiya",TV San Jorge
+https://asucap.com/livestream/asucap_envivo.m3u8
+#EXTINF:-1 tvg-id="VeoTelevisión(1)" tvg-name="Veo Televisión (1)" tvg-country="co" tvg-language="co" group-title="Kolombiya",Veo Televisión (1)
+https://movil.ejeserver.com/live/veotv.m3u8
+#EXTINF:-1 tvg-id="VeoTelevisión(2)" tvg-name="Veo Televisión (2)" tvg-country="co" tvg-language="co" group-title="Kolombiya",Veo Televisión (2)
+https://video.ejeserver.com/live/veotv.m3u8
+#EXTINF:-1 tvg-id="Zoom" tvg-name="Zoom" tvg-country="co" tvg-language="co" group-title="Kolombiya",Zoom
+https://canalzoom.smoothcloud.co:3027/live/canalzoombr1live.m3u8
 #EXTINF:-1 tvg-id="AntenaSeisTV" tvg-name="Antena Seis TV" tvg-country="cr" tvg-language="cr" group-title="Kosta Rika",Antena Seis TV
 https://video1.azulstream.com:8081/antenaseistv/index.m3u8
 #EXTINF:-1 tvg-id="Canal1(1)" tvg-name="Canal 1 (1)" tvg-country="cr" tvg-language="cr" group-title="Kosta Rika",Canal 1 (1)
@@ -5107,6 +5257,8 @@ https://live.obslivestream.com/viaaltomayomux/index.m3u8
 https://videoserver.tmcreativos.com:19360/cablerasvia/cablerasvia.m3u8
 #EXTINF:-1 tvg-id="VivaTVYurimaguas" tvg-name="Viva TV Yurimaguas" tvg-country="pe" tvg-language="pe" group-title="Peru",Viva TV Yurimaguas
 https://live.obslivestream.com/vivatv/index.m3u8
+#EXTINF:-1 tvg-id="TNTV" tvg-name="TNTV" tvg-country="pf" tvg-language="pf" group-title="Polinezya Fransa",TNTV
+https://bcovlive-a.akamaihd.net/34b9e8a6345d4ee8acb351730d1dbe89/us-west-2/5816339219001/playlist.m3u8
 #EXTINF:-1 tvg-id="A2Z" tvg-name="A2Z" tvg-country="ph" tvg-language="ph" group-title="Filipinler",A2Z
 https://qp-pldt-live-grp-02-prod.akamaized.net/out/u/tv5.m3u8
 #EXTINF:-1 tvg-id="CLTV36" tvg-name="CLTV 36" tvg-country="ph" tvg-language="ph" group-title="Filipinler",CLTV 36
